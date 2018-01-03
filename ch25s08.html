@@ -1,0 +1,25 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>25.8.&#160;增加对额外元数据API的支持</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch25.html" title="第&#160;25&#160;章&#160;注解和源代码级的元数据支持">
+<link rel="prev" href="ch25s07.html" title="25.7.&#160;元数据属性的其它用法">
+<link rel="next" href="apa.html" title="附录&#160;A.&#160;XML Schema-based configuration">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id588624"></a>25.8.&#160;增加对额外元数据API的支持</h2></div></div></div>
+<p>
+			如果你希望提供对其它元数据API的支持，这很容易实现。
+		</p>
+<p>
+			简单实现<code class="classname">org.springframework.metadata.Attributes</code>接口，并把它作为你的元数据API的门面。你就可以像前文所示那样在你的bean定义中包含这个对象。
+		</p>
+<p>
+			所有象AOP元数据驱动自动代理这样的使用元数据的框架服务，都自动能使用你新建的元数据提供者。
+		</p>
+</div></body>
+</html>

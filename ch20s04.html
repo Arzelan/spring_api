@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>20.4.&#160;控制bean的 ObjectName</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch20.html" title="第&#160;20&#160;章&#160;JMX">
+<link rel="prev" href="ch20s03.html" title="20.3.&#160;控制bean的管理接口">
+<link rel="next" href="ch20s05.html" title="20.5.&#160;JSR-160连接器">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jmx-naming"></a>20.4.&#160;控制bean的 <code class="classname">ObjectName</code>
+		</h2></div></div></div>
+<p>
+			在后台，<code class="classname">MBeanExporter</code> 委派 <code class="classname">ObjectNamingStrategy</code> 的一个实现去获取正在注册的每个bean的<code class="classname">ObjectName</code>。
+			缺省的实现是 <code class="classname">KeyNamingStrategy</code>，它缺省用 <code class="literal">beans</code> <code class="classname">Map</code> 的键作为 <code class="classname">ObjectName</code>。
+			此外，<code class="classname">KeyNamingStrategy</code> 能把<code class="literal">beans</code> <code class="classname">Map</code> 的键映射为一个 <code class="classname">Properties</code> 文件中的实体，以此来决定 <code class="classname">ObjectName</code>。
+			除了 <code class="classname">KeyNamingStrategy</code> 之外，Spring提供了另外两个 <code class="classname">ObjectNamingStrategy</code> 的实现：
+			<code class="classname">IdentityNamingStrategy</code> 构造一个 <code class="classname">ObjectName</code>，
+			这是基于JVM识别的bean；<code class="classname">MetadataNamingStrategy</code> 是用源代码级元数据获取 <code class="classname">ObjectName</code>。
+		</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-naming-properties"></a>20.4.1.&#160;从<code class="classname">Properties</code>中读取<code class="classname">ObjectName</code>
+			</h3></div></div></div>
+<p>
+				可以配置你自己 <code class="classname">KeyNamingStrategy</code> 实例，配置它从一个 <code class="classname">Properties</code> 的实例中读取 <code class="classname">ObjectName</code>，而不是用bean的键去读。
+				<code class="classname">KeyNamingStrategy</code> 会试着用与bean键相应的键在 <code class="classname">Properties</code> 中查找一个实体。
+				如果没有发现任何实体或是 <code class="classname">Properties</code> 实例为 <code class="literal">null</code>，就用这个bean的键。
+			</p>
+<p>
+				下面代码展示了一个 <code class="classname">KeyNamingStrategy</code> 配置的例子：
+			</p>
+<pre class="programlisting">&lt;beans&gt;
+
+  &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+    &lt;property name="beans"&gt;
+      &lt;map&gt;
+        &lt;entry key="testBean" value-ref="testBean"/&gt;
+      &lt;/map&gt;
+    &lt;/property&gt;
+    &lt;property name="namingStrategy" ref="namingStrategy"/&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="testBean" class="org.springframework.jmx.JmxTestBean"&gt;
+    &lt;property name="name" value="TEST"/&gt;
+    &lt;property name="age" value="100"/&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="namingStrategy" class="org.springframework.jmx.export.naming.KeyNamingStrategy"&gt;
+    &lt;property name="mappings"&gt;
+      &lt;props&gt;
+        &lt;prop key="testBean"&gt;bean:name=testBean1&lt;/prop&gt;
+      &lt;/props&gt;
+    &lt;/property&gt;
+    &lt;property name="mappingLocations"&gt;
+      &lt;value&gt;names1.properties,names2.properties&lt;/value&gt;
+    &lt;/property&gt;
+  &lt;/bean
+
+&lt;/beans&gt;</pre>
+<p>
+				用一个 <code class="classname">Properties</code> 的实例来配置一个 <code class="classname">KeyNamingStrategy</code> 的实例，
+				这个 <code class="classname">Properties</code> 的实例是由映射属性定义的 <code class="classname">Properties</code> 实例和由映射属性定义的路径中的属性文件的内容合并起来的。
+				这个配置中，给bean <code class="literal">testBean</code> 的 <code class="classname">ObjectName</code> 值为 <code class="literal">bean:name=testBean1</code> ，
+				因为这个实体在 <code class="classname">Properties</code> 的实例中，这个实例有一个与bean的键相对应的键。
+			</p>
+<p>
+				如果在 <code class="classname">Properties</code> 实例中没有找到实体，则bean的键名将用作 <code class="classname">ObjectName</code> 的值。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-naming-metadata"></a>20.4.2.&#160;使用 <code class="classname">MetadataNamingStrategy</code>
+			</h3></div></div></div>
+<p>
+				<code class="classname">MetadataNamingStrategy</code> 使用每个bean属性
+				<code class="classname">ManagedResource</code> 的 <code class="classname">ObjectName</code> 属性来创建 <code class="classname">ObjectName</code>。
+				下列代码展示了 <code class="classname">MetadataNamingStrategy</code> 的配置：
+			</p>
+<pre class="programlisting">&lt;beans&gt;
+
+  &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+    &lt;property name="beans"&gt;
+      &lt;map&gt;
+        &lt;entry key="testBean" value-ref="testBean"/&gt;
+      &lt;/map&gt;
+    &lt;/property&gt;
+    &lt;property name="namingStrategy" ref="namingStrategy"/&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="testBean" class="org.springframework.jmx.JmxTestBean"&gt;
+    &lt;property name="name" value="TEST"/&gt;
+    &lt;property name="age" value="100"/&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="namingStrategy" class="org.springframework.jmx.export.naming.MetadataNamingStrategy"&gt;
+    &lt;property name="attributeSource" ref="attributeSource"/&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="attributeSource"
+      class="org.springframework.jmx.export.metadata.AttributesJmxAttributeSource"/&gt;
+
+&lt;/beans&gt;</pre>
+</div>
+</div></body>
+</html>

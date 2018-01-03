@@ -1,0 +1,67 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;21&#160;章&#160;JCA CCI</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt04.html" title="部分&#160;IV.&#160;整合">
+<link rel="prev" href="ch20s08.html" title="20.8.&#160;更多资源">
+<link rel="next" href="ch21s02.html" title="21.2.&#160;配置CCI">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="cci"></a>第&#160;21&#160;章&#160;JCA CCI</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch21.html#id572912">21.1. 介绍</a></span></dt>
+<dt><span class="section"><a href="ch21s02.html">21.2. 配置CCI</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch21s02.html#id573025">21.2.1. 连接器配置</a></span></dt>
+<dt><span class="section"><a href="ch21s02.html#id573148">21.2.2. 在Spring中配置<code class="interfacename">ConnectionFactory</code></a></span></dt>
+<dt><span class="section"><a href="ch21s02.html#id573265">21.2.3. 配置CCI连接</a></span></dt>
+<dt><span class="section"><a href="ch21s02.html#id573434">21.2.4. 使用一个 CCI 单连接</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch21s03.html">21.3. 使用Spring的 CCI访问支持</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch21s03.html#cci-record-creator">21.3.1. 记录转换</a></span></dt>
+<dt><span class="section"><a href="ch21s03.html#id573703">21.3.2. <code class="classname">CciTemplate</code> 类</a></span></dt>
+<dt><span class="section"><a href="ch21s03.html#id574002">21.3.3. DAO支持</a></span></dt>
+<dt><span class="section"><a href="ch21s03.html#automatic-output-generation">21.3.4. 自动输出记录生成 </a></span></dt>
+<dt><span class="section"><a href="ch21s03.html#template-summary">21.3.5. 总结</a></span></dt>
+<dt><span class="section"><a href="ch21s03.html#id574599">21.3.6. 直接使用一个 CCI <code class="interfacename">Connection</code> 接口和<code class="interfacename">Interaction</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch21s03.html#id574724">21.3.7. <code class="classname">CciTemplate</code> 使用示例</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch21s04.html">21.4. 建模CCI访问为操作对象</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch21s04.html#id575254">21.4.1. <code class="classname">MappingRecordOperation</code></a></span></dt>
+<dt><span class="section"><a href="ch21s04.html#id572808">21.4.2. <code class="classname">MappingCommAreaOperation</code></a></span></dt>
+<dt><span class="section"><a href="ch21s04.html#id572860">21.4.3. 自动输出记录生成</a></span></dt>
+<dt><span class="section"><a href="ch21s04.html#id575370">21.4.4. 总结</a></span></dt>
+<dt><span class="section"><a href="ch21s04.html#id575525">21.4.5. <code class="classname">MappingRecordOperation</code> 使用示例</a></span></dt>
+<dt><span class="section"><a href="ch21s04.html#id575643">21.4.6. <code class="classname">MappingCommAreaOperation</code> 使用示例</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch21s05.html">21.5. 事务</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id572912"></a>21.1.&#160;介绍</h2></div></div></div>
+<p>J2EE提供JCA(Java Connector Architecture)规范来标准化对EIS的访问。这个规范被分为几个不同的部分：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>SPI(Service provider interfaces)是连接器提供者（connector provider）必须实现的接口。
+	这些接口组成了一个能被部署在J2EE应用服务器上的资源适配器（resource adapter）。
+	在这种情况下，由服务器来管理连接池（connection pooling）、事务和安全（托管模式（managed mode））。
+	应用服务器还负责管理客户端所拥有的配置。一个连接器（connector）同样能在脱离应用服务器的情况下使用。在这种情况下，应用程序必须直接对它进行配置（非托管模式（non-managed mode））。 
+	</p></li>
+<li><p> CCI (Common Client Interface)是应用程序用来与连接器交互并与EIS通信的接口。同样还为本地事务划界提供了API。</p></li>
+</ul></div>
+<p>Spring对CCI的支持，目的是为了提供以Spring典型的方式来访问CCI连接器的类，并有效地使用Spring的通用资源和事务管理机制。</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>连接器的客户端不必总是使用CCI。 某些连接器暴露它们自己的API来提供JCA资源适配器（resource adapter）以便使用J2EE容器提供的某些系统契约（system contracts）（连接池（connection pooling），全局事务（global transactions），安全（security））。Spring并没有为这类连接器特有（connector-specific）的API提供特殊的支持。 </p>
+</div>
+</div>
+</div></body>
+</html>

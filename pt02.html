@@ -1,0 +1,174 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>部分&#160;II.&#160;中间层数据访问</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="prev" href="ch08s04.html" title="8.4.&#160;更多资源">
+<link rel="next" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="part" lang="zh-cn">
+<div class="titlepage"><div><div><h1 class="title">
+<a name="id489941"></a>部分&#160;II.&#160;中间层数据访问</h1></div></div></div>
+<div class="partintro" lang="zh-cn">
+<div></div>
+<p>
+				开发手册的这一部分关注于中间层开发，并明确描述了这一层的数据访问职责。
+			</p>
+<p>
+				先是，详细阐述了Spring全面的事务管理支持，随后，详细说明了Spring Framework如何支持多种中间层数据访问的框架和技术。
+			</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><a href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">第&#160;9&#160;章 <i>事务管理</i></a></p></li>
+<li><p><a href="ch10.html" title="第&#160;10&#160;章&#160;DAO支持">第&#160;10&#160;章 <i>DAO支持</i></a></p></li>
+<li><p><a href="ch11.html" title="第&#160;11&#160;章&#160;使用JDBC进行数据访问">第&#160;11&#160;章 <i>使用JDBC进行数据访问</i></a></p></li>
+<li><p><a href="ch12.html" title="第&#160;12&#160;章&#160;使用ORM工具进行数据访问">第&#160;12&#160;章 <i>使用ORM工具进行数据访问</i></a></p></li>
+</ul></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="chapter"><a href="ch09.html">9. 事务管理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch09.html#transaction-intro">9.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch09s02.html">9.2. 动机</a></span></dt>
+<dt><span class="section"><a href="ch09s03.html">9.3. 关键抽象</a></span></dt>
+<dt><span class="section"><a href="ch09s04.html">9.4. 使用资源同步的事务</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch09s04.html#id492018">9.4.1. 高层次方案</a></span></dt>
+<dt><span class="section"><a href="ch09s04.html#id492060">9.4.2. 低层次方案</a></span></dt>
+<dt><span class="section"><a href="ch09s04.html#id490628">9.4.3. 
+				<code class="classname">TransactionAwareDataSourceProxy</code>
+			</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch09s05.html">9.5. 声明式事务管理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch09s05.html#id492333">9.5.1. 理解Spring的声明式事务管理实现</a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-first-example">9.5.2. 第一个例子</a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-rolling-back">9.5.3. 回滚</a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-diff-tx">9.5.4. 为不同的bean配置不同的事务语义</a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-txadvice-settings">9.5.5. <code class="literal">&lt;tx:advice/&gt;</code> 有关的设置</a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-annotations">9.5.6. 使用 <code class="interfacename">@Transactional</code></a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-applying-more-than-just-tx-advice">9.5.7. 插入事务操作</a></span></dt>
+<dt><span class="section"><a href="ch09s05.html#transaction-declarative-aspectj">9.5.8. 结合AspectJ使用 <code class="interfacename">@Transactional</code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch09s06.html">9.6. 编程式事务管理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch09s06.html#id495521">9.6.1. 使用 <code class="classname">TransactionTemplate</code></a></span></dt>
+<dt><span class="section"><a href="ch09s06.html#transaction-programmatic-ptm">9.6.2. 使用 <code class="interfacename">PlatformTransactionManager</code>
+			</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch09s07.html">9.7. 选择编程式事务管理还是声明式事务管理</a></span></dt>
+<dt><span class="section"><a href="ch09s08.html">9.8. 与特定应用服务器集成</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch09s08.html#id495805">9.8.1. BEA WebLogic</a></span></dt>
+<dt><span class="section"><a href="ch09s08.html#id495836">9.8.2. IBM WebSphere</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch09s09.html">9.9. 公共问题的解决方案</a></span></dt>
+<dd><dl><dt><span class="section"><a href="ch09s09.html#id495903">9.9.1. 对一个特定的 <code class="interfacename">DataSource</code> 使用错误的事务管理器</a></span></dt></dl></dd>
+<dt><span class="section"><a href="ch09s10.html">9.10. 更多的资源</a></span></dt>
+</dl></dd>
+<dt><span class="chapter"><a href="ch10.html">10. DAO支持</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch10.html#dao-introduction">10.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch10s02.html">10.2. 一致的异常层次</a></span></dt>
+<dt><span class="section"><a href="ch10s03.html">10.3. 一致的DAO支持抽象类</a></span></dt>
+</dl></dd>
+<dt><span class="chapter"><a href="ch11.html">11. 使用JDBC进行数据访问</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11.html#jdbc-introduction">11.1. 简介</a></span></dt>
+<dd><dl><dt><span class="section"><a href="ch11.html#id500600">11.1.1. Spring JDBC包结构</a></span></dt></dl></dd>
+<dt><span class="section"><a href="ch11s02.html">11.2. 利用JDBC核心类实现JDBC的基本操作和错误处理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11s02.html#jdbc-JdbcTemplate">11.2.1. <code class="classname">JdbcTemplate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#jdbc-NamedParameterJdbcTemplate">11.2.2. <code class="classname">NamedParameterJdbcTemplate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#jdbc-SimpleJdbcTemplate">11.2.3. <code class="classname">SimpleJdbcTemplate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id502366">11.2.4. <code class="interfacename">DataSource</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#jdbc-SQLExceptionTranslator">11.2.5. <code class="interfacename">SQLExceptionTranslator</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id502841">11.2.6. 执行SQL语句</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id502876">11.2.7. 执行查询</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id503030">11.2.8. 更新数据库</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch11s03.html">11.3. 控制数据库连接</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11s03.html#jdbc-DataSourceUtils">11.3.1. <code class="classname">DataSourceUtils</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-SmartDataSource">11.3.2. <code class="interfacename">SmartDataSource</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-AbstractDataSource">11.3.3. <code class="classname">AbstractDataSource</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-SingleConnectionDataSource">11.3.4. <code class="classname">SingleConnectionDataSource</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-DriverManagerDataSource">11.3.5. <code class="classname">DriverManagerDataSource</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-TransactionAwareDataSourceProxy">11.3.6. <code class="classname">TransactionAwareDataSourceProxy</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-DataSourceTransactionManager">11.3.7. <code class="classname">DataSourceTransactionManager</code>类</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch11s04.html">11.4. 用Java对象来表达JDBC操作</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11s04.html#jdbc-SqlQuery">11.4.1. <code class="classname">SqlQuery</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-MappingSqlQuery">11.4.2. <code class="classname">MappingSqlQuery</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-SqlUpdate">11.4.3. <code class="classname">SqlUpdate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-StoredProcedure">11.4.4. <code class="classname">StoredProcedure</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-SqlFunction">11.4.5. <code class="classname">SqlFunction</code>类</a></span></dt>
+</dl></dd>
+</dl></dd>
+<dt><span class="chapter"><a href="ch12.html">12. 使用ORM工具进行数据访问</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12.html#orm-introduction">12.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html">12.2. Hibernate</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s02.html#id507645">12.2.1. 资源管理</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id507731">12.2.2. 在Spring的application context中创建 <code class="interfacename">SessionFactory</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id506863">12.2.3. 
+				<code class="classname">HibernateTemplate</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id507888">12.2.4. 不使用回调的基于Spring的DAO实现</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508002">12.2.5. 基于Hibernate3的原生API实现DAO</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508226">12.2.6. 编程式的事务划分</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508338">12.2.7. 声明式的事务划分</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508535">12.2.8. 事务管理策略</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508796">12.2.9. 容器资源 vs 本地资源</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#orm-hibernate-invalid-jdbc-access-error">12.2.10. 在应用服务器中使用Hibernate的注意点</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s03.html">12.3. JDO</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s03.html#id509295">12.3.1. 建立PersistenceManagerFactory</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id509435">12.3.2. 
+				<code class="classname">JdoTemplate</code>和<code class="classname">JdoDaoSupport</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id509667">12.3.3. 基于原生的JDO API实现DAO</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id509923">12.3.4. 事务管理</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id510036">12.3.5. JdoDialect</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s04.html">12.4. Oracle TopLink</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s04.html#id510232">12.4.1. 
+				<code class="interfacename">SessionFactory</code> 抽象层</a></span></dt>
+<dt><span class="section"><a href="ch12s04.html#id510404">12.4.2. 
+				<code class="classname">TopLinkTemplate</code> 和
+      <code class="classname">TopLinkDaoSupport</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s04.html#id510655">12.4.3. 基于原生的TopLink API的DAO实现</a></span></dt>
+<dt><span class="section"><a href="ch12s04.html#id510973">12.4.4. 事务管理</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s05.html">12.5. iBATIS SQL Maps</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s05.html#id511191">12.5.1. iBATIS 1.x和2.x的概览与区别</a></span></dt>
+<dt><span class="section"><a href="ch12s05.html#id511375">12.5.2. iBATIS SQL Maps 1.x</a></span></dt>
+<dt><span class="section"><a href="ch12s05.html#id511677">12.5.3. iBATIS SQL Maps 2.x</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s06.html">12.6. JPA</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s06.html#id512127">12.6.1. 在Spring环境中建立JPA</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id512836">12.6.2. 
+				<code class="classname">JpaTemplate</code> 和 <code class="classname">JpaDaoSupport</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513039">12.6.3. 基于原生的JPA实现DAO</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513260">12.6.4. 异常转化</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513358">12.6.5. 事务管理</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513452">12.6.6. JpaDialect</a></span></dt>
+</dl></dd>
+</dl></dd>
+</dl>
+</div>
+</div>
+</div></body>
+</html>

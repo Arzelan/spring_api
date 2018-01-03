@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>6.4.&#160;AOP声明风格的选择</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">
+<link rel="prev" href="ch06s03.html" title="6.3.&#160;Schema-based AOP support">
+<link rel="next" href="ch06s05.html" title="6.5.&#160;混合切面类型">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="aop-choosing"></a>6.4.&#160;AOP声明风格的选择</h2></div></div></div>
+<p>
+    当你确定切面是实现一个给定需求的最佳方法时，你如何选择是使用Spring AOP还是AspectJ，以及选择
+	Aspect语言（代码）风格、@AspectJ声明风格或XML风格？这个决定会受到多个因素的影响，包括应用的需求、
+	开发工具和小组对AOP的精通程度。 
+    </p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id468123"></a>6.4.1.&#160;Spring AOP还是完全用AspectJ？</h3></div></div></div>
+<p>
+		做能起作用的最简单的事。Spring AOP比完全使用AspectJ更加简单，因为它不需要引入AspectJ的编译器／织入器到你开发和构建过程中。
+		如果你仅仅需要在Spring bean上通知执行操作，那么Spring AOP是合适的选择。如果你需要通知domain对象或其它没有在Spring容器中
+		管理的任意对象，那么你需要使用AspectJ。如果你想通知除了简单的方法执行之外的连接点（如：调用连接点、字段get或set的连接点等等），
+		也需要使用AspectJ。
+		</p>
+<p>
+        当使用AspectJ时，你可以选择使用AspectJ语言（也称为“代码风格”）或@AspectJ注解风格。
+		如果切面在你的设计中扮演一个很大的角色，并且你能在Eclipse中使用AspectJ Development Tools (AJDT)，
+		那么首选AspectJ语言 :- 因为该语言专门被设计用来编写切面，所以会更清晰、更简单。如果你没有使用
+		Eclipse，或者在你的应用中只有很少的切面并没有作为一个主要的角色，你或许应该考虑使用@AspectJ风格
+		并在你的IDE中附加一个普通的Java编辑器，并且在你的构建脚本中增加切面织入（链接）的段落。
+    	</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id468172"></a>6.4.2.&#160;Spring AOP中使用@AspectJ还是XML？</h3></div></div></div>
+<p>
+    	如果你选择使用Spring AOP，那么你可以选择@AspectJ或者XML风格。总的来说，如果你使用Java 5，
+		我们建议使用@AspectJ风格。显然如果你不是运行在Java 5上，XML风格是最佳选择。XML和@AspectJ
+		之间权衡的细节将在下面进行讨论。
+    	</p>
+<p>
+    	XML风格对现有的Spring用户来说更加习惯。它可以使用在任何Java级别中（参考连接点表达式内部的命名连接点，虽然它也需要Java 5）
+		并且通过纯粹的POJO来支持。当使用AOP作为工具来配置企业服务时（一个好的例子是当你认为连接点表达式是你的配置中的一部分时，
+		你可能想单独更改它）XML会是一个很好的选择。对于XML风格，从你的配置中可以清晰的表明在系统中存在那些切面。
+    	</p>
+<p>
+    	XML风格有两个缺点。第一是它不能完全将需求实现的地方封装到一个位置。DRY原则中说系统中的每一项知识都必须具有单一、无歧义、权威的表示。
+		当使用XML风格时，如何实现一个需求的知识被分割到支撑类的声明中以及XML配置文件中。当使用@AspectJ风格时就只有一个单独的模块 -切面- 信息被封装了起来。
+		第二是XML风格同@AspectJ风格所能表达的内容相比有更多的限制：仅仅支持"singleton"切面实例模型，并且不能在XML中组合命名连接点的声明。
+		例如，在@AspectJ风格中我们可以编写如下的内容：
+    	</p>
+<pre class="programlisting">  @Pointcut(execution(* get*()))
+  public void propertyAccess() {}
+
+  @Pointcut(execution(org.xyz.Account+ *(..))
+  public void operationReturningAnAccount() {}
+
+  @Pointcut(propertyAccess() &amp;&amp; operationReturningAnAccount())
+  public void accountPropertyAccess() {}</pre>
+<p>在XML风格中能声明开头的两个连接点：</p>
+<pre class="programlisting">  &lt;aop:pointcut id="propertyAccess" 
+      expression="execution(* get*())"/&gt;
+
+  &lt;aop:pointcut id="operationReturningAnAccount" 
+      expression="execution(org.xyz.Account+ *(..))"/&gt;</pre>
+<p>但是不能通过组合这些来定义accountPropertyAccess连接点</p>
+<p>
+	@AspectJ风格支持其它的实例模型以及更丰富的连接点组合。它具有将将切面保持为一个模块单元的优点。
+	还有一个优点就是@AspectJ切面能被Spring AOP和AspectJ两者都理解 - 所以如果稍后你认为你需要AspectJ
+	的能力去实现附加的需求，那么你非常容易转移到基于AspectJ的途径。总而言之，我们更喜欢@AspectJ风格只要你有切面
+	去做超出简单的“配置”企业服务之外的事情。
+	</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,104 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>23.3.&#160;使用JDK Timer支持类</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch23.html" title="第&#160;23&#160;章&#160;Spring中的定时调度(Scheduling)和线程池(Thread Pooling)">
+<link rel="prev" href="ch23s02.html" title="23.2.&#160;使用OpenSymphony Quartz 调度器">
+<link rel="next" href="ch23s04.html" title="23.4.&#160;SpringTaskExecutor抽象">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id580182"></a>23.3.&#160;使用JDK Timer支持类</h2></div></div></div>
+<p>
+		另外一个调度任务的途径是使用JDK Timer对象。更多的关于<code class="classname">Timer</code>的信息可以在这里<a href="http://java.sun.com/docs/books/tutorial/essential/threads/timer.html" target="_top">http://java.sun.com/docs/books/tutorial/essential/threads/timer.html</a>找到。
+		上面讨论的概念仍可以应用于Timer的支持。你可以创建定制的timer或者调用某些方法的timer。包装timers的工作由<code class="classname">TimerFactoryBean</code>完成。
+	</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id580213"></a>23.3.1.&#160;创建定制的timers</h3></div></div></div>
+<p>
+			你可以使用<code class="literal">TimerTask</code>创建定制的timer tasks，类似于Quartz中的jobs:
+			</p>
+<pre class="programlisting">public class CheckEmailAddresses extends TimerTask {
+
+  private List emailAddresses;
+  
+  public void setEmailAddresses(List emailAddresses) {
+    this.emailAddresses = emailAddresses;
+  }
+  
+  public void run() {
+    <em class="lineannotation"><span class="lineannotation">// iterate over all email addresses and archive them</span></em>
+  }
+}</pre>
+<p>
+				包装它很简单:
+			</p>
+<pre class="programlisting">&lt;bean id="checkEmail" class="examples.CheckEmailAddress"&gt;
+    &lt;property name="emailAddresses"&gt;
+        &lt;list&gt;
+            &lt;value&gt;test@springframework.org&lt;/value&gt;
+            &lt;value&gt;foo@bar.com&lt;/value&gt;
+            &lt;value&gt;john@doe.net&lt;/value&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;
+
+&lt;bean id="scheduledTask" class="org.springframework.scheduling.timer.ScheduledTimerTask"&gt;
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- wait 10 seconds before starting repeated execution --&gt;</span></em>
+    &lt;property name="delay" value="10000" /&gt;
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- run every 50 seconds --&gt;</span></em>
+    &lt;property name="period" value="50000" /&gt;
+    &lt;property name="timerTask" ref="checkEmail" /&gt;
+&lt;/bean&gt;</pre>
+<p>
+				<span class="emphasis"><em>
+				注意若要让任务只运行一次，你可以把<code class="literal">period</code>属性设置为0（或者负值）。
+				</em></span>
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id580305"></a>23.3.2.&#160;使用 <code class="classname">MethodInvokingTimerTaskFactoryBean</code>类</h3></div></div></div>
+<p>
+				和对Quartz的支持类似，对<code class="classname">Timer</code>的支持也包含一个组件，可以让你周期性的调用某个方法:
+			</p>
+<pre class="programlisting">&lt;bean id="doIt" class="org.springframework.scheduling.timer.MethodInvokingTimerTaskFactoryBean"&gt;
+    &lt;property name="targetObject" ref="exampleBusinessObject" /&gt;
+    &lt;property name="targetMethod" value="doIt" /&gt;
+&lt;/bean&gt;</pre>
+<p>
+				以上的例子会调用<code class="literal">exampleBusinessObject</code>对象的<code class="literal">doIt</code>方法。(见下):
+			</p>
+<pre class="programlisting">public class BusinessObject {
+  
+  <em class="lineannotation"><span class="lineannotation">// properties and collaborators</span></em>
+  
+  public void doIt() {
+    <em class="lineannotation"><span class="lineannotation">// do the actual work</span></em>
+  }
+}</pre>
+<p>
+				将上例中<code class="classname">ScheduledTimerTask</code>的<code class="literal">timerTask</code>引用修改为<code class="literal">doIt</code>，bean将会用一个固定的周期来调用<code class="literal">doIt</code>方法。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id580402"></a>23.3.3.&#160;打包:使用<code class="classname">TimerFactoryBean</code>来设置任务</h3></div></div></div>
+<p>
+				<code class="classname">TimerFactoryBean</code>类和Quartz的<code class="classname">SchedulerFactoryBean</code>类有些类似，它们是为同样的目的而设计的：设置确切的任务计划。<code class="classname">TimerFactoryBean</code>对一个Timer进行配置，设置其引用的任务的周期。你可以指定是否使用背景线程。
+			</p>
+<pre class="programlisting">&lt;bean id="timerFactory" class="org.springframework.scheduling.timer.TimerFactoryBean"&gt;
+    &lt;property name="scheduledTimerTasks"&gt;
+        &lt;list&gt;
+            <em class="lineannotation"><span class="lineannotation">&lt;!-- see the example above --&gt;</span></em>
+            &lt;ref bean="scheduledTask" /&gt;
+        &lt;/list&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</pre>
+</div>
+</div></body>
+</html>

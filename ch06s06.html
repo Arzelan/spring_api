@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>6.6.&#160;代理机制</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">
+<link rel="prev" href="ch06s05.html" title="6.5.&#160;混合切面类型">
+<link rel="next" href="ch06s07.html" title="6.7.&#160;编程方式创建@AspectJ代理">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id472909"></a>6.6.&#160;代理机制</h2></div></div></div>
+<p>Spring AOP部分使用JDK动态代理或者CGLIB来为目标对象创建代理。（建议尽量使用JDK的动态代理）</p>
+<p>
+		如果被代理的目标对象实现了至少一个接口，则会使用JDK动态代理。所有该目标类型实现的接口都将被代理。若该目标对象没有实现任何接口，则创建一个CGLIB代理。
+		</p>
+<p>如果你希望强制使用CGLIB代理，（例如：希望代理目标对象的所有方法，而不只是实现自接口的方法）那也可以。但是需要考虑以下问题:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>无法通知（advise）<code class="literal">Final</code> 方法，因为他们不能被覆写。</p></li>
+<li><p>你需要将CGLIB 2二进制发行包放在classpath下面，与之相较JDK本身就提供了动态代理</p></li>
+</ul></div>
+<p><a name="aop-autoproxy-force-CGLIB"></a>
+		强制使用CGLIB代理需要将 <code class="literal">&lt;aop:config&gt;</code> 的 <code class="literal">proxy-target-class</code> 属性设为true:</p>
+<pre class="programlisting">&lt;aop:config <span class="bold"><strong>proxy-target-class="true"</strong></span>&gt;
+
+	...
+
+&lt;/aop:config&gt;</pre>
+<p>当需要使用CGLIB代理和@AspectJ自动代理支持，请按照如下的方式设置
+		<code class="literal">&lt;aop:aspectj-autoproxy&gt;</code> 的 <code class="literal">proxy-target-class</code> 属性：
+		</p>
+<pre class="programlisting">&lt;aop:aspectj-autoproxy <span class="bold"><strong>proxy-target-class="true"</strong></span>/&gt;</pre>
+</div></body>
+</html>

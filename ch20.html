@@ -1,0 +1,86 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;20&#160;章&#160;JMX</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt04.html" title="部分&#160;IV.&#160;整合">
+<link rel="prev" href="ch19s04.html" title="19.4.&#160;接收消息">
+<link rel="next" href="ch20s02.html" title="20.2.&#160;输出bean到JMX">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="jmx"></a>第&#160;20&#160;章&#160;JMX</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch20.html#jmx-introduction">20.1. 介绍</a></span></dt>
+<dt><span class="section"><a href="ch20s02.html">20.2. 输出bean到JMX</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch20s02.html#jmx-exporting-mbeanserver">20.2.1. 创建一个MBeanServer</a></span></dt>
+<dt><span class="section"><a href="ch20s02.html#id564781">20.2.2. 复用现有的MBeanServer</a></span></dt>
+<dt><span class="section"><a href="ch20s02.html#jmx-exporting-lazy">20.2.3. MBean的惰性初始化</a></span></dt>
+<dt><span class="section"><a href="ch20s02.html#jmx-exporting-auto">20.2.4. MBean的自动注册</a></span></dt>
+<dt><span class="section"><a href="ch20s02.html#jmx-exporting-registration-behavior">20.2.5. 控制注册行为</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch20s03.html">20.3. 控制bean的管理接口</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-assembler">20.3.1. <code class="interfacename">MBeanInfoAssembler</code> 接口</a></span></dt>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-metadata">20.3.2. 使用源码级元数据</a></span></dt>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-annotations">20.3.3. 使用JDK 5.0注解</a></span></dt>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-metadata-types">20.3.4. 源代码级的元数据类型</a></span></dt>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-autodetect">20.3.5. 接口<code class="classname">AutodetectCapableMBeanInfoAssembler</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-java">20.3.6. 用Java接口定义管理接口</a></span></dt>
+<dt><span class="section"><a href="ch20s03.html#jmx-interface-methodnames">20.3.7. 使用<code class="classname">MethodNameBasedMBeanInfoAssembler</code>
+			</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch20s04.html">20.4. 控制bean的 <code class="classname">ObjectName</code>
+		</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch20s04.html#jmx-naming-properties">20.4.1. 从<code class="classname">Properties</code>中读取<code class="classname">ObjectName</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch20s04.html#jmx-naming-metadata">20.4.2. 使用 <code class="classname">MetadataNamingStrategy</code>
+			</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch20s05.html">20.5. JSR-160连接器</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch20s05.html#jmx-jsr160-server">20.5.1. 服务器端连接器</a></span></dt>
+<dt><span class="section"><a href="ch20s05.html#jmx-jsr160-client">20.5.2. 客户端连接器</a></span></dt>
+<dt><span class="section"><a href="ch20s05.html#jmx-jsr160-protocols">20.5.3. 基于Burlap/Hessian/SOAP的JMX</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch20s06.html">20.6. 通过代理访问MBeans</a></span></dt>
+<dt><span class="section"><a href="ch20s07.html">20.7. 通知</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch20s07.html#jmx-notifications-listeners">20.7.1. 为通知注册监听器</a></span></dt>
+<dt><span class="section"><a href="ch20s07.html#jmx-notifications-publishing">20.7.2. 发布通知</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch20s08.html">20.8. 更多资源</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jmx-introduction"></a>20.1.&#160;介绍</h2></div></div></div>
+<p>
+			Spring的JMX支持提供了一些特性，使你能够简单透明地将你的Spring应用程序集成到一个JMX基础设施中去。
+		</p>
+<div class="sidebar">
+<p class="title"><b>JMX</b></p>
+<p>
+				这章不是介绍JMX的……，并不试图解释使用JMX的动机（或者解释JMX这三个字母实际代表什么）。如果是JMX方面的新手，可以参考本章结束部分标题为<a href="ch20s08.html" title="20.8.&#160;更多资源">第&#160;20.8&#160;节 “更多资源”</a>的部分。
+			</p>
+</div>
+<p>确切的讲，Spring的JMX支持提供了四种核心特性：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>自动将<span class="emphasis"><em>任一</em></span>Spring bean注册为JMX MBean</p></li>
+<li><p>使用灵活的机制来控制bean的管理接口</p></li>
+<li><p>通过远程的JSR-160连接器对外声明式暴露MBean</p></li>
+<li><p>对本地和远程MBean资源的简单代理</p></li>
+</ul></div>
+<p>
+			这些特性被设计成不管是Spring还是JMX的接口和类都和你的应用程序组件不耦合。实际上，为了利用Spring的JMX特性，大部分应用程序的类都不必去关心Spring或JMX。
+		</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;5&#160;章&#160;校验，数据绑定，BeanWrapper，与属性编辑器</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt01.html" title="部分&#160;I.&#160;核心技术">
+<link rel="prev" href="ch04s07.html" title="4.7.&#160;Application context 和Resource 路径">
+<link rel="next" href="ch05s02.html" title="5.2.&#160;使用Spring的Validator接口进行校验">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="validation"></a>第&#160;5&#160;章&#160;校验，数据绑定，<code class="interfacename">BeanWrapper</code>，与<code class="literal">属性编辑器</code></h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch05.html#validation-introduction">5.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch05s02.html">5.2. 使用Spring的<code class="interfacename">Validator</code>接口进行校验</a></span></dt>
+<dt><span class="section"><a href="ch05s03.html">5.3. 从错误代码到错误信息</a></span></dt>
+<dt><span class="section"><a href="ch05s04.html">5.4. Bean处理和<code class="interfacename">BeanWrapper</code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch05s04.html#beans-beans-conventions">5.4.1. 设置和获取属性值以及嵌套属性</a></span></dt>
+<dt><span class="section"><a href="ch05s04.html#beans-beans-conversion">5.4.2. 内建的<span class="interface"><code class="interfacename">PropertyEditor</code></span>实现</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="validation-introduction"></a>5.1.&#160;简介</h2></div></div></div>
+<p>对是否把校验当作<span class="emphasis"><em>业务逻辑</em></span>这个问题，存在着正和反两种意见，而Spring提供的验证模式(和数据绑定)的设计对这两种意见都不排斥。特别是，校验应该不应该被强制绑定在Web层，而且应该很容易本地化并且可以方便地加入新的验证逻辑。基于上述的考虑，Spring提供了一个<code class="interfacename">Validator</code>接口。这是一个基础的接口并且适用于应用程序的任何一个层面。</p>
+<p>数据绑定（Data binding）非常有用，它可以动态把用户输入与应用程序的域模型（或者你用于处理用户输入的对象）绑定起来。Spring针对此提供了所谓的<code class="interfacename">DataBinder</code>来完成这一功能。由<code class="interfacename">Validator</code>和<code class="interfacename">DataBinder</code>组成的<code class="literal">validation</code>验证包，主要被用于Spring的MVC框架。当然，他们同样可以被用于其他需要的地方。</p>
+<p><code class="interfacename">BeanWrapper</code>作为一个基础组件被用在了Spring框架中的很多地方。不过，你可能很少会需要直接使用<code class="interfacename">BeanWrapper</code>。由于这是一篇参考文档，因而我们觉得对此稍作解释还是有必要的。我们在这一章节里对<code class="interfacename">BeanWrapper</code>的说明，或许到了你日后试图进行类似对象与数据之间的绑定这种与<code class="interfacename">BeanWrapper</code>非常相关的操作时会有一些帮助。</p>
+<p>Spring大量地使用了<code class="interfacename">PropertyEditor</code>（属性编辑器）。<code class="interfacename">PropertyEditor</code>的概念是JavaBean规范的一部分。正如上面提到的<code class="interfacename">BeanWrapper</code>一样，由于它与<code class="interfacename">BeanWrapper</code>以及DataBinder三者之间有着密切的联系，我们在这里同样对<code class="interfacename">PropertyEditor</code>作一番解释。</p>
+</div>
+</div></body>
+</html>

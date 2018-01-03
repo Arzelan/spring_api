@@ -1,0 +1,50 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>20.6.&#160;通过代理访问MBeans</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch20.html" title="第&#160;20&#160;章&#160;JMX">
+<link rel="prev" href="ch20s05.html" title="20.5.&#160;JSR-160连接器">
+<link rel="next" href="ch20s07.html" title="20.7.&#160;通知">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jmx-proxy"></a>20.6.&#160;通过代理访问MBeans</h2></div></div></div>
+<p>
+			Spring JMX允许你创建代理，这个代理改变到注册到本地或远程 <code class="classname">MBeanServer</code> 的MBean的调用。
+			这些代理提供里一个标准的Java接口，通过它，你可以和MBean相合。
+			下面的代码展示了如何为一个运行在本地 <code class="classname">MBeanServer</code> 的配置一个代理：
+		</p>
+<pre class="programlisting">&lt;bean id="proxy" class="org.springframework.jmx.access.MBeanProxyFactoryBean"&gt;
+    &lt;property name="objectName" value="bean:name=testBean"/&gt;
+    &lt;property name="proxyInterface" value="org.springframework.jmx.IJmxTestBean"/&gt;
+&lt;/bean&gt;</pre>
+<p>
+			可以看到在 <code class="classname">ObjectName</code>：<code class="literal">bean:name=testBean</code> 下为注册的MBean创建了一个代理。
+			代理要实现的接口由属性 <code class="literal">proxyInterfaces</code> 和将这些接口上的方法和属性映射到MBean的操作和属性上的规则来控制，这些规则和 <code class="classname">InterfaceBasedMBeanInfoAssembler</code> 使用的规则是一样的。
+		</p>
+<p>
+			<code class="classname">MBeanProxyFactoryBean</code> 能创建一个到任何MBean的代理，可以通过一个 <code class="classname">MBeanServerConnection</code>来访问。
+			缺省情况下，查找和使用本地 <code class="classname">MBeanServer</code>，但是你可以重写（override）它，
+			提供一个指向远程<code class="classname">MBeanServer</code>的<code class="classname">MBeanServerConnection</code>到指向远程MBean的代理。
+		</p>
+<pre class="programlisting">&lt;bean id="clientConnector"
+      class="org.springframework.jmx.support.MBeanServerConnectionFactoryBean"&gt;
+  &lt;property name="serviceUrl" value="service:jmx:rmi://remotehost:9875"/&gt;
+&lt;/bean&gt;
+
+&lt;bean id="proxy" class="org.springframework.jmx.access.MBeanProxyFactoryBean"&gt;
+  &lt;property name="objectName" value="bean:name=testBean"/&gt;
+  &lt;property name="proxyInterface" value="org.springframework.jmx.IJmxTestBean"/&gt;
+  &lt;property name="server" ref="clientConnector"/&gt;
+&lt;/bean&gt;</pre>
+<p>
+			你可以看到，我们创建了一个 <code class="classname">MBeanServerConnection</code>，它指向一个远程的，
+			使用了 <code class="classname">MBeanServerConnectionFactoryBean</code> 的机器。然后通过属性 <code class="literal">server</code>
+			将这个 <code class="classname">MBeanServerConnection</code> 传给 <code class="classname">MBeanProxyFactoryBean</code> 。
+			创建的代理将通过这个 <code class="classname">MBeanServerConnection</code> 转发所有到 <code class="classname">MBeanServer</code>的调用。
+		</p>
+</div></body>
+</html>

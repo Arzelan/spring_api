@@ -1,0 +1,22 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>7.4.&#160;Spring里的advisor（Advisor） API</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch07.html" title="第&#160;7&#160;章&#160;Spring AOP APIs">
+<link rel="prev" href="ch07s03.html" title="7.3.&#160;Spring的通知API">
+<link rel="next" href="ch07s05.html" title="7.5.&#160;使用ProxyFactoryBean创建AOP代理">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id481004"></a>7.4.&#160;Spring里的advisor（Advisor） API</h2></div></div></div>
+<p>在Spring里，一个advisor是一个仅仅包含一个通知对象和与之关联的切入点表达式的切面。</p>
+<p>除了引入这种特殊形式，任何advisor都可以和任何通知一起工作。
+    <code class="literal">org.springframework.aop.support.DefaultPointcutAdvisor</code>是最常用的advisor类。例如，它可以和：
+    <code class="literal">MethodInterceptor</code>，<code class="literal">BeforeAdvice</code> 或者
+    <code class="literal">ThrowsAdvice</code>一起使用。</p>
+<p>在Spring里有可能在同一个AOP代理里模糊advisor和通知类型。例如，你可以在一个代理配置里使用一个interception环绕通知，一个异常通知和一个前置通知：Spring将负责自动创建所需的拦截器链。</p>
+</div></body>
+</html>

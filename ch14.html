@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;14&#160;章&#160;集成视图技术</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt03.html" title="部分&#160;III.&#160;Web">
+<link rel="prev" href="ch13s12.html" title="13.12.&#160;其它资源">
+<link rel="next" href="ch14s02.html" title="14.2.&#160;JSP和JSTL">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="view"></a>第&#160;14&#160;章&#160;集成视图技术</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch14.html#view-introduction">14.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch14s02.html">14.2. JSP和JSTL</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch14s02.html#view-jsp-resolver">14.2.1. 视图解析器</a></span></dt>
+<dt><span class="section"><a href="ch14s02.html#view-jsp-jstl">14.2.2. 'Plain-old' JSPs versus JSTL 'Plain-old' JSP与JSTL</a></span></dt>
+<dt><span class="section"><a href="ch14s02.html#view-jsp-tags">14.2.3. 帮助简化开发的额外的标签</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch14s03.html">14.3. Tiles</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch14s03.html#view-tiles-dependencies">14.3.1. 需要的资源</a></span></dt>
+<dt><span class="section"><a href="ch14s03.html#view-tiles-integrate">14.3.2. 如何集成Tiles</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch14s04.html">14.4. Velocity和FreeMarker</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch14s04.html#view-velocity-dependencies">14.4.1. 需要的资源</a></span></dt>
+<dt><span class="section"><a href="ch14s04.html#view-velocity-contextconfig">14.4.2. Context 配置</a></span></dt>
+<dt><span class="section"><a href="ch14s04.html#view-velocity-createtemplates">14.4.3. 创建模板</a></span></dt>
+<dt><span class="section"><a href="ch14s04.html#view-velocity-advancedconfig">14.4.4. 高级配置</a></span></dt>
+<dt><span class="section"><a href="ch14s04.html#view-velocity-forms">14.4.5. 绑定支持和表单处理</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch14s05.html">14.5. XSLT</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch14s05.html#view-xslt-firstwords">14.5.1. 写在段首</a></span></dt>
+<dt><span class="section"><a href="ch14s05.html#view-xslt-summary">14.5.2. 小结</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch14s06.html">14.6. 文档视图（PDF/Excel）</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch14s06.html#view-document-intro">14.6.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch14s06.html#view-document-config">14.6.2. 配置和安装</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch14s07.html">14.7. JasperReports</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch14s07.html#view-jasper-reports-dependencies">14.7.1. 依赖的资源</a></span></dt>
+<dt><span class="section"><a href="ch14s07.html#view-jasper-reports-configuration">14.7.2. 配置</a></span></dt>
+<dt><span class="section"><a href="ch14s07.html#view-jasper-reports-model">14.7.3. 构造<code class="literal">ModelAndView</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch14s07.html#view-jasper-reports-subreports">14.7.4. 使用子报表</a></span></dt>
+<dt><span class="section"><a href="ch14s07.html#view-jasper-reports-exporter-parameters">14.7.5. 配置Exporter的参数</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="view-introduction"></a>14.1.&#160;简介</h2></div></div></div>
+<p>Spring的一个优秀之处在于，把view层技术与MVC框架的其他部分分离开来。例如，选择使用Velocity或者XSLT来代替已有的JSP方式只需要在配置上做改动就可以了。本章涵盖了和Spring协同工作的主流view层技术并简要介绍了如何增加新的方式。这里假设你已经熟悉 <a href="ch13s05.html" title="13.5.&#160;视图与视图解析">第&#160;13.5&#160;节 “视图与视图解析”</a> 中“mvc-view resolver”的知识，那里讲述了view层与MVC框架协作的基础。</p>
+</div>
+</div></body>
+</html>

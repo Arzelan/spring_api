@@ -1,0 +1,180 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>8.3.&#160;集成测试</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch08.html" title="第&#160;8&#160;章&#160;测试">
+<link rel="prev" href="ch08s02.html" title="8.2.&#160;单元测试">
+<link rel="next" href="ch08s04.html" title="8.4.&#160;更多资源">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="integration-testing"></a>8.3.&#160;集成测试</h2></div></div></div>
+<p>然而，不用将你的应用程序部署到应用服务器上或者实际连接到企业集成系统里就可以进行一些集成测试也很重要。这将使你可以测试以下内容：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>Spring IoC容器的context装配是否正确</p></li>
+<li><p>使用JDBC或者ORM工具的数据访问。这将包括诸如SQL语句或者Hibernate的XML映射文件是否正确等等。</p></li>
+</ul></div>
+<p>Spring Framework为集成测试提供了一流的支持。这种一流的支持是通过Spring Framework发行包里 <code class="literal">spring-mock.jar</code> 文件中的一些类来提供的。这个库中的类远远的超越了Cactus等容器内测试工具。</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>本章中其余地方描述的所有测试类都是基于JUnit的。</p>
+</div>
+<p>包 <code class="literal">org.springframework.test</code> 为使用Srping容器进行集成测试提供了有价值的超类，而且同时不用依赖于任何应用服务器或者其他部署环境。这些测试可以在Junit中甚至是某个IDE中运行而不需要特别的部署步骤。他们通常比单元测试要慢，但是比Cactus测试或者需要部署到一个应用服务器上的远程测试要快。</p>
+<p>这个包里的各种抽象类提供了如下的功能：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>各测试案例执行期间的Spring IoC容器缓存。</p></li>
+<li><p>测试fixture自身的依赖注入。</p></li>
+<li><p>适合集成测试的事务管理。</p></li>
+<li><p>继承而来的对测试有用的各种实例变量。</p></li>
+</ul></div>
+<p>2004年后无数的 <a href="http://www.springframework.com/" target="_top">Interface21</a> 和其他的项目已经显示了这一方法的有效性和功能，让我们仔细研究一些重要的功能。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id488614"></a>8.3.1.&#160;Context管理和缓存</h3></div></div></div>
+<p>包 <code class="literal">org.springframework.test</code> 提供了一致的Spring contexts加载并且对加载的Context提供缓存。后者是非常重要的，因为如果你在从事一个大项目时，启动时间可能成为一个问题－－这不是Spring自身的开销，而是被Spring容器实例化的对象在实例化自身时所需要的时间。例如，一个包括50-100个Hibernate映射文件的项目可能需要10-20秒的时间来加载上述的映射文件，如果在运行每个测试fixture里的每个测试案例前都有这样的开销，将导致整个测试工作的延时，最终有可能（实际上很可能）降低效率。 </p>
+<p>为了解决这个问题，<code class="classname">AbstractDependencyInjectionSpringContextTests</code> 有一个子类必须实现的 <code class="literal">abstract</code>
+				<code class="literal">protected</code> 方法来提供contexts的位置：</p>
+<pre class="programlisting">protected abstract String[] getConfigLocations();</pre>
+<p>这个方法的实现者必须提供一个包含XML配置格式的资源位置数组-通常在类路径上－－用来配置本应用。这将和 <code class="literal">web.xml</code> 或其他部署配置文件中指定的配置位置列表一样或者类似。</p>
+<p>缺省情况下，一旦加载后，这些配置将被所有的测试案例重用。这样，只有一次设置的开销，随后的测试运行起来将快的多。</p>
+<p>在某种极偶然的情况下，某个测试可能“弄脏”了配置场所，并要求重新加载－－例如改变一个bean的定义或者一个应用对象的状态－－你可以调用 <code class="classname">AbstractDependencyInjectionSpringContextTests</code> 上的 <code class="literal">setDirty()</code> 方法来重新加载配置并在执行下一个测试案例前重建application context。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id488729"></a>8.3.2.&#160;测试fixture的依赖注入</h3></div></div></div>
+<p>当类 <code class="classname">AbstractDependencyInjectionSpringContextTests</code>（及其子类）装载你的Application Context时，他们可以通过Setter注入任意配置你的测试类的实例。你只需要定义实例变量和相应的setter操作。<code class="classname">AbstractDependencyInjectionSpringContextTests</code>将从<code class="literal">getConfigLocations()</code>方法指定的配置文件中自动查找对应的对象。 </p>
+<p>让我们在实际运用中找一个体现这个强大功能的简单例子来看看。考虑以下情况，比如我们有一个类 <code class="classname">HibernateTitleDao</code>，执行数据访问逻辑比如说 <code class="classname">Title</code> 领域对象。我们需要编写用于测试以下所有情况的集成测试：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>Spring的配置文件；例如是否所有和 <code class="classname">HibernateTitleDao</code> 相关的东西都存在并且正确？</p></li>
+<li><p>Hibernate映射配置文件；例如是否所有类都映射正确无误并恰当的配置了延时加载？</p></li>
+<li><p>
+						<code class="classname">HibernateTitleDao</code> 的逻辑是否正确；这个类是否按照预期的方式运行？</p></li>
+</ul></div>
+<p>让我们先看一下测试类自身（我们随后就查看所属的配置文件）</p>
+<pre class="programlisting">public class HibernateTitleDaoTests <span class="bold"><strong>extends AbstractDependencyInjectionSpringContextTests</strong></span>  {
+
+    <em class="lineannotation"><span class="lineannotation">// 这个实例将被（自动的）依赖注入</span></em>    
+    private HibernateTitleDao titleDao;
+   
+    <em class="lineannotation"><span class="lineannotation">// 一个用来实现'titleDao'实例变量依赖注入的setter方法</span></em>
+    public void setTitleDao(HibernateTitleDao titleDao) {
+        this.titleDao = titleDao;
+    }
+    
+    public void testLoadTitle() throws Exception {
+        Title title = this.titleDao.loadTitle(new Long10));
+        assertNotNull(title);
+    }
+
+    <em class="lineannotation"><span class="lineannotation">//指定Spring配置文件加载这个fixture</span></em>
+    protected String[] getConfigLocations() {
+        return new String[] { "classpath:com/foo/daos.xml" };
+    }
+
+}</pre>
+<p>被方法 <code class="literal">getConfigLocations()</code> 引用的相关文件（<code class="literal">'classpath:com/foo/daos.xml'</code>）看起来可能是这样的...</p>
+<pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;!DOCTYPE beans PUBLIC  "-//SPRING//DTD BEAN 2.0//EN"
+    "http://www.springframework.org/dtd/http://www.springframework.org/dtd/spring-beans-2.0.dtd"&gt;
+&lt;beans&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- 这个bean将被注入到 <code class="classname">HibernateTitleDaoTests</code> 类中 --&gt;</span></em>
+    &lt;bean id="titleDao" class="com/foo/dao/hibernate/HibernateTitleDao"&gt;
+        &lt;property name="sessionFactory" ref="sessionFactory"/&gt;
+    &lt;/bean&gt;
+    
+    &lt;bean id="sessionFactory" class="org.springframework.orm.hibernate3.LocalSessionFactoryBean"&gt;
+        <em class="lineannotation"><span class="lineannotation">&lt;!-- 为了清楚起见，相关依赖的定义在这里省略 --&gt;</span></em>
+    &lt;/bean&gt;
+
+&lt;/beans&gt;</pre>
+<p>类 <code class="classname">AbstractDependencyInjectionSpringContextTests</code> 使用 <span class="emphasis"><em>根据类型的自动装配功能</em></span>（自动装配的内容可见标题为"自动装配" <a href="ch03s03.html#beans-factory-autowire" title="3.3.6.&#160;自动装配（autowire）协作者">第&#160;3.3.6&#160;节 “自动装配（autowire）协作者”</a> 的节3.3.7）。所以如果你有多个bean都定义为一个类型，则对这些bean你不能用这个方法。在这种情况下你要使用继承来的 <code class="literal">applicationContext</code> 实例变量，并且使用 <code class="literal">getBean()</code> 来进行显式查找。</p>
+<p>如果你的测试案例不使用依赖注入，只要不定义任何setters方法即可。或者你可以继承 <code class="classname">AbstractSpringContextTests</code> －－这个 <code class="literal">org.springframework.test</code> 包中的根类。它只包括用来加载Spring Context的便利方法并且在测试fixture中不进行依赖注入。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id488989"></a>8.3.3.&#160;事务管理</h3></div></div></div>
+<p>在那些访问真实数据库的测试中，普遍存在的一个问题是测试自身对持久存储的数据会有影响。即使你在使用一个开发用数据库，对数据库的改变都可能影响将来的测试。并且，许多操作－－比如插入或者改变持久数据－－不可能在事务外完成（或者进行验证）。超类 <code class="classname">org.springframework.test.AbstractTransactionalDataSourceSpringContextTests</code>（及其子类）就是用来满足这个需要的。缺省情况下，对每一个测试案例，他们创建并且回滚一个事务。你的代码只要当作这个事务已存在即可，如果你在你的测试中调用事务代理对象，他们将根据他们的事务性语义正确运作。</p>
+<p>类 <code class="classname">AbstractTransactionalSpringContextTests</code> 依赖于Application Context中定义的一个bean <code class="classname">PlatformTransactionManager</code>。由于使用了依据类型的自动装配，可以任意取名。</p>
+<p>通常你将从 <code class="classname">AbstractTransactionalDataSourceSpringContextTests</code> 继承子类。这也要求有一个 <code class="classname">DataSource</code> bean定义在配置文件中，一样也可以任意取名。它将创建一个 <code class="classname">JdbcTemplate</code> 实例变量用来进行方便的查询并提供了一个删除指定表内容的便利方法（记住缺省情况下这个事务将被回滚，所以对数据库是安全的）。</p>
+<p>如果你需要提交某个事务－－这不太常见，但是如果你需要一个特定的测试来填充数据库时会很有用。例如－－你可以调用从类 <code class="classname">AbstractTransactionalSpringContextTests</code> 继承来的 <code class="methodname">setComplete()</code> 方法。这将提交而不是回滚事务。</p>
+<p>通过调用 <code class="methodname">endTransaction()</code> 方法可以在测试案例结束前方便的中止事务。缺省情况下将回滚该事务，除非在前面调用过 <code class="methodname">setComplete()</code> 方法来提交事务。这个功能在当你想测试'断开的'数据对象行为，比如用于web层或者在事务外的远程的Hibernate映射对象时是很有用的。通常，延迟加载错误只能通过界面测试才能发现，如果你调用 <code class="methodname">endTransaction()</code> 就可以通过JUnit测试套件来保证用户界面的正确操作。</p>
+<p>这些测试支持类按照单个数据库来设计的。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id489119"></a>8.3.4.&#160;方便的变量</h3></div></div></div>
+<p>当你继承 <code class="classname">AbstractTransactionalDataSourceSpringContextTests</code> 类时你将可以访问下列保护性实例变量：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>继承自 <code class="classname">AbstractDependencyInjectionSpringContextTests</code> 超类。可以利用它进行显式bean查找，或者作为一个整体来测试这个Context的状态。</p></li>
+<li><p>
+						<code class="literal">jdbcTemplate</code>：继承自<code class="classname">AbstractTransactionalDataSourceSpringContextTests</code>。对确定数据状态的查询很有用。例如，你可能在创建对象并用ORM工具持久化的应用测试代码前后进行此种查询，用来验证数据已经进入数据库。（Spring将确保该查询在同一个事务内执行）。为正常工作你需要告诉你的ORM工具'刷新'它的已改变内容，例如使用Hibernate <code class="classname">Session</code> 接口的 <code class="literal">flush()</code> 方法。</p></li>
+</ul></div>
+<p>通常你要为集成测试提供一个在整个应用范围内的可用超类，以便在众多测试中可以提供更有用的实例变量。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id489204"></a>8.3.5.&#160;示例</h3></div></div></div>
+<p>Spring发行版里包括的PetClinic实例展示了这些测试超类的用法（Spring 1.1.5 及以上版本）。大多数测试功能在<code class="classname">AbstractClinicTests</code> 类里，部分代码如下：</p>
+<pre class="programlisting">public abstract class AbstractClinicTests
+               extends AbstractTransactionalDataSourceSpringContextTests {
+
+   protected Clinic clinic;
+
+
+   public void setClinic(Clinic clinic) {
+      this.clinic = clinic;
+   }
+
+
+   public void testGetVets() {
+      Collection vets = this.clinic.getVets();
+      assertEquals('JDBC query must show the same number of vets'，
+         jdbcTemplate.queryForInt('SELECT COUNT(0) FROM VETS')， 
+         vets.size());
+      Vet v1 = (Vet) EntityUtils.getById(vets， Vet.class， 2);
+      assertEquals('Leary'， v1.getLastName());
+      assertEquals(1， v1.getNrOfSpecialties());
+      assertEquals('radiology'， ((Specialty) v1.getSpecialties().get(0)).getName());
+      Vet v2 = (Vet) EntityUtils.getById(vets， Vet.class， 3);
+      assertEquals('Douglas'， v2.getLastName());
+      assertEquals(2， v2.getNrOfSpecialties());
+      assertEquals('dentistry'， ((Specialty) v2.getSpecialties().get(0)).getName());
+      assertEquals('surgery'， ((Specialty) v2.getSpecialties().get(1)).getName());
+}</pre>
+<p>注意：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>这个测试案例从 <code class="classname">AbstractTransactionalDataSourceSpringContextTests</code> 类继承了依赖性注入和事务处理行为。</p></li>
+<li><p>
+						<code class="literal">clinic</code> 实例变量－－也就是被测试的应用对象－－是通过 <code class="methodname">setClinic()</code> 方法被依赖注入的。</p></li>
+<li><p>
+						<code class="methodname">testGetVets()</code>方法展示了继承来的 <code class="literal">JdbcTemplate</code> 变量如何用于验证正在被测试的应用代码行为是否正确。这允许更严密的测试并减少了对测试数据的依赖。例如，可以在不中止测试的情况下在数据库里增加额外的数据行。</p></li>
+<li><p>和许多集成测试需要使用一个数据库类似，大多数 <code class="classname">AbstractClinicTests</code> 中的测试需要测试前在数据库里有一定的数据量。然而，你也可以选择在测试时才填充数据库－－依然在同一个事务中。</p></li>
+</ul></div>
+<p>PetClinic应用支持四种数据访问技术－－JDBC、Hibernate、TopLink和JPA。因此 <code class="classname">AbstractClinicTests</code> 类自身不指定Context位置－－这个操作是在子类中的，通过实现 <code class="classname">AbstractDependencyInjectionSpringContextTests</code> 中必需实现的保护性抽象方法。
+			</p>
+<p>例如，用Hibernate实现的PetClinic测试包含如下方法：</p>
+<pre class="programlisting">public class HibernateClinicTests extends AbstractClinicTests {
+
+   protected String[] getConfigLocations() {
+      return new String[] { 
+         '/org/springframework/samples/petclinic/hibernate/applicationContext-hibernate.xml' 
+      };
+   }
+}</pre>
+<p>由于PetClinic是一个非常简单的应用，只有一个Spring配置文件。而更复杂的应用往往要将他们的Spring配置文件分为多个。</p>
+<p>除了定义在子类里，也经常在一个通用基类里为所有和应用相关的集成测试定义配置场所。这可能也增加了有用的实例变量－－自然，这是通过依赖注入被填充的。比如在使用Hibernate的应用里使用的 <code class="classname">HibernateTemplate</code>。
+			</p>
+<p>你应该尽可能的在集成测试中使用和正式部署环境中一样的Spring配置文件。对数据库连接池和事务管理则要区别处理。如果你打算把应用部署到一个全功能的应用服务器上，很有可能使用它的连接池（通过JNDI）和JTA实现。这样在产品中你将为 <code class="classname">DataSource</code>， 和 <code class="classname">JtaTransactionManager</code> 使用一个 <code class="classname">JndiObjectFactoryBean</code> 。在没有容器的集成测试中，无法获JNDI和JTA，所以你要使用一个类似于 <code class="classname">BasicDataSource</code> 和 <code class="classname">DataSourceTransactionManager</code> 的通用DBCP组合或者 <code class="classname">HibernateTransactionManager</code>。你可以把变动的这部分放入一个单独的XML文件，这样在应用服务器和'本地'配置下的选择将和其他在测试环境和产品环境下都不改变的配置隔离开来。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id489446"></a>8.3.6.&#160;运行集成测试</h3></div></div></div>
+<p>集成测试自然比一般单元测试有更多的环境依赖性。这些集成测试是测试的一个补充部分而不是用来代替单元测试的。</p>
+<p>这种依赖主要是对一个包含应用使用的完整数据模型的开发用数据库。也可以通过DbUnit或者使用你的数据库提供的工具来导入测试数据。</p>
+</div>
+</div></body>
+</html>

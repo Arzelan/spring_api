@@ -1,0 +1,32 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>9.2.&#160;动机</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+<link rel="prev" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+<link rel="next" href="ch09s03.html" title="9.3.&#160;关键抽象">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="transaction-motivation"></a>9.2.&#160;动机</h2></div></div></div>
+<div class="sidebar">
+<p class="title"><b>事务管理究竟是否需要应用服务器？</b></p>
+<p>Spring框架对事务管理的支持极大地改变了传统上认为J2EE应用需要应用服务器的认识。</p>
+<p>这种改变尤其在于你不需要仅仅为了通过EJB来使用声明式事务而使用应用服务器。事实上，即使你的应用服务器拥有强大的JTA功能，你也有充分的理由可以发现，Spring框架的声明式事务提供了比EJB CMT更加强大、高效的编程模型。</p>
+<p>一般来说，只有当你需要支持多个事务性资源时，你才需要应用服务器的JTA功能。而大多数应用并不需要能够处理跨越多种资源。许多高端应用使用单一的、高伸缩性的数据库，比如Oracle 9i RAC。</p>
+<p>（当然，也许你需要应用服务器的其他功能，比如JMS或JCA。）</p>
+<p>最重要的一点是，使用Spring，<span class="emphasis"><em>你可以选择何时把你的应用迁移到全功能的应用服务器</em></span>。用硬编码去实现本地事务来替代EJB CMT或JTA，处理JDBC连接，或者还需要使用硬编码来处理那些全局的、受到容器管理的事务，这样的日子将一去不复返了。使用Spring，你仅需要改动配置文件，而不必改动你的代码。</p>
+</div>
+<p>传统上，J2EE开发者有两个事务管理的选择： <span class="emphasis"><em>全局</em></span> 或 <span class="emphasis"><em>本地</em></span> 事务。全局事务由应用服务器管理，使用JTA。局部事务是和资源相关的，比如一个和JDBC连接关联的事务。这个选择有深刻的含义。例如，全局事务可以用于多个事务性的资源（典型例子是关系数据库和消息队列）。使用局部事务，应用服务器不需要参与事务管理，并且不能帮助确保跨越多个资源（需要指出的是多数应用使用单一事务性的资源）的事务的正确性。</p>
+<p><b>全局事务.&#160;</b>
+				全局事务有一个重大的缺陷，代码需要使用JTA：一个笨重的API（部分是因为它的异常模型）。此外，JTA的<code class="interfacename">UserTransaction</code>通常需要从JNDI获得，这意味着我们为了JTA，需要 <span class="emphasis"><em>同时</em></span> 使用JNDI <span class="emphasis"><em>和</em></span> JTA。显然全部使用全局事务限制了应用代码的重用性，因为JTA通常只在应用服务器的环境中才能使用。
+			
+				以前，使用全局事务的首选方式是通过EJB的 <span class="emphasis"><em>CMT</em></span>（<span class="emphasis"><em>容器管理事务</em></span>）：CMT是 <span class="bold"><strong>声明式事务管理</strong></span> 的一种形式（区别于 <span class="bold"><strong>编程式事务管理</strong></span>）。EJB的CMT不需要任何和事务相关的JNDI查找，虽然使用EJB本身肯定需要使用JNDI。它消除了大多数（不是全部）硬编码的方式去控制事务。重大的缺陷是CMT绑定在JTA和应用服务器环境上，并且只有我们选择使用EJB实现业务逻辑，或者至少处于一个事务化EJB的外观（Facade）后才能使用它。EJB有如此多的诟病，尤其是存在其它声明式事务管理时，EJB不是一个吸引人的建议。</p>
+<p><b>本地事务.&#160;</b>本地事务容易使用，但也有明显的缺点：它们不能用于多个事务性资源。例如，使用JDBC连接事务管理的代码不能用于全局的JTA事务中。另一个缺点是局部事务趋向于入侵式的编程模型。</p>
+<p>Spring解决了这些问题。它使应用开发者能够使用在 <span class="emphasis"><em>任何环境</em></span> 下使用 <span class="emphasis"><em>一致</em></span> 的编程模型。你可以只写一次你的代码，这在不同环境下的不同事务管理策略中很有益处。Spring框架同时提供声明式和编程式事务管理。声明事务管理是多数使用者的首选，在多数情况下是被推荐使用的。</p>
+<p>使用编程式事务管理，开发者直接使用Spring框架事务抽象，这个抽象可以使用在任何底层事务基础之上。使用首选的声明式模型，开发者通常书写很少的或没有与事务相关的代码，因此不依赖Spring框架或任何其他事务API。</p>
+</div></body>
+</html>

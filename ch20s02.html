@@ -1,0 +1,274 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>20.2.&#160;输出bean到JMX</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch20.html" title="第&#160;20&#160;章&#160;JMX">
+<link rel="prev" href="ch20.html" title="第&#160;20&#160;章&#160;JMX">
+<link rel="next" href="ch20s03.html" title="20.3.&#160;控制bean的管理接口">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jmx-exporting"></a>20.2.&#160;输出bean到JMX</h2></div></div></div>
+<p>在Spring的JMX框架中，核心类是 <code class="classname">MBeanExporter</code>。这个类负责获取Spring的bean，并用一个JMX <code class="classname">MBeanServer</code> 类来注册它们。举个例子，考虑下面的类：</p>
+<pre class="programlisting">package org.springframework.jmx;
+
+public class JmxTestBean implements IJmxTestBean {
+
+    private String name;
+    private int age;
+    private boolean isSuperman;
+
+    public int getAge() {
+        return age;
+    }
+
+    public void setAge(int age) {
+        this.age = age;
+    }
+    
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public int add(int x, int y) {
+        return x + y;
+    }
+
+    public void dontExposeMe() {
+        throw new RuntimeException();
+    }
+}</pre>
+<p>你只需要在配置文件里简单地配置一个 <code class="classname">MBeanExporter</code> 的实例，并以如下所示的方法将这个bean传入，就可以将这个bean的属性和方法作为一个MBean的属性和操作暴露出去。</p>
+<pre class="programlisting">&lt;beans&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- this bean must <span class="bold"><strong>not</strong></span> be lazily initialized if the exporting is to happen --&gt;</span></em>
+  &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter" <span class="bold"><strong>lazy-init="false"</strong></span>&gt;
+    &lt;property name="beans"&gt;
+      &lt;map&gt;
+        &lt;entry key="bean:name=testBean1" value-ref="testBean"/&gt;
+      &lt;/map&gt;
+    &lt;/property&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="testBean" class="org.springframework.jmx.JmxTestBean"&gt;
+    &lt;property name="name" value="TEST"/&gt;
+    &lt;property name="age" value="100"/&gt;
+  &lt;/bean&gt;
+
+&lt;/beans&gt;</pre>
+<p>上面的配置片段中，与bean定义相关的是 <code class="literal">exporter</code> bean，属性 <code class="literal">beans</code> 
+		是告诉类 <code class="classname">MBeanExporter</code> 必须将哪些bean输出到JMX的 <code class="classname">MBeanServer</code> 去。
+		缺省配置中，在 <code class="literal">beans</code> 中，<code class="classname">Map</code> 用到的每个条目的key被用做相应条目值所引用的bean的 <code class="classname">ObjectName</code>。
+		在 <a href="ch20s04.html" title="20.4.&#160;控制bean的 ObjectName
+		">第&#160;20.4&#160;节 “控制bean的 <code class="classname">ObjectName</code>
+		”</a> 中描述的情况下，可以改变这个行为。</p>
+<p>
+			在这项配置中，<code class="literal">testBean</code> 这个bean在 <code class="classname">ObjectName</code>值为 <code class="literal">bean:name=testBean1</code>
+			的情况下作为MBean暴露出去的。缺省情况下，这个bean所有的 <span class="emphasis"><em>public</em></span> 的属性都作为对应MBean的属性，
+			这个bean所有的 <span class="emphasis"><em>public</em></span> 的方法（除了那些继承自类 <code class="classname">Object</code> 的方法）都作为对应MBean的操作暴露出去的。
+		</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-exporting-mbeanserver"></a>20.2.1.&#160;创建一个MBeanServer</h3></div></div></div>
+<p>
+				上述配置是假定应用程序运行在一个（仅有一个）<code class="classname">MBeanServer</code> 运行的环境中的。
+				这种情况下，Spring会试着查找运行中的 <code class="classname">MBeanServer</code> 并用这个server（如果有的话）来注册自己的bean。
+				在一个拥有自己的 <code class="classname">MBeanServer</code> 的容器中（如Tomcat或IBM WebSphere），这种行为是非常有用。
+			</p>
+<p>
+				然而，在一个单一的环境，或运行在一个没有提供任何 <code class="classname">MBeanServer</code> 的容器里的情况下，这种方法毫无用处。
+				要处理这类问题，你可以在配置文件里添加一个类 <code class="classname">org.springframework.jmx.support.MBeanServerFactoryBean</code>
+				的实例来声明创建一个 <code class="classname">MBeanServer</code> 的实例。你也可以通过设置类
+				<code class="classname">MBeanExporter</code> 的 <code class="literal">server</code> 属性的值来确保使用一个特殊的 <code class="classname">MBeanServer</code>，
+				这个 <code class="classname">MBeanServer</code> 值是由一个 <code class="classname">MBeanServerFactoryBean</code> 返回的；例如：
+			</p>
+<pre class="programlisting">&lt;beans&gt;
+
+  &lt;bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean"/&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!--
+    this bean needs to be eagerly pre-instantiated in order for the exporting to occur;
+    this means that it must <span class="bold"><strong>not</strong></span> be marked as lazily initialized
+  --&gt;</span></em>
+  &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+    &lt;property name="beans"&gt;
+      &lt;map&gt;
+        &lt;entry key="bean:name=testBean1" value-ref="testBean"/&gt;
+      &lt;/map&gt;
+    &lt;/property&gt;
+    &lt;property name="server" ref="mbeanServer"/&gt;
+  &lt;/bean&gt;
+
+  &lt;bean id="testBean" class="org.springframework.jmx.JmxTestBean"&gt;
+    &lt;property name="name" value="TEST"/&gt;
+    &lt;property name="age" value="100"/&gt;
+  &lt;/bean&gt;
+
+&lt;/beans&gt;</pre>
+<p>
+				这里，通过 <code class="classname">MBeanServerFactoryBean</code> 创建一个 <code class="classname">MBeanServer</code>
+				的实例，并通过属性server将这个实例提供给<code class="classname">MBeanExporter</code>。
+				在提供你自己的<code class="classname">MBeanServer</code>实例的时候，<code class="classname">MBeanExporter</code>
+				将不会去查找运行中的<code class="classname">MBeanServer</code>，而是使用这个提供的<code class="classname">MBeanServer</code> 
+				实例。为了让它正确的工作，必须在你的类路径上有一个JMX的实现。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id564781"></a>20.2.2.&#160;复用现有的MBeanServer</h3></div></div></div>
+<p>如果服务器没有指定，<code class="literal">MBeanExporter</code>会尝试自动检测运行中的<code class="literal">MBeanServer</code>。
+      这在大多数只有一个<code class="literal">MBeanServer</code>实例的环境中可以奏效，但当存在多个实例时，可能会选错服务器。
+      在这种情况下，应该用<code class="literal">MBeanServer</code> <code class="literal">agentId</code>来说明究竟用哪个实例：</p>
+<pre class="programlisting">&lt;beans&gt;
+   &lt;bean id="mbeanServer" class="org.springframework.jmx.support.MBeanServerFactoryBean"&gt;
+     &lt;!-- indicate to first look for a server --&gt;
+     &lt;property name="locateExistingServerIfPossible" value="true"/&gt;
+     &lt;!-- search the MbeanServer instance with the given agentId --&gt;
+     &lt;property name="agentId" value="<span class="emphasis"><em>&lt;MBeanServer instance agentId&gt;</em></span>"/&gt;
+   &lt;/bean&gt;
+   
+   &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+     &lt;property name="server" ref="mbeanServer"/&gt;
+   ...
+   &lt;/bean&gt;
+&lt;/beans&gt;</pre>
+<p>在某些平台/情况中，<code class="literal">MBeanServer</code>通过查询方法来获得有动态/未知的<code class="literal">agentId</code>，
+      这时应该用<a href="ch03s02.html#beans-factory-class-static-factory-method" title="3.2.3.2.2.&#160;使用 静态工厂方法实例化">factory-method</a>：</p>
+<pre class="programlisting">&lt;beans&gt;
+   &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+     &lt;property name="server"&gt;
+       &lt;!-- Custom MBeanServerLocator --&gt;
+       &lt;bean class="platform.package.MBeanServerLocator" factory-method="locateMBeanServer"/&gt;
+     &lt;/property&gt;
+   ...
+   &lt;/bean&gt;
+&lt;/beans&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-exporting-lazy"></a>20.2.3.&#160;MBean的惰性初始化</h3></div></div></div>
+<p>
+				如果你用 <code class="classname">MBeanExporter</code> 来配置的一个bean，同时也配置了惰性初始化，那么 <code class="classname">MBeanExporter</code>
+				<span class="bold"><strong>不会</strong></span> 破坏这个约定，将避免初始化相应的bean。
+				而是会给 <code class="classname">MBeanServer</code> 注册一个代理，推迟从容器中获取这个bean，直到在代理侧发生对它的第一次调用。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-exporting-auto"></a>20.2.4.&#160;MBean的自动注册</h3></div></div></div>
+<p>
+				所有通过 <code class="classname">MBeanExporter</code> 输出，并已经是有效MBean的bean，会在没有Spring干涉的情况下向 <code class="classname">MBeanServer</code> 注册。
+				通过设置 <code class="literal">autodetect</code> 属性为 <code class="literal">true</code>，<code class="classname">MBeanExporter</code>能自动的发现MBean：
+			</p>
+<pre class="programlisting">&lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+  &lt;property name="autodetect" value="true"/&gt;
+&lt;/bean&gt;
+
+&lt;bean name="spring:mbean=true" class="org.springframework.jmx.export.TestDynamicMBean"/&gt;</pre>
+<p>
+				这里，被称做 <code class="literal">spring:mbean=true</code> 的bean已经是一个有效的MBean了，将由Spring自动的注册。
+				缺省情况下，为JMX注册而自动发现的bean有它们自己的名字，用 <code class="classname">ObjectName</code> 来设置。
+				在 <a href="ch20s04.html" title="20.4.&#160;控制bean的 ObjectName
+		">第&#160;20.4&#160;节 “控制bean的 <code class="classname">ObjectName</code>
+		”</a> 章节里，更详细的描述了如何覆盖（override）这种行为。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-exporting-registration-behavior"></a>20.2.5.&#160;控制注册行为</h3></div></div></div>
+<p>
+				考虑这样一个场景，一个Spring的 <code class="classname">MBeanExporter</code> 试着用 <code class="classname">ObjectName</code>
+				<code class="literal">'bean:name=testBean1'</code> 往一个 <code class="classname">MBeanServer</code> 里注册一个<code class="classname">MBean</code>。
+				如果之前已经有一个 <code class="classname">MBean</code> 实例在同一个 <code class="classname">ObjectName</code> 下注册了，则缺省的行为是失败（并抛出一个 <code class="classname">InstanceAlreadyExistsException</code> 异常）。
+			</p>
+<p>
+				当向 <code class="classname">MBeanServer</code> 注册一个 <code class="classname">MBean</code> 的时候，可以控制发生哪些行为。
+				Spring对JMX的支持三种不同的注册行为，当注册进程找到一个已经在同一个 <code class="classname">ObjectName</code> 下注册过的<code class="classname">MBean</code>时，以此来控制注册行为。这些注册行为总结在下面的表中：
+			</p>
+<p>
+				</p>
+<div class="table">
+<a name="id565126"></a><p class="title"><b>表&#160;20.1.&#160;注册行为</b></p>
+<div class="table-contents"><table summary="注册行为" border="1">
+<colgroup>
+<col align="left">
+<col align="left">
+</colgroup>
+<thead><tr>
+<th align="center">注册行为</th>
+<th align="center">解释</th>
+</tr></thead>
+<tbody>
+<tr>
+<td align="left">
+									<p>REGISTRATION_FAIL_ON_EXISTING</p>
+								</td>
+<td align="left">
+									<p>
+										这是缺省的注册行为。如果一个 <code class="classname">MBean</code> 实例已经在同一个 <code class="classname">ObjectName</code> 下进行注册了，则正在注册中的这个 <code class="classname">MBean</code> 将不会注册，同时抛出 <code class="classname">InstanceAlreadyExistsException</code> 异常，已经存在的 <code class="classname">MBean</code> 不会受到影响。
+									</p>
+								</td>
+</tr>
+<tr>
+<td align="left">
+									<p>REGISTRATION_IGNORE_EXISTING</p>
+								</td>
+<td align="left">
+									<p>
+										如果一个 <code class="classname">MBean</code> 实例已经在同一个 <code class="classname">ObjectName</code> 下进行注册了，正在注册的 <code class="classname">MBean</code> 将 <span class="emphasis"><em>不</em></span> 被注册，已经存在的 <code class="classname">MBean</code> 不受影响，不会有 <code class="classname">Exception</code> 抛出。
+									</p>
+									<p>
+										当多个应用程序想在一个共享 <code class="classname">MBeanServer</code> 中共享一个公共 <code class="classname">MBean</code> 时，这个行为很有用。
+									</p>
+								</td>
+</tr>
+<tr>
+<td align="left">
+									<p>REGISTRATION_REPLACE_EXISTING</p>
+								</td>
+<td align="left">
+									<p>
+										如果一个 <code class="classname">MBean</code> 实例已经在同一个 <code class="classname">ObjectName</code> 下进行注册了，现存的已经注册过的<code class="classname">MBean</code>将被注销掉，新的 <code class="classname">MBean</code> 将代替原来的进行注册（新的 <code class="classname">MBean</code> 有效的替换之前的那个实例）。
+									</p>
+								</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p><br class="table-break">
+			</p>
+<p>
+				上述各值（分别是 <code class="literal">REGISTRATION_FAIL_ON_EXISTING</code>、
+	            <code class="literal">REGISTRATION_IGNORE_EXISTING</code> 和 
+	            <code class="literal">REGISTRATION_REPLACE_EXISTING</code>）作为常数定义在类 <code class="classname">MBeanRegistrationSupport</code> 中（类 <code class="classname">MBeanExporter</code> 继承自这个超类）。如果你想改变缺省注册行为，只需要在你的 <code class="classname">MBeanExporter</code> 的定义中简单的把属性 <code class="literal">registrationBehaviorName</code> 设置成这些值中的一个就可以了。
+			</p>
+<p>
+				下面的例子说明了如何从缺省的注册行为改变为 <code class="literal">REGISTRATION_REPLACE_EXISTING</code> 行为。
+			</p>
+<pre class="programlisting">&lt;beans&gt;
+
+    &lt;bean id="exporter" class="org.springframework.jmx.export.MBeanExporter"&gt;
+        &lt;property name="beans"&gt;
+            &lt;map&gt;
+                &lt;entry key="bean:name=testBean1" value-ref="testBean"/&gt;
+            &lt;/map&gt;
+        &lt;/property&gt;
+        &lt;property name="registrationBehaviorName" value="REGISTRATION_REPLACE_EXISTING"/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="testBean" class="org.springframework.jmx.JmxTestBean"&gt;
+        &lt;property name="name" value="TEST"/&gt;
+        &lt;property name="age" value="100"/&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;</pre>
+</div>
+</div></body>
+</html>

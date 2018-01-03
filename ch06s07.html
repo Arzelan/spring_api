@@ -1,0 +1,36 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>6.7.&#160;编程方式创建@AspectJ代理</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">
+<link rel="prev" href="ch06s06.html" title="6.6.&#160;代理机制">
+<link rel="next" href="ch06s08.html" title="6.8.&#160;在Spring应用中使用AspectJ">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="aop-aspectj-programmatic"></a>6.7.&#160;编程方式创建@AspectJ代理</h2></div></div></div>
+<p>
+		除了在配置文件中使用 &lt;aop:config&gt; 或者 &lt;aop:aspectj-autoproxy&gt; 来声明切面。
+		同样可以通过编程方式来创建代理通知（advise）目标对象。关于Spring AOP API的详细介绍，请参看下一章。这里我们重点介绍自动创建代理。
+		</p>
+<p>
+		类 <code class="classname">org.springframework.aop.aspectj.annotation.AspectJProxyFactory</code>
+		可以为@AspectJ切面的目标对象创建一个代理。该类的基本用法非常简单，示例如下。请参看Javadoc获取更详细的信息。
+		</p>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">// create a factory that can generate a proxy for the given target object</span></em>
+AspectJProxyFactory factory = new AspectJProxyFactory(targetObject); 
+
+<em class="lineannotation"><span class="lineannotation">// add an aspect, the class must be an @AspectJ aspect
+// you can call this as many times as you need with different aspects</span></em>
+factory.addAspect(SecurityManager.class);
+
+<em class="lineannotation"><span class="lineannotation">// you can also add existing aspect instances, the type of the object supplied must be an @AspectJ aspect</span></em>
+factory.addAspect(usageTracker);	
+
+<em class="lineannotation"><span class="lineannotation">// now get the proxy object...</span></em>
+MyInterfaceType proxy = factory.getProxy();</pre>
+</div></body>
+</html>

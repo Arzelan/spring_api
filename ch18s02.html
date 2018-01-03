@@ -1,0 +1,66 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>18.2.&#160;访问EJB</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch18.html" title="第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成">
+<link rel="prev" href="ch18.html" title="第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成">
+<link rel="next" href="ch18s03.html" title="18.3.&#160;使用Spring提供的辅助类实现EJB组件">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="ejb-access"></a>18.2.&#160;访问EJB</h2></div></div></div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="ejb-access-concepts"></a>18.2.1.&#160;概念</h3></div></div></div>
+<p>为了调用一个本地或者远程无状态session bean上的方法，通常客户端的代码必须进行JNDI查找，获取(本地或远程的)EJB Home对象，然后调用该对象的"create"方法，才能得到实际的(本地或远程的)EJB对象。如此一来，调用的方法比调用EJB组件本身的方法还要多。</p>
+<p>为了避免重复的底层代码，很多EJB应用使用了服务定位器(Service Locator)和业务委托(Bussiness Delegate)模式，这样要比在客户端代码中到处都进行JNDI查找要好些，不过它们的常见实现都有严重的缺陷。例如：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>通常如果代码依赖于服务定位器或业务代理单件来使用EJB，则很难对其进行测试。</p></li>
+<li><p>如果只使用了服务定位器模式而不使用业务委托模式，应用程序代码仍然需要调用EJB Home组件的create方法，并且要处理由此产生的异常。这样代码依然存在和EJB API的耦合并感染了EJB编程模型的复杂性。</p></li>
+<li><p>实现业务委托模式通常会导致大量的冗余代码，因为对于EJB组件的同一个方法，我们不得不编写很多方法去调用它。</p></li>
+</ul></div>
+<p>Spring的解决方法是允许用户创建并使用只要很少代码量的业务委托代理对象，一般在Spring的容器里配置。不再需要编写额外的服务定位器或JNDI查找的代码，以及手写的业务委托对象里面冗余的方法，除非它们可以带来实质性的好处。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="ejb-access-local"></a>18.2.2.&#160;访问本地的无状态Session Bean(SLSB)</h3></div></div></div>
+<p>假设有一个web控制器需要使用本地EJB组件。我们将遵循最佳实践经验，使用EJB的业务方法接口(Business Methods Interface)模式，这样，这个EJB组件的本地接口就扩展了非EJB特定的业务方法接口。让我们把这个业务方法接口称为MyComponent。</p>
+<pre class="programlisting">public interface MyComponent {
+    ...
+}</pre>
+<p>使用业务方法接口模式的一个主要原因就是为了保证本地接口和bean的实现类之间的方法签名自动同步。另外一个原因是它使得稍后我们更容易改用基于POJO(简单Java对象)的服务实现方式，只要这样的改变是有意义的。当然，我们也需要实现本地Home接口，并提供一个Bean实现类，用它来实现接口<code class="classname">SessionBean</code>和业务方法接口<code class="classname">MyComponent</code>。现在为了把我们Web层的控制器和EJB的实现链接起来，我们唯一要写的Java代码就是在控制器上发布一个类型为<code class="classname">MyComponent</code>的setter方法。这样就可以把这个引用保存在控制器的一个实例变量中。</p>
+<pre class="programlisting">private MyComponent myComponent;
+
+public void setMyComponent(MyComponent myComponent) {
+    this.myComponent = myComponent;
+}</pre>
+<p>然后我们可以在控制器的任意业务方法里面使用这个实例变量。假设我们现在从Spring容器获得该控制器对象，我们就可以(在同一个上下文中)配置一个<code class="literal">LocalStatelessSessionProxyFactoryBean</code>的实例，它将作为EJB组件的代理对象。这个代理对象的配置和控制器属性<code class="literal">myComponent</code>的设置是使用一个配置项完成的，如下所示：</p>
+<pre class="programlisting">&lt;bean id="myComponent"
+      class="org.springframework.ejb.access.LocalStatelessSessionProxyFactoryBean"&gt;
+  &lt;property name="jndiName" value="myComponent"/&gt;
+  &lt;property name="businessInterface" value="com.mycom.MyComponent"/&gt;
+&lt;/bean&gt;
+
+&lt;bean id="myController" class="com.mycom.myController"&gt;
+  &lt;property name="myComponent" ref="myComponent"/&gt;
+&lt;/bean&gt;</pre>
+<p>这些看似简单的代码背后有很多复杂的处理，受益于Spring的AOP框架，你甚至不必知道这些概念，就可以享用它的成果。Bean <code class="literal">myComponent</code>的定义创建了一个EJB组件的代理对象，它实现了业务方法接口。这个EJB组件的本地Home对象在启动的时候就被放到了缓存中，所以只需要执行一次JNDI查找。每当EJB组件被调用的时候，这个代理对象就调用本地EJB组件的<code class="literal">classname</code>方法，并调用EJB组件上相应的业务方法。</p>
+<p>在Bean <code class="literal">myController</code>的定义中，控制器类的属性<code class="literal">myController</code>的值被设置为上述的EJB代理对象。</p>
+<p>这种EJB组件访问机制大大简化了应用程序代码：Web层(或其他EJB客户端)的代码不再依赖于EJB组件的使用。如果我们想把这个EJB的引用替换为一个POJO，或者是模拟对象或其他测试桩架，我们只需要简单地修改Bean <code class="literal">myComponent</code>的定义而无需修改一行Java代码，此外，我们也不再需要在应用程序中编写任何JNDI查找或其它EJB相关的代码。</p>
+<p>真实应用中的评测和经验表明，这种方法(尽管其中使用了反射来调用目标EJB组件的方法)的性能开销是最小的，通常使用中几乎觉察不出。虽然如此，仍请牢记我们不要过多地调用EJB组件，因为应用服务器中EJB的基础框架毕竟会带来性能损失。</p>
+<p>关于JNDI查找有一点需要特别注意。在一个Bean容器中，这个类通常最好用作单件(没理由使之成为原型)。不过，如果这个Bean容器会预先实例化单件(XML <code class="classname">ApplicationContext</code>的几种变体就会这样)，并在EJB容器加载目标EJB前被加载，我们就可能会遇到问题。因为JNDI查找会在该类的init方法中被执行然后缓存结果，但是此时EJB还没有被绑定到目标位置。解决方案就是不要预先实例化这个工厂对象，而让它在第一次被用到的时候再创建，在XML容器中，这是通过属性<code class="literal">lazy-init</code>来控制的。</p>
+<p>尽管大部分Spring的用户不会对这些感兴趣，但那些对EJB进行AOP编程工作的用户则想看看<code class="classname">LocalSlsbInvokerInterceptor</code>。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="ejb-access-remote"></a>18.2.3.&#160;访问远程SLSB</h3></div></div></div>
+<p>基本上访问远程EJB与访问本地EJB差别不大，只是前者使用的是<code class="classname">SimpleRemoteStatelessSessionProxyFactoryBean</code>。当然，无论是否使用Spring，远程调用的语义都相同；对于使用场景和错误处理来说，调用另一台计算机上不同虚拟机中对象的方法和本地调用会有所不同。</p>
+<p>与不使用Spring方式的EJB客户端相比，Spring的EJB客户端有一个额外的好处。通常如果要想能随意的在本地和远程EJB调用之间切换EJB客户端代码，是会产生问题的。这是因为远程接口的方法需要声明他们抛出的<code class="classname">RemoteException</code>方法
+，然后客户端代码必须处理这种异常，但是本地接口的方法却不需要这样。如果要把针对本地EJB的代码改为访问远程EJB，就需要修改客户端代码，增加处理远程异常的代码，反之要么保留这些用不上的远程异常处理代码要么就需要进行修改以去除这些异常处理代码。使用Spring的远程EJB代理，我们就不再需要在业务方法接口和EJB的实现代码中声明要抛出的<code class="classname">RemoteException</code>，而是定义一个相似的远程接口，唯一不同就是它抛出的是<code class="classname">RemoteException</code>， 然后交给代理对象去动态的协调这两个接口。也就是说，客户端代码不再需要与
+<code class="classname">RemoteException</code>这个checked exception打交道，实际上在EJB调用中被抛出的<code class="classname">RemoteException</code>都将被以unchecked exception <code class="classname">RemoteAccessException</code>的方式重新抛出，它是<code class="classname">RuntimeException</code>的一个子类。这样目标服务就可以在本地EJB或远程EJB(甚至POJO)之间随意地切换，客户端不需要关心甚至根本不会觉察到这种切换。当然，这些都是可选的，没有什么阻止你在你的业务接口中声明<code class="classname">RemoteExceptions</code>异常。</p>
+</div>
+</div></body>
+</html>

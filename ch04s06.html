@@ -1,0 +1,40 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>4.6.&#160;把Resource作为属性来配置</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch04.html" title="第&#160;4&#160;章&#160;资源">
+<link rel="prev" href="ch04s05.html" title="4.5.&#160; ResourceLoaderAware 接口">
+<link rel="next" href="ch04s07.html" title="4.7.&#160;Application context 和Resource 路径">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id460270"></a>4.6.&#160;把<code class="interfacename">Resource</code>作为属性来配置</h2></div></div></div>
+<p>如果bean自身希望通过一些动态方式决定和提供资源路径，那么让这个bean通过 <code class="interfacename">ResourceLoader</code>
+			接口去载入资源就很有意义了。考虑一个载入某类模板的例子，其中需要哪种特殊类型由用户的角色决定。
+			如果同时资源是静态的，完全不使用 <code class="interfacename">ResourceLoader</code> 接口很有意义，
+			这样只需让这些bean暴露所需的 <code class="interfacename">Resource</code> 属性，并保证他们会被注入。
+		</p>
+<p>让注入这些属性变得比较繁琐的原因是，所有的application context注册并使用了能把 <code class="classname">String</code>
+			路径变为 <code class="interfacename">Resource</code> 对象的特殊 <code class="interfacename">PropertyEditor</code>
+			JavaBeans。因此如果 <code class="literal">myBean</code> 有 <code class="interfacename">Resource</code> 类型的模板属性，
+			那它就能够使用简单的字符串配置该资源，如下所示：
+		</p>
+<pre class="programlisting">bean id="myBean" class="..."&gt;
+  &lt;property name="template" value="some/resource/path/myTemplate.txt"/&gt;
+&lt;/bean&gt;</pre>
+<p>可以看到资源路径没有前缀，因为application context本身要被作为 <code class="interfacename">ResourceLoader</code>
+			使用，这个资源会被载入为<code class="classname">ClassPathResource</code>、
+			<code class="literal">FileSystemResource</code>、
+			<code class="classname">ServletContextResource</code>等等，这取决于context类型。
+		</p>
+<p>
+			如果有必要强制使用特殊的 <code class="interfacename">Resource</code> 类型，那你就可以使用前缀。下面的两个例子说明了如何强制使用 <code class="classname">ClassPathResource</code> 和
+			<code class="classname">UrlResource</code> (其中的第二个被用来访问文件系统中的文件)。
+		</p>
+<pre class="programlisting">&lt;property name="template" value="classpath:some/resource/path/myTemplate.txt"&gt;</pre>
+<pre class="programlisting">&lt;property name="template" value="file:/some/resource/path/myTemplate.txt"/&gt;</pre>
+</div></body>
+</html>

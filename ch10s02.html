@@ -1,0 +1,49 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>10.2.&#160;一致的异常层次</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch10.html" title="第&#160;10&#160;章&#160;DAO支持">
+<link rel="prev" href="ch10.html" title="第&#160;10&#160;章&#160;DAO支持">
+<link rel="next" href="ch10s03.html" title="10.3.&#160;一致的DAO支持抽象类">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="dao-exceptions"></a>10.2.&#160;一致的异常层次</h2></div></div></div>
+<p>
+			Spring提供了一种方便的方法，把特定于某种技术的异常，如<code class="classname">SQLException</code>，
+			转化为自己的异常，这种异常属于以<code class="classname">DataAccessException</code>
+			为根的异常层次。这些异常封装了原始异常对象，这样就不会有丢失任何错误信息的风险。
+		</p>
+<p>
+			除了对JDBC异常的封装，Spring也对Hibernate异常进行了封装，把它们从一种专有的checked异常
+			（Hibernate3.0以前的版本），转化为一系列抽象的运行时异常。对JDO也是这样。
+			它可以让你轻松处理大多数持久化异常（这些异常大多是不可恢复的，而且只出现在特定
+			的层次），而不再需要讨厌的样板式catch/throw代码块和异常声明。你仍然可以在需要
+			的地方捕获并处理这些异常。就像我们上面提到的，JDBC异常（包括特定于某种数据库
+			方言的异常）也可以被转化为同样的异常层次，这意味着你可以在一致的编程模型下，通
+			过JDBC来执行某些操作。
+		</p>
+<p>
+			上述情况适用于各种使用模板方式的ORM访问框架。如果使用拦截器方式，你在应用中
+			就得自己小心处理<code class="classname">HibernateException</code>、
+			<code class="classname">JDOException</code>等，最好是委托给
+			<code class="classname">SessionFactoryUtils</code>的
+			<code class="literal">convertHibernateAccessException</code>、
+			<code class="literal">convertJdoAccessException</code>等方法。这些方法可以把相应的异常转
+			化为与<code class="literal">org.springframework.dao</code>中定义的异常层次相兼容的异常。
+			其中<code class="classname">JDOException</code>属unchecked异常，它们则被简单地抛出，
+			尽管这在异常处理方面牺牲了通用的DAO抽象。
+		</p>
+<p>
+			下图描述了Spring使用的异常层次：
+		</p>
+<div class="mediaobject"><img src="images/DataAccessException.gif"></div>
+<p>
+			（注意上图所包含的异常类只是整个庞大的<code class="classname">DataAccessException</code>
+			异常层次中的一部分。）
+		</p>
+</div></body>
+</html>

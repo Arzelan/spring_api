@@ -1,0 +1,176 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>19.4.&#160;接收消息</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch19.html" title="第&#160;19&#160;章&#160;JMS">
+<link rel="prev" href="ch19s03.html" title="19.3.&#160;发送一条消息">
+<link rel="next" href="ch20.html" title="第&#160;20&#160;章&#160;JMX">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id561868"></a>19.4.&#160;接收消息</h2></div></div></div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id561874"></a>19.4.1.&#160;同步接收</h3></div></div></div>
+<p>虽然JMS一般都和异步处理相关，但它也可以同步的方式使用消息。可重载的<code class="methodname">receive(..)</code>方法提供了这种功能。在同步接收中，接收线程被阻塞直至获得一个消息，有可能出现线程被无限阻塞的危险情况。属性<span class="property">receiveTimeout</span>指定了接收器可等待消息的延时时间。
+        </p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jms-asynchronousMessageReception"></a>19.4.2.&#160;异步接收 - 消息驱动的POJOs</h3></div></div></div>
+<p>类似于EJB世界里流行的消息驱动bean(MDB)，消息驱动POJO(MDP)作为JMS消息的接收器。MDP的一个约束(但也请看下面的有关<code class="interfacename">javax.jms.MessageListener</code>类的讨论)是它必须实现<code class="interfacename">javax.jms.MessageListener</code>接口。另外当你的POJO将以多线程的方式接收消息时必须确保你的代码是线程-安全的。
+  		</p>
+<p>以下是MDP的一个简单实现:</p>
+<pre class="programlisting">import javax.jms.JMSException;
+import javax.jms.Message;
+import javax.jms.MessageListener;
+import javax.jms.TextMessage;
+
+public class ExampleListener implements MessageListener {
+
+  public void onMessage(Message message) {
+    if (message instanceof TextMessage) {
+      try {
+        System.out.println(((TextMessage) message).getText());
+      } catch (JMSException ex) {
+        throw new RuntimeException(ex);
+      }
+    } else {
+      throw new IllegalArgumentException("Message must be of type TextMessage");
+    }
+  }
+}</pre>
+<p>一旦你实现了<code class="interfacename">MessageListener</code>后就可以创建一个消息侦听容器。</p>
+<p>请看下面例子是如何定义和配置一个随Sping发行的消息侦听容器的(这个例子用<code class="classname">DefaultMessageListenerContainer</code>)</p>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">&lt;!-- this is the Message Driven POJO (MDP) --&gt;</span></em>
+&lt;bean id="messageListener" class="jmsexample.ExampleListener" /&gt;
+
+<em class="lineannotation"><span class="lineannotation">&lt;!-- and this is the attendant message listener container --&gt;</span></em>
+&lt;bean id="listenerContainer"
+  class="org.springframework.jms.listener.DefaultMessageListenerContainer"&gt;
+  &lt;property name="concurrentConsumers" value="5"/&gt;
+  &lt;property name="connectionFactory" ref="connectionFactory" /&gt;
+  &lt;property name="destination" ref="destination" /&gt;
+  <span class="bold"><strong>&lt;property name="messageListener" ref="messageListener" /&gt;</strong></span>
+&lt;/bean&gt;</pre>
+<p>关于各个消息侦听容器实现的特色请参阅相关的Spring Javadoc文档。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id562018"></a>19.4.3.&#160;<code class="interfacename">SessionAwareMessageListener</code> 接口</h3></div></div></div>
+<p><code class="interfacename">SessionAwareMessageListener</code>接口是一个Spring专门用来提供类似于JMS <code class="interfacename">MessageListener</code>的接口，也提供了从接收<code class="interfacename">Message</code>来访问JMS <code class="interfacename">Session</code>的消息处理方法。
+</p>
+<pre class="programlisting">package org.springframework.jms.listener;
+
+public interface SessionAwareMessageListener {
+
+    void onMessage(Message message, Session session) <span class="bold"><strong>throws JMSException</strong></span>;
+}</pre>
+<p>如果你希望你的MDP可以响应所有接收到的消息(使用<code class="literal">onMessage(Message, Session)</code>方法提供的<code class="interfacename">Session</code>)那么你可以选择让你的MDP实现这个接口(优先于标准的JMS <code class="interfacename">MessageListener</code>接口)。所有随Spring发行的支持MDP的消息侦听容器都支持<code class="interfacename">MessageListener</code>或<code class="interfacename">SessionAwareMessageListener</code>接口的实现。要注意的是实现了<code class="interfacename">SessionAwareMessageListener</code>接口的类通过接口和Spring有了耦合。是否选择使用它完全取决于开发者或架构师。
+        </p>
+<p>请注意<code class="interfacename">SessionAwareMessageListener</code>接口的<code class="literal">'onMessage(..)'</code>方法会抛出<code class="classname">JMSException</code>异常。和标准JMS <code class="interfacename">MessageListener</code>接口相反，当使用<code class="interfacename">SessionAwareMessageListener</code>接口时，客户端代码负责处理任何抛出的异常。
+        </p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id562142"></a>19.4.4.&#160;<code class="classname">MessageListenerAdapter</code></h3></div></div></div>
+<p><code class="classname">MessageListenerAdapter</code>类是Spring的异步支持消息类中的不变类(final class)：简而言之，它允许你几乎将<span class="emphasis"><em>任意</em></span>一个类做为MDP显露出来(当然有某些限制)。
+  	    </p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>如果你使用JMS 1.0.2 API，你将使用和<code class="classname">MessageListenerAdapter</code>一样功能的类<code class="classname">MessageListenerAdapter102</code>。
+  	        </p>
+</div>
+<p>考虑如下接口定义。注意虽然这个接口既不是从<code class="interfacename">MessageListener</code>也不是从<code class="interfacename">SessionAwareMessageListener</code>继承来得，但通过<code class="classname">MessageListenerAdapter</code>类依然可以当作一个MDP来使用。同时也请注意各种消息处理方法是如何根据他们可以接收并处理消息的内容来进行强类型匹配的。
+        </p>
+<pre class="programlisting">public interface MessageDelegate {
+
+    void handleMessage(String message);
+
+    void handleMessage(Map message);
+
+    void handleMessage(byte[] message);
+
+    void handleMessage(Serializable message);
+}</pre>
+<pre class="programlisting">public class DefaultMessageDelegate implements MessageDelegate {
+    <em class="lineannotation"><span class="lineannotation">// implementation elided for clarity...</span></em>
+}</pre>
+<p>特别请注意，上面的<code class="interfacename">MessageDelegate</code>接口(上文中<code class="classname">DefaultMessageDelegate</code>类)的实现完全<span class="emphasis"><em>不</em></span>依赖于JMS。它是一个真正的POJO，我们可以通过如下配置把它设置成MDP。
+        </p>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">&lt;!-- this is the Message Driven POJO (MDP) --&gt;</span></em>
+<span class="bold"><strong>&lt;bean id="messageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter"&gt;
+    &lt;constructor-arg&gt;
+        &lt;bean class="jmsexample.DefaultMessageDelegate"/&gt;
+    &lt;/constructor-arg&gt;
+&lt;/bean&gt;</strong></span>
+
+<em class="lineannotation"><span class="lineannotation">&lt;!-- and this is the attendant message listener container... --&gt;</span></em>
+&lt;bean id="listenerContainer"
+  class="org.springframework.jms.listener.DefaultMessageListenerContainer"&gt;
+  &lt;property name="concurrentConsumers" value="5"/&gt;
+  &lt;property name="connectionFactory" ref="connectionFactory" /&gt;
+  &lt;property name="destination" ref="destination" /&gt;
+  <span class="bold"><strong>&lt;property name="messageListener" ref="messageListener" /&gt;</strong></span>
+&lt;/bean&gt;</pre>
+<p>下面是另外一个只能处理接收JMS<code class="interfacename">TextMessage</code>消息的MDP示例。注意消息处理方法是如何实际调用<code class="literal">'receive'</code>(在<code class="classname">MessageListenerAdapter</code>中默认的消息处理方法的名字是<code class="literal">'handleMessage'</code>)的，但是它是可配置的(你下面就将看到)。注意<code class="literal">'receive(..)'</code>方法是如何使用强制类型来只接收和处理JMS <code class="interfacename">TextMessage</code>消息的。
+</p>
+<pre class="programlisting">public interface TextMessageDelegate {
+
+    void receive(TextMessage message);
+}</pre>
+<pre class="programlisting">public class DefaultTextMessageDelegate implements TextMessageDelegate {
+    <em class="lineannotation"><span class="lineannotation">// implementation elided for clarity...</span></em>
+}</pre>
+<p>辅助的<code class="classname">MessageListenerAdapter</code>类配置文件类似如下：
+        </p>
+<pre class="programlisting">&lt;bean id="messageListener" class="org.springframework.jms.listener.adapter.MessageListenerAdapter"&gt;
+    &lt;constructor-arg&gt;
+        &lt;bean class="jmsexample.DefaultTextMessageDelegate"/&gt;
+    &lt;/constructor-arg&gt;
+    &lt;property name="defaultListenerMethod" value="receive"/&gt;
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- we <span class="bold"><strong>don't</strong></span> want automatic message context extraction --&gt;</span></em>
+    &lt;property name="messageConverter"&gt;
+        &lt;null/&gt;
+    &lt;/property&gt;
+&lt;/bean&gt;</pre>
+<p>请注意，如果上面的<code class="literal">'messageListener'</code>收到一个不是<code class="interfacename">TextMessage</code>类型的JMS <code class="interfacename">Message</code>，将会产生一个<code class="classname">IllegalStateException</code>异常(随之产生的其他异常只被捕获而不处理)。
+        </p>
+<p><code class="classname">MessageListenerAdapter</code>还有一个功能就是如果处理方法返回一个非空值，它将自动返回一个响应<code class="interfacename">消息</code>。
+        </p>
+<p>请看下面的接口及其实现：</p>
+<pre class="programlisting">public interface ResponsiveTextMessageDelegate {
+
+    <em class="lineannotation"><span class="lineannotation"><span class="bold"><strong>// notice the return type...</strong></span></span></em>
+    String receive(TextMessage message);
+}</pre>
+<pre class="programlisting">public class DefaultResponsiveTextMessageDelegate implements ResponsiveTextMessageDelegate {
+    <em class="lineannotation"><span class="lineannotation">// implementation elided for clarity...</span></em>
+}</pre>
+<p>如果上面的<code class="classname">DefaultResponsiveTextMessageDelegate</code>和<code class="classname">MessageListenerAdapter</code>联合使用，那么任意从执行<code class="literal">'receive(..)'</code>方法返回的非空值都将(缺省情况下)转换成一个<code class="interfacename">TextMessage</code>。这个返回的<code class="interfacename">TextMessage</code>将被发送到原来的<code class="interfacename">Message</code>中JMS Reply-To属性定义的<code class="interfacename">目的地</code>(如果存在)，或者是<code class="classname">MessageListenerAdapter</code>设置(如果配置了)的缺省<code class="interfacename">目的地</code>；如果没有定义<code class="interfacename">目的地</code>，那么将产生一个<code class="classname">InvalidDestinationException</code>异常(此异常将不会只被捕获而不处理，它<span class="emphasis"><em>将</em></span>沿着调用堆栈上传)。
+        </p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id562537"></a>19.4.5.&#160;事务中的多方参与</h3></div></div></div>
+<p>参与到事务中只需要一点微小的改动。你需要创建一个事务管理器，并且注册到一个可以参与事务的子类中(<code class="classname">DefaultMessageListenerContainer</code>或<code class="classname">ServerSessionMessageListenerContainer</code>)。
+  		</p>
+<p>为了创建事务管理器，你需要创建一个<code class="classname">JmsTransactionManager</code>的实例并提供给它一个支持XA事务功能的连接工厂。
+  		</p>
+<pre class="programlisting">&lt;bean id="transactionManager" class="org.springframework.jms.connection.JmsTransactionManager"&gt;
+  &lt;property name="connectionFactory" ref="connectionFactory" /&gt;
+&lt;/bean&gt;</pre>
+<p>然后你只需要把它加入到我们先前的容器配置中。容器会处理其他的事情。</p>
+<pre class="programlisting">&lt;bean id="listenerContainer" class="org.springframework.jms.listener.DefaultMessageListenerContainer"&gt;
+  &lt;property name="concurrentConsumers" value="5" /&gt;
+  &lt;property name="connectionFactory" ref="connectionFactory" /&gt;
+  &lt;property name="destination" ref="destination" /&gt;
+  &lt;property name="messageListener" ref="messageListener" /&gt;
+  <span class="bold"><strong>&lt;property name="transactionManager" ref="transactionManager" /&gt;</strong></span>
+&lt;/bean&gt;</pre>
+</div>
+</div></body>
+</html>

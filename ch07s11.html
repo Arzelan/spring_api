@@ -1,0 +1,20 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>7.11.&#160;定义新的通知类型</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch07.html" title="第&#160;7&#160;章&#160;Spring AOP APIs">
+<link rel="prev" href="ch07s10.html" title="7.10.&#160;使用TargetSources">
+<link rel="next" href="ch07s12.html" title="7.12.&#160;更多资源">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="aop-extensibility"></a>7.11.&#160;定义新的<code class="interfacename">通知</code>类型</h2></div></div></div>
+<p>Spring AOP被设计为可扩展的。通过在内部使用拦截实现策略，你可以支持已有的环绕通知，前置通知，异常通知和后置通知之外的任意通知类型，它是开箱即用的。</p>
+<p><code class="literal">org.springframework.aop.framework.adapter</code>包是一个SPI包，它允许添加新的自定义通知类型而无需修改核心框架。对于自定义<code class="interfacename">Advice</code>类型的唯一的限制是它必须实现<code class="interfacename">org.aopalliance.aop.Advice</code>这个标记接口。
+</p>
+<p>请参考<code class="literal">org.springframework.aop.framework.adapter</code>包的Javadoc来了解进一步的信息。</p>
+</div></body>
+</html>

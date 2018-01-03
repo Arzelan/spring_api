@@ -1,0 +1,62 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;4&#160;章&#160;资源</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt01.html" title="部分&#160;I.&#160;核心技术">
+<link rel="prev" href="ch03s09.html" title="3.9.&#160;粘合代码和可怕的singleton">
+<link rel="next" href="ch04s02.html" title="4.2.&#160; Resource 接口">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="resources"></a>第&#160;4&#160;章&#160;资源</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch04.html#id458413">4.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch04s02.html">4.2. 
+			<code class="interfacename">Resource</code> 接口</a></span></dt>
+<dt><span class="section"><a href="ch04s03.html">4.3. 内置 <code class="interfacename">Resource</code> 实现</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch04s03.html#id459423">4.3.1. 
+				<code class="classname">UrlResource</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch04s03.html#id459528">4.3.2. 
+				<code class="classname">ClassPathResource</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch04s03.html#id459609">4.3.3. 
+				<code class="classname">FileSystemResource</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch04s03.html#id459642">4.3.4. 
+				<code class="classname">ServletContextResource</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch04s03.html#id459685">4.3.5. 
+				<code class="classname">InputStreamResource</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch04s03.html#id459753">4.3.6. 
+				<code class="classname">ByteArrayResource</code>
+			</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch04s04.html">4.4. <code class="interfacename">ResourceLoader</code>
+		</a></span></dt>
+<dt><span class="section"><a href="ch04s05.html">4.5. 
+			<code class="interfacename">ResourceLoaderAware</code> 接口</a></span></dt>
+<dt><span class="section"><a href="ch04s06.html">4.6. 把<code class="interfacename">Resource</code>作为属性来配置</a></span></dt>
+<dt><span class="section"><a href="ch04s07.html">4.7. Application context 和<code class="interfacename">Resource</code> 路径</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch04s07.html#id460435">4.7.1. 构造application context</a></span></dt>
+<dt><span class="section"><a href="ch04s07.html#id460649">4.7.2. Application context构造器中资源路径的通配符</a></span></dt>
+<dt><span class="section"><a href="ch04s07.html#resources-filesystemresource-caveats">4.7.3. 
+				<code class="classname">FileSystemResource</code> 提示</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id458413"></a>4.1.&#160;简介</h2></div></div></div>
+<p>Java标准的 <code class="classname">java.net.URL</code>接口和多种URL前缀处理类并不能很好地满足所有底层资源访问的需要。比如，还没有能从类路径或者<code class="classname">ServletContext</code> 的相对路径获得资源的标准URL实现。虽然能为特定的URL前缀注册新的处理类(类似已有前缀 <code class="literal">http:</code> 的处理类)，但是这样做通常比较复杂，而且URL接口还缺少一些有用的功能，比如检查指向的资源是否存在的方法。</p>
+</div>
+</div></body>
+</html>

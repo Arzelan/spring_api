@@ -1,0 +1,61 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>9.6.&#160;编程式事务管理</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+<link rel="prev" href="ch09s05.html" title="9.5.&#160;声明式事务管理">
+<link rel="next" href="ch09s07.html" title="9.7.&#160;选择编程式事务管理还是声明式事务管理">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="transaction-programmatic"></a>9.6.&#160;编程式事务管理</h2></div></div></div>
+<p>Spring提供两种方式的编程式事务管理：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>使用 <code class="classname">TransactionTemplate</code></p></li>
+<li><p>直接使用一个 <code class="interfacename">PlatformTransactionManager</code> 实现</p></li>
+</ul></div>
+<p>如果你选择编程式事务管理，Spring小组推荐你采用第一种方法（即使用 <code class="classname">TransactionTemplate</code>）。第二种方法类似使用JTA的 <code class="interfacename">UserTransaction</code> API （除了异常处理简单点儿）。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id495521"></a>9.6.1.&#160;使用 <code class="classname">TransactionTemplate</code></h3></div></div></div>
+<p><code class="classname">TransactionTemplate</code> 采用与Spring中别的 <span class="emphasis"><em>模板</em></span> 同样的方法，如 <code class="classname">JdbcTemplate</code> 和 <code class="classname">HibernateTemplate</code>。它使用回调机制，将应用代码从样板式的资源获取和释放代码中解放出来，不再有大量的try/catch/finally/try/catch代码块。同样，和别的模板类一样，<code class="classname">TransactionTemplate</code> 类的实例是线程安全的。</p>
+<p>必须在事务上下文中执行的应用代码看起来像这样：（注意使用 <code class="interfacename">TransactionCallback</code> 可以有返回值）</p>
+<pre class="programlisting">Object result = tt.execute(new TransactionCallback() {
+    public Object doInTransaction(TransactionStatus status) {
+        updateOperation1();
+        return resultOfUpdateOperation2();
+    }
+});</pre>
+<p>如果不需要返回值，更方便的方式是创建一个 <code class="classname">TransactionCallbackWithoutResult</code> 的匿名类，如下：</p>
+<pre class="programlisting">tt.execute(new TransactionCallbackWithoutResult() {
+    protected void doInTransactionWithoutResult(TransactionStatus status) {
+        updateOperation1();
+        updateOperation2();
+    }
+});</pre>
+<p>回调方法内的代码可以通过调用 <code class="interfacename">TransactionStatus</code> 对象的 <code class="literal">setRollbackOnly()</code> 方法来回滚事务。</p>
+<p>想要使用 <code class="classname">TransactionTemplate</code> 的应用类必须能访问一个 <code class="interfacename">PlatformTransactionManager</code>（典型情况下通过依赖注入提供）。这样的类很容易做单元测试，只需要引入一个 <code class="interfacename">PlatformTransactionManager</code> 的伪类或桩类。这里没有JNDI查找、没有 <code class="literal">静态</code> 诡计，它是一个如此简单的接口。像往常一样，使用Spring给你的单元测试带来极大地简化。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-programmatic-ptm"></a>9.6.2.&#160;使用 <code class="interfacename">PlatformTransactionManager</code>
+			</h3></div></div></div>
+<p>你也可以直接使用 <code class="interfacename">org.springframework.transaction.PlatformTransactionManager</code>的实现来管理事务。只需通过bean引用简单地传入一个 <code class="interfacename">PlatformTransactionManager</code> 实现，然后使用 <code class="interfacename">TransactionDefinition</code> 和 <code class="interfacename">TransactionStatus</code> 对象，你就可以启动一个事务，提交或回滚。</p>
+<pre class="programlisting">DefaultTransactionDefinition def = new DefaultTransactionDefinition();
+def.setPropagationBehavior(TransactionDefinition.PROPAGATION_REQUIRED);
+
+TransactionStatus status = txManager.getTransaction(def);
+try {
+    <em class="lineannotation"><span class="lineannotation">// execute your business logic here</span></em>
+}
+catch (MyException ex) {
+    txManager.rollback(status);
+    throw ex;
+}
+txManager.commit(status);</pre>
+</div>
+</div></body>
+</html>

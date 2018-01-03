@@ -1,0 +1,109 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>B.4.&#160;Coding a BeanDefinitionParser</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="apb.html" title="附录&#160;B.&#160;Extensible XML authoring">
+<link rel="prev" href="apbs03.html" title="B.3.&#160;Coding a NamespaceHandler">
+<link rel="next" href="apbs05.html" title="B.5.&#160;Registering the handler and the schema">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id598380"></a>B.4.&#160;Coding a <code class="interfacename">BeanDefinitionParser</code></h2></div></div></div>
+<p>
+				As you can see, the namespace handler shown above registers so-called <code class="literal">BeanDefinitionParsers</code>.
+				A <code class="interfacename">BeanDefinitionParser</code> in this case will be consulted if the namespace handler
+				encounters an XML element of the type that has been mapped to this specific bean definition parser (which
+				is <code class="literal">dateformat</code> in this case).
+				In other words, the <code class="interfacename">BeanDefinitionParser</code> is responsible for parsing
+				one distinct top-level XML element defined in the schema. 
+				In the parser, we'll have access to the XML element (and its subelements)
+				and the <code class="classname">ParserContext</code>. The latter can be used to obtain a reference
+				to the <code class="interfacename">BeanDefinitionRegistry</code>, for instance, as seen in the
+				example below.
+			</p>
+<pre class="programlisting">package org.springframework.samples.xml;
+
+import java.text.SimpleDateFormat;
+
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.beans.factory.config.BeanDefinitionHolder;
+import org.springframework.beans.factory.support.BeanDefinitionReaderUtils;
+import org.springframework.beans.factory.support.RootBeanDefinition;
+import org.springframework.beans.factory.xml.BeanDefinitionParser;
+import org.springframework.beans.factory.xml.ParserContext;
+import org.springframework.util.StringUtils;
+import org.w3c.dom.Element;
+
+public class SimpleDateFormatBeanDefinitionParser implements BeanDefinitionParser {
+   
+   public BeanDefinition parse(Element element, ParserContext parserContext) {
+      
+      // create a RootBeanDefinition that will serve as configuration
+      // holder for the 'pattern' attribute and the 'lenient' attribute<span class="bold"><strong>
+      RootBeanDefinition beanDef = new RootBeanDefinition();
+      beanDef.setBeanClass(SimpleDateFormat.class);</strong></span>      
+
+      <em class="lineannotation"><span class="lineannotation">// never <code class="literal">null</code> since the schema requires it </span></em>
+      String pattern = element.getAttribute("pattern");<span class="bold"><strong>
+      beanDef.getConstructorArgumentValues().addGenericArgumentValue(pattern);</strong></span>
+
+      String lenientString = element.getAttribute("lenient");
+      if (StringUtils.hasText(lenientString)) {
+         // won't throw exception if validation is turned on (boolean type set in schema)         <span class="bold"><strong>
+         beanDef.getPropertyValues().addPropertyValue("lenient", new Boolean(lenientString));</strong></span>
+      }
+      
+      <em class="lineannotation"><span class="lineannotation">// retrieve the ID attribute that will serve as the bean identifier in the context </span></em>
+      String id = element.getAttribute("id");
+      
+      // create a bean definition holder to be able to register the
+      // bean definition with the bean definition registry
+      // (obtained through the ParserContext)
+      BeanDefinitionHolder holder = new BeanDefinitionHolder(beanDef, id);
+      
+      // register the BeanDefinitionHolder (which contains the bean definition)
+      // with the BeanDefinitionRegistry<span class="bold"><strong>
+      BeanDefinitionReaderUtils.registerBeanDefinition(holder, parserContext.getRegistry());</strong></span>
+      
+      return beanDef;
+   }
+}</pre>
+<p>
+				</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+					In the example here, we're defining a <code class="interfacename">BeanDefinition</code> and registering it
+					with the <code class="interfacename">BeanDefinitionRegistry</code>. Note that you don't necessarily have to 
+					register a bean definition with the registry or return a bean definition
+					from the <code class="literal">parse()</code> method. You are free to do whatever you
+					want with the information given to you (i.e. the XML element) and the
+					<code class="classname">ParserContext</code>.
+				</div>
+<p>
+			</p>
+<p>
+				The <code class="classname">ParserContext</code> provides access to following properties:
+				</p>
+<div class="itemizedlist"><ul type="disc" compact>
+<li><p><code class="literal">readerContext</code> - provides access
+							to the bean factory and also to the <code class="interfacename">NamespaceHandlerResolver</code>, which
+							can optionally be used to resolve nested namespaces.
+						</p></li>
+<li><p><code class="literal">parserDelegate</code> - controlling component
+						that drives the parsing of (parts of) the configuration file. Typically
+						you don't need to access this.</p></li>
+<li><p><code class="literal">registry</code> - the <code class="interfacename">BeanDefinitionRegistry</code>
+						that allows you to register newly created <code class="interfacename">BeanDefinition</code> instances with.
+						</p></li>
+<li><p><code class="literal">nested</code> - indicates whether or the XML element that is currently
+						being processed is part of a outer bean definition (in other words, it's defined similar
+						to traditional inner-beans).
+						</p></li>
+</ul></div>
+<p>
+			</p>
+</div></body>
+</html>

@@ -1,0 +1,95 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;11&#160;章&#160;使用JDBC进行数据访问</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt02.html" title="部分&#160;II.&#160;中间层数据访问">
+<link rel="prev" href="ch10s03.html" title="10.3.&#160;一致的DAO支持抽象类">
+<link rel="next" href="ch11s02.html" title="11.2.&#160;利用JDBC核心类实现JDBC的基本操作和错误处理">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="jdbc"></a>第&#160;11&#160;章&#160;使用JDBC进行数据访问</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch11.html#jdbc-introduction">11.1. 简介</a></span></dt>
+<dd><dl><dt><span class="section"><a href="ch11.html#id500600">11.1.1. Spring JDBC包结构</a></span></dt></dl></dd>
+<dt><span class="section"><a href="ch11s02.html">11.2. 利用JDBC核心类实现JDBC的基本操作和错误处理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11s02.html#jdbc-JdbcTemplate">11.2.1. <code class="classname">JdbcTemplate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#jdbc-NamedParameterJdbcTemplate">11.2.2. <code class="classname">NamedParameterJdbcTemplate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#jdbc-SimpleJdbcTemplate">11.2.3. <code class="classname">SimpleJdbcTemplate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id502366">11.2.4. <code class="interfacename">DataSource</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#jdbc-SQLExceptionTranslator">11.2.5. <code class="interfacename">SQLExceptionTranslator</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id502841">11.2.6. 执行SQL语句</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id502876">11.2.7. 执行查询</a></span></dt>
+<dt><span class="section"><a href="ch11s02.html#id503030">11.2.8. 更新数据库</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch11s03.html">11.3. 控制数据库连接</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11s03.html#jdbc-DataSourceUtils">11.3.1. <code class="classname">DataSourceUtils</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-SmartDataSource">11.3.2. <code class="interfacename">SmartDataSource</code>接口</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-AbstractDataSource">11.3.3. <code class="classname">AbstractDataSource</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-SingleConnectionDataSource">11.3.4. <code class="classname">SingleConnectionDataSource</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-DriverManagerDataSource">11.3.5. <code class="classname">DriverManagerDataSource</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-TransactionAwareDataSourceProxy">11.3.6. <code class="classname">TransactionAwareDataSourceProxy</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s03.html#jdbc-DataSourceTransactionManager">11.3.7. <code class="classname">DataSourceTransactionManager</code>类</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch11s04.html">11.4. 用Java对象来表达JDBC操作</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch11s04.html#jdbc-SqlQuery">11.4.1. <code class="classname">SqlQuery</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-MappingSqlQuery">11.4.2. <code class="classname">MappingSqlQuery</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-SqlUpdate">11.4.3. <code class="classname">SqlUpdate</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-StoredProcedure">11.4.4. <code class="classname">StoredProcedure</code>类</a></span></dt>
+<dt><span class="section"><a href="ch11s04.html#jdbc-SqlFunction">11.4.5. <code class="classname">SqlFunction</code>类</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jdbc-introduction"></a>11.1.&#160;简介</h2></div></div></div>
+<p>
+			Spring JDBC抽象框架所带来的价值将在以下几个方面得以体现：（注：使用了Spring JDBC抽象框架之后，应用开发人员只需要完成斜体字部分的编码工作。）
+		</p>
+<div class="orderedlist"><ol type="1">
+<li><p>指定数据库连接参数</p></li>
+<li><p>打开数据库连接</p></li>
+<li><p><span class="emphasis"><em>声明SQL语句</em></span></p></li>
+<li><p>预编译并执行SQL语句</p></li>
+<li><p>遍历查询结果（如果需要的话）</p></li>
+<li><p><span class="emphasis"><em>处理每一次遍历操作</em></span></p></li>
+<li><p>处理抛出的任何异常</p></li>
+<li><p>处理事务</p></li>
+<li><p>关闭数据库连接</p></li>
+</ol></div>
+<p>
+			Spring将替我们完成所有单调乏味的JDBC底层细节处理工作。
+		</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id500600"></a>11.1.1.&#160;Spring JDBC包结构</h3></div></div></div>
+<p>
+				Spring JDBC抽象框架由四个包构成：<code class="literal">core</code>、 <code class="literal">dataSource</code>、<code class="literal">object</code>以及<code class="literal">support</code>。
+			</p>
+<p>
+				<code class="literal">org.springframework.jdbc.core</code>包由<code class="classname">JdbcTemplate</code>类以及相关的回调接口（callback interface）和类组成。
+			</p>
+<p>
+				<code class="literal">org.springframework.jdbc.datasource</code>包由一些用来简化<code class="interfacename">DataSource</code>访问的工具类，以及各种<code class="interfacename">DataSource</code>接口的简单实现(主要用于单元测试以及在J2EE容器之外使用JDBC)组成。工具类提供了一些静态方法，诸如通过JNDI获取数据连接以及在必要的情况下关闭这些连接。它支持绑定线程的连接，比如被用于<code class="classname">DataSourceTransactionManager</code>的连接。
+			</p>
+<p>
+				接下来，<code class="literal">org.springframework.jdbc.object</code>包由封装了查询、更新以及存储过程的类组成，这些类的对象都是线程安全并且可重复使用的。它们类似于JDO，与JDO的不同之处在于查询结果与数据库是“<span class="quote">断开连接</span>”的。它们是在<code class="literal">org.springframework.jdbc.core</code>包的基础上对JDBC更高层次的抽象。
+			</p>
+<p>
+				最后，<code class="literal">org.springframework.jdbc.support</code>包提供了一些<code class="classname">SQLException</code>的转换类以及相关的工具类。
+			</p>
+<p>
+				在JDBC处理过程中抛出的异常将被转换成<code class="literal">org.springframework.dao</code>包中定义的异常。因此使用Spring JDBC进行开发将不需要处理JDBC或者特定的RDBMS才会抛出的异常。所有的异常都是unchecked exception，这样我们就可以对传递到调用者的异常进行有选择的捕获。
+			</p>
+</div>
+</div>
+</div></body>
+</html>

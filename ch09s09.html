@@ -1,0 +1,23 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>9.9.&#160;公共问题的解决方案</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+<link rel="prev" href="ch09s08.html" title="9.8.&#160;与特定应用服务器集成">
+<link rel="next" href="ch09s10.html" title="9.10.&#160;更多的资源">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="transaction-solutions-to-common-problems"></a>9.9.&#160;公共问题的解决方案</h2></div></div></div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id495903"></a>9.9.1.&#160;对一个特定的 <code class="interfacename">DataSource</code> 使用错误的事务管理器</h3></div></div></div>
+<p>开发者需要按照需求仔细地选择正确的 <span class="emphasis"><em><code class="literal">PlatformTransactionManager</code></em></span> 实现。理解Spring的事务抽象如何与JTA全局事务一起工作是非常重要的。使用得当，就不会有任何冲突：Spring仅仅提供一个直观的、可移植的抽象层。</p>
+<p>如果你使用全局事务，你 <span class="emphasis"><em>必须</em></span> 为你的所有事务操作使用Spring的 <code class="literal">org.springframework.transaction.jta.JtaTransactionManager</code> 类（或 <a href="ch09s08.html" title="9.8.&#160;与特定应用服务器集成"> 特定于某种应用服务器的子类</a>）。否则Spring将试图在象容器数据源这样的资源上执行局部事务。这样的局部事务没有任何意义，好的应用服务器会把这些情况视为错误。<code class="literal"></code>
+			</p>
+</div>
+</div></body>
+</html>

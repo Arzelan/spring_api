@@ -1,0 +1,18 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>8.2.&#160;单元测试</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch08.html" title="第&#160;8&#160;章&#160;测试">
+<link rel="prev" href="ch08.html" title="第&#160;8&#160;章&#160;测试">
+<link rel="next" href="ch08s03.html" title="8.3.&#160;集成测试">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="unit-testing"></a>8.2.&#160;单元测试</h2></div></div></div>
+<p>采用依赖注射的一个主要好处是你的代码对容器的依赖将比传统J2EE开发小的多。<span class="emphasis"><em>无需Spring或任何其他容器</em></span>，只要简单地通过 <code class="literal">new</code> 操作符即可实例化对象，通过这种方式组成你应用的POJO对象就可以充分利用JUnit进行测试了。你可以使用模拟对象或者其他很多有价值的测试技术将你的代码隔离起来进行测试。如果你的应用在架构上遵循了Spring的建议，那么你的代码将会有清晰的层次和高度的模块化，这些都将大大方便单元测试。例如，在单元测试中你可以通过测试框架或者模拟DAO接口的方式来测试服务层对象而无需访问持久化数据。</p>
+<p>真正的单元测试运行起来通常都非常迅速，因为没有应用服务器，数据库，ORM工具等运行设施需要设置。因此加强正确的单元测试可以大大提高你的生产力。所以并不需要本节来帮助你为你那些基于IoC的应用编写有效的 <span class="emphasis"><em>单元</em></span> 测试。</p>
+</div></body>
+</html>

@@ -1,0 +1,66 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>B.3.&#160;Coding a NamespaceHandler</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="apb.html" title="附录&#160;B.&#160;Extensible XML authoring">
+<link rel="prev" href="apbs02.html" title="B.2.&#160;Authoring the schema">
+<link rel="next" href="apbs04.html" title="B.4.&#160;Coding a BeanDefinitionParser">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id598192"></a>B.3.&#160;Coding a <code class="interfacename">NamespaceHandler</code></h2></div></div></div>
+<p>
+				In addition to the schema, we need a <code class="interfacename">NamespaceHandler</code>
+				that will parse all elements of this specific namespace Spring encounters
+				while parsing configuration files. The <code class="interfacename">NamespaceHandler</code> should in our case
+				take care of the parsing of the <code class="literal">myns:dateformat</code> element.
+			</p>
+<p>
+				The <code class="interfacename">NamespaceHandler</code> interface is pretty simple in that 
+				it only features three methods:
+				</p>
+<div class="itemizedlist"><ul type="disc" compact>
+<li><p><code class="literal">init()</code> - allows for initialization of
+						the <code class="interfacename">NamespaceHandler</code> and will be called by Spring before the handler is used</p></li>
+<li><p><code class="literal">BeanDefinition parse(Element element, ParserContext parserContext)</code> - 
+						called when Spring encounters a top-level element (not nested inside a bean definition
+						or a different namespace). This method can register bean definitions itself and/or
+						return a bean definition.</p></li>
+<li><p><code class="literal">BeanDefinitionHolder decorate(Node element, BeanDefinitionHolder definition, ParserContext parserContext)</code> -
+						called when Spring encounters an attribute or nested element of a different namespace, inside
+						for example the Spring namespace. The decoration of one or more bean definitions is used
+						for example with the out-of-the-box scopes Spring 2.0 comes with (see
+						<a href="ch03s04.html" title="3.4.&#160;bean的作用域">第&#160;3.4&#160;节 “bean的作用域”</a> for more information about scopes). We'll
+						start by highlighting a simple example, without using decoration, after which we will
+						show decoration in a somewhat more advanced example.</p></li>
+</ul></div>
+<p>
+			</p>
+<p>
+				Although it is perfectly possible to code your own
+				<code class="interfacename">NamespaceHandler</code> for the entire namespace
+				(and hence provide code that parses each and every element in the namespace),
+				it is often the case that <span class="emphasis"><em>each top-level XML element in a Spring XML
+				configuration file results in a single bean definition</em></span> (as in our
+				case, where the <code class="literal">myns:dateformat</code> element results in a 
+				<code class="classname">SimpleDateFormat</code> bean definition). Spring features a
+				couple of convenience classes that support this scenario. In this example,
+				we'll use the most often used convenience class which is the
+				<code class="classname">NamespaceHandlerSupport</code> class:
+			</p>
+<pre class="programlisting">package org.springframework.samples.xml;
+
+import org.springframework.beans.factory.xml.NamespaceHandlerSupport;
+
+public class MyNamespaceHandler extends NamespaceHandlerSupport {
+    
+    public void init() {<span class="bold"><strong>
+        registerBeanDefinitionParser("dateformat", 
+                new SimpleDateFormatBeanDefinitionParser());        
+    </strong></span>}
+}</pre>
+</div></body>
+</html>

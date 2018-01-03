@@ -1,0 +1,41 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>2.2.&#160;控制反转(IoC)容器</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch02.html" title="第&#160;2&#160;章&#160;Spring 2.0 的新特性">
+<link rel="prev" href="ch02.html" title="第&#160;2&#160;章&#160;Spring 2.0 的新特性">
+<link rel="next" href="ch02s03.html" title="2.3.&#160;面向切面编程(AOP)">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="new-in-2-ioc"></a>2.2.&#160;控制反转(IoC)容器</h2></div></div></div>
+<p>Spring 2.0 相当大的改进之一就是Spring的IoC容器。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-ioc-configuration"></a>2.2.1.&#160;更简单的XML配置</h3></div></div></div>
+<p>多亏了新的基于XML Schema的XML配置语法的产生，Spring的XML配置变的更加简单了。如果你想充分利用Spring提供的新标签（Spring团队当然建议你这么做，因为他们使配置变的不再繁琐，更加易于阅读），请阅读标题为 <a href="apa.html" title="附录&#160;A.&#160;XML Schema-based configuration">附录&#160;A, <i>XML Schema-based configuration</i></a> 的部分。</p>
+<p>相关提示，请引用新的Spring 2.0 DTD以使用基于XML Schema的配置。下面给出了DOCTYPE声明，如果有兴趣的读者可以详细阅读Spring 2.0发布包的
+			<code class="filename">'dist/resources'</code>目录中的<code class="filename">'spring-beans-2.0.dtd'</code> DTD。</p>
+<pre class="programlisting">&lt;!DOCTYPE beans PUBLIC "-//SPRING//DTD BEAN 2.0//EN"
+			  "http://www.springframework.org/dtd/spring-beans-2.0.dtd"&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-ioc-scopes"></a>2.2.2.&#160;新的bean作用域</h3></div></div></div>
+<p>Spring上个版本的IoC容器支持两个不同的bean作用域（单例与原型）。Spring 2.0改进了这一点，不仅提供了一些依赖于Spring部署环境（比如说，在web环境中的request和session作用域bean）的额外的作用域,而且提供了所谓的'钩子'（'hooks'）（因为找不到更好的表达）使Spring用户可以创造自己的作用域。</p>
+<p>应该注意的是，即使单例与原型作用域beans的基本（内在）实现发生了变化，上述变化对最终用户来说是透明的...现有的配置不需要改变或放弃。</p>
+<p>在标题为 <a href="ch03s04.html" title="3.4.&#160;bean的作用域">第&#160;3.4&#160;节 “bean的作用域”</a> 的部分有对新增的作用域与原有作用域的详细描述。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-ioc-custom-configuration"></a>2.2.3.&#160;可扩展的XML编写</h3></div></div></div>
+<p>XML配置不仅更加易于书写，而且也具有可扩展性。</p>
+<p>这里'可扩展性'的含义是，作为一个应用程序开发人员，或着（更可能）作为第三方框架或产品的供应商，可以开发自定义标签，供其他开发人员把这些标签嵌入到自己的Spring配置文件里。你可以在组件的特定配置中定义你自己的DSL（domain specific language，这个词在这里用得比较宽泛）。</p>
+<p>对于个别应用的开发人员或者在项目中运用Spring的企业架构师来说，实现自定义Spring标签可能不是他们的兴趣所在。我们期待着第三方供应商能够对开发在Spring配置文件里使用的自定义配置标签予于足够的关注。</p>
+<p>可扩展的配置机制在 <a href="apb.html" title="附录&#160;B.&#160;Extensible XML authoring">附录&#160;B, <i>Extensible XML authoring</i></a> 里有更充分的描述。</p>
+</div>
+</div></body>
+</html>

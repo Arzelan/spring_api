@@ -1,0 +1,31 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>2.3.&#160;面向切面编程(AOP)</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch02.html" title="第&#160;2&#160;章&#160;Spring 2.0 的新特性">
+<link rel="prev" href="ch02s02.html" title="2.2.&#160;控制反转(IoC)容器">
+<link rel="next" href="ch02s04.html" title="2.4.&#160;中间层">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="new-in-2-aop"></a>2.3.&#160;面向切面编程(AOP)</h2></div></div></div>
+<p>Spring 2.0在AOP上有很大的改进。Spring AOP框架本身就十分易于用XML配置，不再那么繁琐；Spring 2.0集成了AspectJ 切入点（pointcut）语言和 @AspectJ 切面（aspect）声明类型。
+		标题为 <a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a> 的部分专门描述这个新支持。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-aop-configuration"></a>2.3.1.&#160;更加简单的AOP XML配置</h3></div></div></div>
+<p>Spring 2.0引入了新的模式，支持定义从常规Java对象中发展中来的切面。
+      此支持充分利用了AspectJ切入点语言，提供了完整类型的通知（advice）（也就是没有多余转换和 <code class="literal">Object[]</code> 参数操作）。
+      标题为 <a href="ch06s03.html" title="6.3.&#160;Schema-based AOP support">第&#160;6.3&#160;节 “Schema-based AOP support”</a> 的部分详细描述了该支持的细节。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-aop-aspectJ"></a>2.3.2.&#160;对@AspectJ 切面的支持</h3></div></div></div>
+<p>Spring 2.0也支持使用@AspectJ注解定义的切面。这些切面可以在AspectJ与Spring AOP中共享，仅仅需要（老实说!）一些简单的配置。
+			在标题为 <a href="ch06s02.html" title="6.2.&#160;@AspectJ支持">第&#160;6.2&#160;节 “@AspectJ支持”</a> 的部分讨论了对@AspectJ切面的支持。</p>
+</div>
+</div></body>
+</html>

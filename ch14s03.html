@@ -1,0 +1,94 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>14.3.&#160;Tiles</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch14.html" title="第&#160;14&#160;章&#160;集成视图技术">
+<link rel="prev" href="ch14s02.html" title="14.2.&#160;JSP和JSTL">
+<link rel="next" href="ch14s04.html" title="14.4.&#160;Velocity和FreeMarker">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="view-tiles"></a>14.3.&#160;Tiles</h2></div></div></div>
+<p>在使用了Spring的web项目中，很可能会用到Tiles－－就像任何其它的web层技术。下面粗略讲述了如何使用。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="view-tiles-dependencies"></a>14.3.1.&#160;需要的资源</h3></div></div></div>
+<p>使用Tiles项目中必须得包含一些额外的资源，以下是你需要的资源列表：</p>
+<p>
+				</p>
+<div class="itemizedlist"><ul type="disc" compact>
+<li><p>
+							<code class="literal">Struts 1.1以及更高版本</code>
+						</p></li>
+<li><p>
+							<code class="literal">Commons BeanUtils</code>
+						</p></li>
+<li><p>
+							<code class="literal">Commons Digester</code>
+						</p></li>
+<li><p>
+							<code class="literal">Commons Lang</code>
+						</p></li>
+<li><p>
+							<code class="literal">Commons Logging</code>
+						</p></li>
+</ul></div>
+<p>
+			</p>
+<p>这些资源全部包含于Spring的发行包中</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="view-tiles-integrate"></a>14.3.2.&#160;如何集成Tiles</h3></div></div></div>
+<p>使用Tiles，你必须为它配置一些包含了定义信息的文件（关于Tiles定义和其他概念的信息，可以参考 <a href="http://jakarta.apache.org/struts" target="_top">http://jakarta.apache.org/struts</a>）。在Spring中，你可以使用 <code class="classname">TilesConfigurer</code> 来完成这项工作。看看下面这个应用上下文配置的例子：</p>
+<pre class="programlisting">&lt;bean id="tilesConfigurer" class="org.springframework.web.servlet.view.tiles.TilesConfigurer"&gt;
+  &lt;property name="factoryClass" value="org.apache.struts.tiles.xmlDefinition.I18nFactorySet"/&gt;
+  &lt;property name="definitions"&gt;
+    &lt;list&gt;
+      &lt;value&gt;/WEB-INF/defs/general.xml&lt;/value&gt;
+      &lt;value&gt;/WEB-INF/defs/widgets.xml&lt;/value&gt;
+      &lt;value&gt;/WEB-INF/defs/administrator.xml&lt;/value&gt;
+      &lt;value&gt;/WEB-INF/defs/customer.xml&lt;/value&gt;
+      &lt;value&gt;/WEB-INF/defs/templates.xml&lt;/value&gt;
+    &lt;/list&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;</pre>
+<p>正如你所看到的，有五个包含定义的文件，都放在 <code class="filename">'WEB-INF/defs'</code> 目录下。在<code class="interfacename">WebApplicationContext</code>初始化的阶段，这些文件被加载，同时由 <code class="literal">factoryClass</code> 属性定义的工厂类被初始化。然后，定义文件中的tiles可以做为views在Spring的web 项目中使用。为使views正常工作，你必须有一个 <code class="interfacename">ViewResolver</code>，就像使用spring提供的任何其它view层技术一样。它有二种选择：<code class="classname">InternalResourceViewResolver</code> 和 <code class="classname">ResourceBundleViewResolver</code>。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="view-tiles-internal"></a>14.3.2.1.&#160;
+					<code class="classname">InternalResourceViewResolver</code>
+				</h4></div></div></div>
+<p><code class="classname">InternalResourceViewResolver</code>为它解析的每个view实例化一个 <code class="literal">viewClass</code> 类的实例。</p>
+<pre class="programlisting">&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver"&gt;
+  &lt;property name="requestContextAttribute" value="requestContext"/&gt;
+  &lt;property name="viewClass" value="org.springframework.web.servlet.view.tiles.TilesView"/&gt;
+&lt;/bean&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="view-tiles-resource"></a>14.3.2.2.&#160;
+					<code class="classname">ResourceBundleViewResolver</code>
+				</h4></div></div></div>
+<p><code class="classname">ResourceBundleViewResolver</code>需要一个属性文件，其中包含了它需要使用的视图名和视图类：</p>
+<pre class="programlisting">&lt;bean id="viewResolver" class="org.springframework.web.servlet.view.ResourceBundleViewResolver"&gt;
+  &lt;property name="basename" value="views"/&gt;
+&lt;/bean&gt;</pre>
+<pre class="programlisting">    ...
+welcomeView.class=org.springframework.web.servlet.view.tiles.TilesView
+welcomeView.url=welcome (&amp;lt;b&amp;gt;this is the name of a definition&amp;lt;/b&amp;gt;)
+
+vetsView.class=org.springframework.web.servlet.view.tiles.TilesView
+vetsView.url=vetsView <em class="lineannotation"><span class="lineannotation">(again, this is the name of a definition)</span></em>
+
+findOwnersForm.class=org.springframework.web.servlet.view.JstlView
+findOwnersForm.url=/WEB-INF/jsp/findOwners.jsp
+...</pre>
+<p>正如你所看到的，使用<code class="classname">ResourceBundleViewResolver</code>时你可以混用不同的view层技术。</p>
+</div>
+</div>
+</div></body>
+</html>

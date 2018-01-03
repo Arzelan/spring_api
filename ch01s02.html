@@ -1,0 +1,53 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>1.2.&#160;使用场景</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch01.html" title="第&#160;1&#160;章&#160;简介">
+<link rel="prev" href="ch01.html" title="第&#160;1&#160;章&#160;简介">
+<link rel="next" href="ch02.html" title="第&#160;2&#160;章&#160;Spring 2.0 的新特性">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="overview-usagescenarios"></a>1.2.&#160;使用场景</h2></div></div></div>
+<p>借助搭积木方式来解释一下各种情景下使用Spring的情况，从简单的Applet一直到完整的使用Spring的事务管理功能和Web框架的企业应用。</p>
+<p>
+			</p>
+<div class="mediaobject" align="center">
+<img src="images/full.gif" align="middle"><div class="caption"><p>典型的完整Spring Web应用</p></div>
+</div>
+<p>
+		</p>
+<p>通过用Spring的 <a href="ch09s05.html" title="9.5.&#160;声明式事务管理">声明事务管理特性</a>，Web应用可以做到完全事务性，就像使用EJB提供的那种容器管理的事务一样。
+			所有自定义的业务逻辑可以通过简单的POJO来实现，并利用Spring的IoC容器进行管理。对于其他的服务，比如发送email和不依赖web层的校验信息，还可以让你自己决定在哪里执行校验规则。
+			Spring本身的ORM支持可以和JPA、Hibernate、JDO以及iBatis集成起来，例如使用Hibernate，你可复用已经存在的映射文件与标准的Hibernate <code class="interfacename">SessionFactory</code> 配置。用控制器去无缝整合web层和领域模型，消除对 <code class="classname">ActionForms</code> 的依赖，或者避免了其他class为领域模型转换HTTP参数的需要。</p>
+<p>
+			</p>
+<div class="mediaobject" align="center">
+<img src="images/thirdparty-web.gif" align="middle"><div class="caption"><p>使用了第三方框架的Spring中间层</p></div>
+</div>
+<p>
+		</p>
+<p>有的时候，现有情况不允许你彻底地从一种框架切换到另一种框架。然而，Spring却 <span class="emphasis"><em>不需要</em></span> 强制你使用它的全部，Spring不是一种 <span class="emphasis"><em>全有全无</em></span> 的解决方案。
+			如果，现有的应用使用了WebWork、Struts、Tapestry或其他的UI框架作为前端程序，完全可以只与Spring的事务特性进行集成。
+			只需要使用 <code class="classname">ApplicationContext</code> 来挂接你的业务逻辑和通过 <code class="classname">WebApplicationContext</code> 来集成你的web层前端程序。</p>
+<p>
+			</p>
+<div class="mediaobject" align="center">
+<img src="images/remoting.gif" align="middle"><div class="caption"><p>远程使用场景</p></div>
+</div>
+<p>
+		</p>
+<p>当你需要通过WebService来访问你的现有代码时，你可使用Spring提供的 <code class="literal">Hessian-</code>、<code class="literal">Burlap-</code>、<code class="literal">Rmi-</code> 为前缀的接口或者 <code class="classname">JaxRpcProxyFactory</code> 这个代理类。你会发现，远程访问现有应用程序不再那么困难了。</p>
+<p>
+			</p>
+<div class="mediaobject" align="center">
+<img src="images/ejb.gif" align="middle"><div class="caption"><p>EJBs-包装现有的POJOs</p></div>
+</div>
+<p>
+		</p>
+<p>Spring还为EJB提供了 <a href="ch18.html" title="第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成">数据访问和抽象层</a>，让你可以复用已存在的POJO并将他们包装在无状态SessionBean中，以便在可能需要声明式安全（EJB中的安全管理，译者注）的非安全的Web应用中使用。</p>
+</div></body>
+</html>

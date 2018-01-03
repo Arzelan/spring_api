@@ -1,0 +1,82 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>25.2.&#160;Spring的元数据支持</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch25.html" title="第&#160;25&#160;章&#160;注解和源代码级的元数据支持">
+<link rel="prev" href="ch25.html" title="第&#160;25&#160;章&#160;注解和源代码级的元数据支持">
+<link rel="next" href="ch25s03.html" title="25.3.&#160;注解">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="metadata-spring"></a>25.2.&#160;Spring的元数据支持</h2></div></div></div>
+<p>
+			为了与Spring提供的其他重要概念的抽象相一致，Spring提供了一个对元数据实现的门面(facade)，
+			以<code class="interfacename">org.springframework.metadata.Attributes</code>接口的形式来实现。
+			这个门面因以下几个原因而显得很有价值：
+		</p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<p>
+					尽管Java 5提供了语言级的元数据支持，但提供这样一个抽象还是能带来价值：
+				</p>
+<div class="itemizedlist"><ul type="circle">
+<li><p>
+							Java 5的元数据是静态的。它是在编译时与一个类关联，而且在部署环境下是不可改变的
+							(注解的状态可以通过反射在运行时改变，但这并不是一个很好的实践)。
+							这里会需要多层次的元数据，以支持在部署时重载某些属性的值 - 举例来说，在一个XML文件
+							中定义用于覆盖的属性。
+						</p></li>
+<li><p>
+							Java 5的元数据是通过Java反射API返回的。这使得在测试时无法模拟元数据。
+							Spring提供了一个简单的接口来允许这种模拟。
+						</p></li>
+<li><p>
+							在未来至少两年内仍有在1.3和1.4应用程序中支持元数据的需要。Spring着眼于提供<span class="emphasis"><em>现在</em></span>可以工作的解决方案；
+							强迫使用Java 5不是在这个重要领域中的明智之举。
+						</p></li>
+</ul></div>
+</li>
+<li><p>
+					当前的元数据API，例如Commons Attributes(在Spring 1.0-1.2中使用)很难测试。Spring提供了一个简单的易于模拟的元数据接口。
+				</p></li>
+</ul></div>
+<p>
+			Spring的<code class="interfacename">Attributes</code>接口是这个样子的：
+		</p>
+<pre class="programlisting">public interface Attributes {
+
+    Collection getAttributes(Class targetClass);
+
+    Collection getAttributes(Class targetClass, Class filter);
+
+    Collection getAttributes(Method targetMethod);
+
+    Collection getAttributes(Method targetMethod, Class filter);
+
+    Collection getAttributes(Field targetField);
+
+    Collection getAttributes(Field targetField, Class filter);
+}</pre>
+<p>
+			这是个再普通不过的命名者接口。JSR-175能提供更多的功能，比如定义在方法参数上的属性。
+			在1.0版本时，Spring着眼于提供所需元数据的一个子集，使得能在Java 1.3+上提供像EJB或.NET
+			一样的有效的声明式企业级服务。Spring 1.2还支持Java 5的注解作为Commons Attributes的替代品。
+		</p>
+<p>
+			要注意到该接口像.NET一样提供了<code class="classname">Object</code>属性。这使得它区别
+			于一些仅提供<code class="classname">String</code>属性的元数据属性系统，比如Nanning Aspects。
+			支持<code class="classname">Object</code>属性有一个显著的优点。它使属性能参与到类层次中，
+			还可以使属性能够灵活的根据它们的配置参数起作用。
+		</p>
+<p>
+			对于大多数属性提供者来说，属性类的配置是通过构造方法参数或JavaBean的属性完成的。Commons Attributes同时支持这两种方式。
+		</p>
+<p>
+			同所有的Spring抽象API一样，<code class="interfacename">Attributes</code>是一个接口。
+			这使得在单元测试中模拟属性的实现变得容易起来。
+		</p>
+</div></body>
+</html>

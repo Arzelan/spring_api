@@ -1,0 +1,142 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>11.3.&#160;控制数据库连接</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch11.html" title="第&#160;11&#160;章&#160;使用JDBC进行数据访问">
+<link rel="prev" href="ch11s02.html" title="11.2.&#160;利用JDBC核心类实现JDBC的基本操作和错误处理">
+<link rel="next" href="ch11s04.html" title="11.4.&#160;用Java对象来表达JDBC操作">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jdbc-datasource"></a>11.3.&#160;控制数据库连接</h2></div></div></div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-DataSourceUtils"></a>11.3.1.&#160;<code class="classname">DataSourceUtils</code>类</h3></div></div></div>
+<p>
+				<code class="classname">DataSourceUtils</code>作为一个帮助类提供易用且强大的数据库访问能力，
+				我们可以使用该类提供的<code class="literal">静态</code>方法从JNDI获取数据库连接以及在必要的时候关闭之。
+				它提供支持线程绑定的数据库连接（比如使用<code class="classname">DataSourceTransactionManager</code>
+				的时候，将把数据库连接绑定到当前的线程上）。
+			</p>
+<p>
+				注：<code class="literal">getDataSourceFromJndi(..)</code>方法主要用于那些没有使用bean factory
+				或者application context的场合。如果使用application context，那么最好是在
+				<code class="classname">JndiObjectFactoryBean</code>中配置bean或者直接使用
+				<code class="classname">JdbcTemplate</code>实例。<code class="classname">JndiObjectFactoryBean</code>
+				能够通过JNDI获取<code class="interfacename">DataSource</code>并将
+				<code class="interfacename">DataSource</code>作为引用参数传递给其他bean。
+				这样，在不同的<code class="interfacename">DataSource</code>之间切换只需要修改配置文件即可，
+				甚至我们可以用一个非JNDI的<code class="interfacename">DataSource</code>来替换
+				<code class="interfacename">FactoryBean</code>定义！
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-SmartDataSource"></a>11.3.2.&#160;<code class="interfacename">SmartDataSource</code>接口</h3></div></div></div>
+<p>
+				<code class="interfacename">SmartDataSource</code>是<code class="interfacename">DataSource</code>
+				接口的一个扩展，用来提供数据库连接。使用该接口的类在指定的操作之后可以检查是否需要关闭连接。
+				该接口在某些情况下非常有用，比如有些情况需要重用数据库连接。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-AbstractDataSource"></a>11.3.3.&#160;<code class="classname">AbstractDataSource</code>类</h3></div></div></div>
+<p>
+				<code class="classname">AbstractDataSource</code>是一个实现了<code class="interfacename">DataSource</code>
+				接口的<code class="literal">abstract</code>基类。它实现了<code class="interfacename">DataSource</code>接口的
+				一些无关痛痒的方法，如果你需要实现自己的<code class="interfacename">DataSource</code>，那么继承
+				该类是个好主意。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-SingleConnectionDataSource"></a>11.3.4.&#160;<code class="classname">SingleConnectionDataSource</code>类</h3></div></div></div>
+<p>
+				<code class="classname">SingleConnectionDataSource</code>是<code class="literal">SmartDataSource</code>接口
+				的一个实现，其内部包装了一个单连接。该连接在使用之后将不会关闭，很显然它不能在多线程
+				的环境下使用。
+			</p>
+<p>
+				当客户端代码调用close方法的时候，如果它总是假设数据库连接来自连接池（就像使用持久化工具时一样），
+				你应该将<code class="literal">suppressClose</code>设置为true。
+				这样，通过该类获取的将是代理连接（禁止关闭）而不是原有的物理连接。
+				需要注意的是，我们不能把使用该类获取的数据库连接造型（cast）为Oracle Connection之类的本地数据库连接。
+			</p>
+<p>
+				<code class="classname">SingleConnectionDataSource</code>主要在测试的时候使用。
+				它使得测试代码很容易脱离应用服务器而在一个简单的JNDI环境下运行。
+				与<code class="classname">DriverManagerDataSource</code>不同的是，它始终只会使用同一个数据库连接，
+				从而避免每次建立物理连接的开销。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-DriverManagerDataSource"></a>11.3.5.&#160;<code class="classname">DriverManagerDataSource</code>类</h3></div></div></div>
+<p>
+				<code class="classname">DriverManagerDataSource</code>类实现了
+				<code class="interfacename">SmartDataSource</code>接口。在applicationContext.xml中可以使用
+				bean properties来设置JDBC Driver属性，该类每次返回的都是一个新的连接。
+			</p>
+<p>
+				该类主要在测试以及脱离J2EE容器的独立环境中使用。它既可以用来在application context中作为一个
+				<code class="interfacename">DataSource</code> bean，也可以在简单的JNDI环境下使用。
+				由于<code class="literal">Connection.close()</code>仅仅只是简单的关闭数据库连接，因此任何能够获取
+				<code class="interfacename">DataSource</code>的持久化代码都能很好的工作。不过使用JavaBean风格的连接池
+				（比如commons-dbcp）也并非难事。即使是在测试环境下，使用连接池也是一种比使用
+				<code class="classname">DriverManagerDataSource</code>更好的做法。
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-TransactionAwareDataSourceProxy"></a>11.3.6.&#160;<code class="classname">TransactionAwareDataSourceProxy</code>类</h3></div></div></div>
+<p>
+				<code class="classname">TransactionAwareDataSourceProxy</code>作为目标<code class="interfacename">DataSource</code>的一个代理，
+				在对目标<code class="interfacename">DataSource</code>包装的同时，还增加了Spring的事务管理能力，
+				在这一点上，这个类的功能非常像J2EE服务器所提供的事务化的JNDI <code class="interfacename">DataSource</code>。
+			</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>
+				该类几乎很少被用到，除非现有代码在被调用的时候需要一个标准的 JDBC <code class="interfacename">DataSource</code>接口实现作为参数。
+				这种情况下，这个类可以使现有代码参与Spring的事务管理。通常最好的做法是使用更高层的抽象
+				来对数据源进行管理，比如<code class="classname">JdbcTemplate</code>和<code class="classname">DataSourceUtils</code>等等。
+				</p>
+</div>
+<p>
+				<span class="emphasis"><em>如果需要更详细的资料，请参考<code class="classname">TransactionAwareDataSourceProxy</code> JavaDoc 。</em></span>
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jdbc-DataSourceTransactionManager"></a>11.3.7.&#160;<code class="classname">DataSourceTransactionManager</code>类</h3></div></div></div>
+<p>
+				<code class="classname">DataSourceTransactionManager</code>类是
+				<code class="interfacename">PlatformTransactionManager</code>接口的一个实现，用于处理单JDBC数据源。
+				它将从指定DataSource取得的JDBC连接绑定到当前线程，因此它也支持了每个数据源对应到一个线程。
+			</p>
+<p>
+				我们推荐在应用代码中使用<code class="literal">DataSourceUtils.getConnection(DataSource)</code>来获取
+				JDBC连接，而不是使用J2EE标准的<code class="literal">DataSource.getConnection</code>。因为前者将抛出
+				unchecked的<code class="literal">org.springframework.dao</code>异常，而不是checked的
+				<code class="classname">SQLException</code>异常。Spring Framework中所有的类（比如
+				<code class="classname">JdbcTemplate</code>）都采用这种做法。如果不需要和这个
+				<code class="classname">DataSourceTransactionManager</code>类一起使用，DataSourceUtils
+				提供的功能跟一般的数据库连接策略没有什么两样，因此它可以在任何场景下使用。
+			</p>
+<p>
+				<code class="classname">DataSourceTransactionManager</code>类支持定制隔离级别，以及对SQL语句查询超时的设定。
+				为了支持后者，应用代码必须使用<code class="classname">JdbcTemplate</code>或者在每次创建SQL语句时调用
+				<code class="literal">DataSourceUtils.applyTransactionTimeout</code>方法。
+			</p>
+<p>
+				在使用单个数据源的情形下，你可以用<code class="classname">DataSourceTransactionManager</code>来替代<code class="classname">JtaTransactionManager</code>，
+				因为<code class="classname">DataSourceTransactionManager</code>不需要容器支持JTA。如果你使用<code class="literal">DataSourceUtils.getConnection(DataSource)</code>来获取
+				JDBC连接，二者之间的切换只需要更改一些配置。最后需要注意的一点就是<code class="classname">JtaTransactionManager</code>不支持隔离级别的定制！
+			</p>
+</div>
+</div></body>
+</html>

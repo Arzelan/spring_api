@@ -1,0 +1,18 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>13.10.&#160;处理异常</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch13.html" title="第&#160;13&#160;章&#160;Web框架">
+<link rel="prev" href="ch13s09.html" title="13.9.&#160;使用Spring的表单标签库">
+<link rel="next" href="ch13s11.html" title="13.11.&#160;惯例优先原则(convention over configuration)">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="mvc-exceptionhandlers"></a>13.10.&#160;处理异常</h2></div></div></div>
+<p>当控制器处理请求时，可能会有意想不到的异常产生。为了方便地处理这些异常，Spring提供了<code class="literal">HandlerExceptionResolver</code>这个异常解析器接口。	<code class="literal">HandlerExceptionResolvers</code> 有点像你在<code class="literal">web.xml</code>中所声明的异常映射(exception mapping)，但是它处理异常的方式更加灵活。它可以提供当异常产生时控制器的运行状态。同时，在程序中你也有更多应对异常的选项。当你的程序处理完异常后，产生异常的请求会被传递给另一个URL (这个最终结果和你在web.xml中声明的异常处理的效果一样)。</p>
+<p>实现<code class="interfacename">HandlerExceptionResolver</code>接口很简单，你只需要实现<code class="literal">resolveException(Exception, Handler)</code>这个方法，返回一个<code class="classname">ModelAndView</code>对象即可。你也可以直接使用Spring内置的<code class="classname">SimpleMappingExceptionResolver</code>。 这个解析器允许你把异常的类名映射到处理完异常后显示的视图名。这和Servlet API中提供的异常处理功能相同。不同的是，它还允许通过对不同的处理器实现更细粒度的异常映射。</p>
+</div></body>
+</html>

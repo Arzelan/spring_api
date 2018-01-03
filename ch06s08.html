@@ -1,0 +1,279 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>6.8.&#160;在Spring应用中使用AspectJ</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">
+<link rel="prev" href="ch06s07.html" title="6.7.&#160;编程方式创建@AspectJ代理">
+<link rel="next" href="ch06s09.html" title="6.9.&#160;其它资源">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="aop-using-aspectj"></a>6.8.&#160;在Spring应用中使用AspectJ</h2></div></div></div>
+<p>
+		到目前为止本章讨论的一直是纯Spring AOP。
+		在这一节里面我们将介绍如何使用AspectJ compiler/weaver来代替Spring AOP或者作为它的补充，因为有些时候Spring AOP单独提供的功能也许并不能满足你的需要。
+		</p>
+<p>
+		Spring提供了一个小巧的AspectJ aspect library
+		（你可以在程序发行版本中单独使用 <code class="literal">spring-aspects.jar</code> 文件，并将其加入到classpath下以使用其中的切面）。
+		<a href="ch06s08.html#aop-atconfigurable" title="6.8.1.&#160;在Spring中使用AspectJ来为domain object进行依赖注入">第&#160;6.8.1&#160;节 “在Spring中使用AspectJ来为domain object进行依赖注入”</a> 和 <a href="ch06s08.html#aop-ajlib-other" title="6.8.2.&#160;Spring中其他的AspectJ切面">第&#160;6.8.2&#160;节 “Spring中其他的AspectJ切面”</a> 讨论了该库和如何使用该库。
+		<a href="ch06s08.html#aop-aj-configure" title="6.8.3.&#160;使用Spring IoC来配置AspectJ的切面">第&#160;6.8.3&#160;节 “使用Spring IoC来配置AspectJ的切面”</a> 讨论了如何对通过AspectJ compiler织入的AspectJ切面进行依赖注入。
+		最后<a href="ch06s08.html#aop-aj-ltw" title="6.8.4.&#160;在Spring应用中使用AspectJ Load-time weaving（LTW）">第&#160;6.8.4&#160;节 “在Spring应用中使用AspectJ Load-time weaving（LTW）”</a>介绍了使用AspectJ的Spring应用程序如何装载期织入（load-time weaving）。
+		</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="aop-atconfigurable"></a>6.8.1.&#160;在Spring中使用AspectJ来为domain object进行依赖注入</h3></div></div></div>
+<p>
+			Spring容器对application context中定义的bean进行实例化和配置。
+			同样也可以通过bean factory来为一个已经存在且已经定义为spring bean的对象应用所包含的配置信息。
+			spring-aspects.jar中包含了一个annotation-driven的切面，提供了能为任何对象进行依赖注入的能力。
+			这样的支持旨在为 <span class="emphasis"><em>脱离容器管理</em></span> 创建的对象进行依赖注入。
+			Domain object经常处于这样的情形：它们可能是通过 <code class="literal">new</code> 操作符创建的对象，
+			也可能是ORM工具查询数据库的返回结果对象。
+		</p>
+<p> 
+			包 <code class="literal">org.springframework.orm.hibernate.support</code> 中的类 <code class="classname">DependencyInjectionInterceptorFactoryBean</code>
+			可以让Spring为Hibernate创建并且配置prototype类型的domain object（使用自动装配或者确切命名的bean原型定义）。
+			当然，拦截器不支持配置你编程方式创建的对象而非检索数据库返回的对象。
+			其他framework也会提供类似的技术。仍是那句话，Be Pragramatic选择能满足你需求的方法中最简单的那个。
+			请注意前面提及的类 <span class="bold"><strong>没有</strong></span> 随Spring发行包一起发布。
+			如果你希望使用该类，需要从Spring CVS Respository上下载并且自行编译。
+			你可以在Spring CVS respository下的 <code class="literal">'sandbox'</code> 目录下找到该文件。
+			</p>
+<p>
+				<code class="interfacename">@Configurable</code> 注解标记了一个类可以通过Spring-driven方式来配置。
+			在最简单的情况下，我们只把它当作标记注解：
+			</p>
+<pre class="programlisting">package com.xyz.myapp.domain;
+
+import org.springframework.beans.factory.annotation.Configurable;
+
+@Configurable
+public class Account {
+   ...
+
+}</pre>
+<p>
+			当只是简单地作为一个标记接口来使用的时候，Spring将采用和该已注解的类型（比如<code class="classname">Account</code>类）全名
+			（<code class="classname">com.xyz.myapp.domain.Account</code>）一致的bean原型定义来配置一个新实例。
+			由于一个bean默认的名字就是它的全名，所以一个比较方便的办法就是省略定义中的id属性：
+			</p>
+<pre class="programlisting">&lt;bean class="com.xyz.myapp.domain.Account" scope="prototype"&gt;
+  &lt;property name="fundsTransferService" ref="fundsTransferService"/&gt;
+  ...
+&lt;/bean&gt;</pre>
+<p>如果你希望明确的指定bean原型定义的名字，你可以在注解中直接定义：</p>
+<pre class="programlisting">package com.xyz.myapp.domain;
+
+import org.springframework.beans.factory.annotation.Configurable;
+
+@Configurable("account")
+public class Account {
+
+   ...
+
+}</pre>
+<p>Spring会查找名字为"account"的bean定义，并使用它作为原型定义来配置一个新的<code class="classname">Account</code>对象。</p>
+<p>
+			你也可以使用自动装配来避免手工指定原型定义的名字。
+			只要设置 <code class="interfacename">@Configurable</code> 注解中的autowire属性就可以让Spring来自动装配了：
+			<code class="literal">@Configurable(autowire=Autowire.BY_TYPE)</code> 或者 <code class="literal">@Configurable(autowire=Autowire.BY_NAME</code>，这样就可以按类型或者按名字自动装配了。
+		</p>
+<p>
+			最后，你可以设置 <code class="literal">dependencyCheck</code> 属性，通过设置，Spring对新创建和配置的对象的对象引用进行校验
+			（例如：<code class="literal">@Configurable(autowire=Autowire.BY_NAME,dependencyCheck=true)</code> ）。
+			如果这个属性被设为true，Spring会在配置结束后校验除了primitives和collections类型的所有的属性是否都被赋值了。
+			</p>
+<p>
+			仅仅使用注解并没有做任何事情。但当注解存在时，spring-aspects.jar中的 <code class="literal">AnnotationBeanConfigurerAspect</code> 就起作用了。
+			实质上切面做了这些：当初始化一个有 <code class="interfacename">@Configurable</code> 注解的新对象时，Spring按照注解中的属性来配置这个新创建的对象。
+			要实现上述的操作，已注解的类型必须由AspectJ weaver来织入 - 你可以使用一个 build-time ant/maven任务来完成
+			（参见<a href="http://www.eclipse.org/aspectj/doc/released/devguide/antTasks.html" target="_top">AspectJ Development Environment Guide</a>）
+			或者使用load-time weaving（参见 <a href="ch06s08.html#aop-aj-ltw" title="6.8.4.&#160;在Spring应用中使用AspectJ Load-time weaving（LTW）">第&#160;6.8.4&#160;节 “在Spring应用中使用AspectJ Load-time weaving（LTW）”</a>）。
+			</p>
+<p>
+			类 <code class="classname">AnnotationBeanConfigurerAspect</code> 本身也需要Spring来配置（获得bean factory的引用，使用bean factory配置新的对象）。
+			为此Spring AOP命名空间定义了一个非常方便的标签。如下所示，可以很简单的在application context配置文件包含这个标签中。</p>
+<pre class="programlisting">&lt;aop:spring-configured/&gt;</pre>
+<p>如果你使用DTD代替Schema，对应的定义如下：</p>
+<pre class="programlisting">&lt;bean
+  class="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"
+  factory-method="aspectOf"/&gt;</pre>
+<p>
+			在切面配置完成 <span class="emphasis"><em>之前</em></span> 创建的@Configurable对象实例会导致在log中留下一个warning，并且任何对于该对象的配置都不会生效。
+			举一个例子，一个Spring管理配置的bean在被Spring初始化的时候创建了一个domain object。
+			对于这样的情况，你需要定义bean属性中的"depends-on"属性来手动指定该bean依赖于configuration切面。
+			</p>
+<pre class="programlisting">&lt;bean id="myService"
+  class="com.xzy.myapp.service.MyService"
+  depends-on="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"&gt;
+
+  ...
+
+&lt;/bean&gt;</pre>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="id473526"></a>6.8.1.1.&#160;
+					<code class="interfacename">@Configurable</code> object的单元测试</h4></div></div></div>
+<p>
+				提供 <code class="interfacename">@Configurable</code> 支持的一个目的就是使得domain object的单元测试可以独立进行，不需要通过硬编码查找各种倚赖关系。
+				如果 <code class="interfacename">@Configurable</code> 类型没有通过AspectJ织入，
+				则在单元测试过程中注解不会起到任何作用，测试中你可以简单的为对象的mock或者stub属性赋值，并且和正常情况一样的去使用该对象。
+				如果 <code class="interfacename">@Configurable</code> 类型通过AspectJ织入，
+				我们依然可以脱离容器进行单元测试，不过每次创建一个新的 <code class="interfacename">@Configurable</code> 对象时都会看到一个warning标示该对象不受Spring管理配置。
+		  </p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="id473579"></a>6.8.1.2.&#160;多application context情况下的处理</h4></div></div></div>
+<p>
+					<code class="literal">AnnotationBeanConfigurerAspect</code> 通过一个AspectJ singleton切面来实现对 <code class="interfacename">@Configurable</code> 的支持。
+				一个singleton切面的作用域和一个静态变量的作用域是一样的，例如，对于每一个classloader有一个切面来定义类型。
+				这就意味着如果你在一个classloader层次结构中定义了多个application context的时候就需要考虑在哪里定义 
+				<code class="literal">&lt;aop:spring-configured/&gt;</code> bean和在哪个classpath下放置Srping-aspects.jar。
+				</p>
+<p>
+				考虑一下典型的Spring web项目，一般都是由一个父application context定义大部分business service和所需要的其他资源，然后每一个servlet拥有一个子application context定义。
+				所有这些context共存于同一个classloader hierarchy下，因此对于全体context，<code class="literal">AnnotationBeanConfigurerAspect</code> 仅可以维护一个引用。
+				在这样的情况下，我们推荐在父application context中定义 <code class="literal">&lt;aop:spring-configured/&gt;</code> bean：
+				这里所定义的service可能是你希望注入domain object的。
+				这样做的结果是你不能为子application context中使用@Configurable的domain object配置bean引用（可能你也根本就不希望那么做！）。
+				</p>
+<p> 
+				当在一个容器中部署多个web-app的时候，请确保每一个web-application使用自己的classloader来加载spring-aspects.jar中的类（例如将spring-aspects.jar放在WEB-INF/lib目录下）。
+				如果spring-aspects.jar被放在了容器的classpath下（因此也被父classloader加载），则所有的web application将共享一个aspect实例，这可能并不是你所想要的。
+				</p>
+</div>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="aop-ajlib-other"></a>6.8.2.&#160;Spring中其他的AspectJ切面</h3></div></div></div>
+<p>
+			除了 <code class="interfacename">@Configurable</code> 支持，spring-aspects.jar包含了一个AspectJ切面可以用来为那些使用了
+			@Transactional annotation 的类型和方法驱动Spring事务管理（参见 <a href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">第&#160;9&#160;章 <i>事务管理</i></a>）。
+			提供这个的主要目的是有些用户希望脱离Spring容器使用Spring的事务管理。
+			</p>
+<p>解析@Transactional annotations的切面是<code class="interfacename">AnnotationTransactionAspect</code>。
+			当使用这个切面时，你必须注解这个实现类（和/或这个类中的方法），而<span class="emphasis"><em>不是</em></span>这个类实现的接口（如果有）。
+			AspectJ允许在接口上注解的Java规则 <span class="emphasis"><em>不被继承</em></span>。
+			</p>
+<p>
+			类之上的一个@Transactional注解为该类中任何<span class="emphasis"><em>public</em></span>操作的执行指定了默认的事务语义。
+			</p>
+<p>
+			类内部方法上的一个@Transactional注解会覆盖类注解（如果存在）所给定的默认的事务语义。
+			具有public、protected和default修饰符的方法都可以被注解。直接注解protected和default方法是让这个操作的执行
+			获得事务划分的唯一途径。
+			</p>
+<p>
+			对于AspectJ程序员，希望使用Spring管理配置和事务管理支持，不过他们不想（或者不能）使用注解，spring-aspects.jar也包含了一些抽象切面供你继承来提供你自己的切入点定义。
+			参见 <code class="literal">AbstractBeanConfigurerAspect</code> 和 <code class="literal">AbstractTransactionAspect</code> 的Javadoc获取更多信息。
+			作为一个例子，下面的代码片断展示了如何编写一个切面，然后通过bean原型定义中和类全名匹配的来配置domian object中所有的实例：
+			</p>
+<pre class="programlisting">public aspect DomainObjectConfiguration extends AbstractBeanConfigurerAspect {
+
+  public DomainObjectConfiguration() {
+    setBeanWiringInfoResolver(new ClassNameBeanWiringInfoResolver());
+  }
+
+  <em class="lineannotation"><span class="lineannotation">// the creation of a new bean (any object in the domain model)</span></em>
+  protected pointcut beanCreation(Object beanInstance) :
+    initialization(new(..)) &amp;&amp;
+    SystemArchitecture.inDomainModel() &amp;&amp; 
+    this(beanInstance);
+		   		   
+}</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="aop-aj-configure"></a>6.8.3.&#160;使用Spring IoC来配置AspectJ的切面</h3></div></div></div>
+<p>
+			当在Spring application中使用AspectJ的时候，很自然的会想到用Spring来管理这些切面。
+			AspectJ runtime自身负责切面的创建，这意味着通过Spring来管理AspectJ
+			创建切面依赖于切面所使用的AspectJ instantiation model(per-clause)。
+			</p>
+<p>
+			大多数AspectJ切面都是 <span class="emphasis"><em>singleton</em></span> 切面。
+			管理这些切面非常容易，和通常一样创建一个bean定义引用该切面类型就可以了，并且在bean定义中包含 <code class="literal">'factory-method="aspectOf"'</code> 这个属性。
+			这确保Spring从AspectJ获取切面实例而不是尝试自己去创建该实例。示例如下：
+			</p>
+<pre class="programlisting">&lt;bean id="profiler" class="com.xyz.profiler.Profiler"
+	  factory-method="aspectOf"&gt;
+  &lt;property name="profilingStrategy" ref="jamonProfilingStrategy"/&gt;
+&lt;/bean&gt;</pre>
+<p>
+	   		对于non-singleton的切面，最简单的配置管理方法是定义一个bean原型定义并且使用@Configurable支持，这样就可以在切面被AspectJ runtime创建后管理它们。
+	   		</p>
+<p>
+	   		如果你希望一些@AspectJ切面使用AspectJ来织入（例如使用load-time织入domain object）
+			和另一些@AspectJ切面使用Spring AOP，而这些切面都是由Spring来管理的，那你就需要告诉Spring AOP @AspectJ自动代理支持那些切面需要被自动代理。
+			你可以通过在 <code class="literal">&lt;aop:aspectj-autoproxy&gt;</code> 声明中使用一个或多个 <code class="literal">&lt;include/&gt;</code>。
+	   		每一个指定了一种命名格式，只有bean命名至少符合其中一种情况下才会使用Spring AOP自动代理配置：
+	   		</p>
+<pre class="programlisting">&lt;aop:aspectj-autoproxy&gt;
+  &lt;include name="thisBean"/&gt;
+  &lt;include name="thatBean"/&gt;
+&lt;/aop:aspectj-autoproxy&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="aop-aj-ltw"></a>6.8.4.&#160;在Spring应用中使用AspectJ Load-time weaving（LTW）</h3></div></div></div>
+<p>
+			Load-time weaving（LTW）指的是在虚拟机载入字节码文件时动态织入AspectJ切面。
+			关于LTW的详细信息，请查看<a href="http://www.eclipse.org/aspectj/doc/released/devguide/ltw.html" target="_top">
+			LTW section of the AspectJ Development Environment Guide</a>。
+			在这里我们重点来看一下Java 5环境下Spring应用如何配置LTW。
+			</p>
+<p>
+			LTW需要定义一个 <code class="literal">aop.xml</code>，并将其置于META-INF目录。
+			AspectJ会自动查找所有可见的classpath下的META-INF/aop.xml文件，并且通过定义内容的合集来配置自身。
+			</p>
+<p>一个基本的META-INF/aop.xml文件应该如下所示：</p>
+<pre class="programlisting">&lt;!DOCTYPE aspectj PUBLIC
+  "-//AspectJ//DTD//EN"	"http://www.eclipse.org/aspectj/dtd/aspectj.dtd"&gt;
+
+&lt;aspectj&gt;
+   &lt;weaver&gt;
+	 &lt;include within="com.xyz.myapp..*"/&gt;
+   &lt;/weaver&gt;
+&lt;/aspectj&gt;</pre>
+<p>
+			'<code class="literal">&lt;include/&gt;</code>'的内容告诉AspectJ那些类型需要被纳入织入过程。使用包名前缀并加上"..*"（表示该子包中的所有类型）是一个不错的默认设定。
+			使用include元素是非常重要的，不然AspectJ会查找每一个应用里面用到的类型（包括Spring的库和其它许多相关库）。通常你并不希望织入这些类型并且不愿意承担AspectJ尝试去匹配的开销。
+			</p>
+<p>希望在日志中记录LTW的活动，请添加如下选项：</p>
+<pre class="programlisting">&lt;!DOCTYPE aspectj PUBLIC    
+  "-//AspectJ//DTD//EN"    "http://www.eclipse.org/aspectj/dtd/aspectj.dtd"&gt;    
+
+&lt;aspectj&gt;    
+   &lt;weaver 
+	 options="-showWeaveInfo
+              -XmessageHandlerClass:org.springframework.aop.aspectj.AspectJWeaverMessageHandler"&gt;
+	 &lt;include within="com.xyz.myapp..*"/&gt;
+   &lt;/weaver&gt;
+&lt;/aspectj&gt;</pre>
+<p>
+			最后，如果希望精确的控制使用哪些切面，可以使用 <code class="literal">aspects</code>。
+			默认情况下所有定义的切面都将被织入（spring-aspects.jar包含了META-INF/aop.xml，定义了配置管理和事务管理切面）。
+			如果你在使用spring-aspects.jar，但是只希望使用配制管理切面而不需要事务管理的话，你可以像下面那样定义：
+			</p>
+<pre class="programlisting">&lt;!DOCTYPE aspectj PUBLIC
+  "-//AspectJ//DTD//EN"	"http://www.eclipse.org/aspectj/dtd/aspectj.dtd"&gt;
+
+&lt;aspectj&gt;
+   &lt;aspects&gt;
+	  &lt;include within="org.springframework.beans.factory.aspectj.AnnotationBeanConfigurerAspect"/&gt;
+   &lt;/aspects&gt;
+   &lt;weaver
+    options="-showWeaveInfo -XmessageHandlerClass:org.springframework.aop.aspectj.AspectJWeaverMessageHandler"&gt;
+    &lt;include within="com.xyz.myapp..*"/&gt;
+   &lt;/weaver&gt;
+&lt;/aspectj&gt;</pre>
+<p>在Java 5平台下，LTW可以通过虚拟机的参数来启用。</p>
+<pre class="programlisting">-javaagent:&lt;path-to-ajlibs&gt;/aspectjweaver.jar</pre>
+</div>
+</div></body>
+</html>

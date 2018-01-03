@@ -1,0 +1,135 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;12&#160;章&#160;使用ORM工具进行数据访问</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt02.html" title="部分&#160;II.&#160;中间层数据访问">
+<link rel="prev" href="ch11s04.html" title="11.4.&#160;用Java对象来表达JDBC操作">
+<link rel="next" href="ch12s02.html" title="12.2.&#160;Hibernate">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="orm"></a>第&#160;12&#160;章&#160;使用ORM工具进行数据访问</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch12.html#orm-introduction">12.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html">12.2. Hibernate</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s02.html#id507645">12.2.1. 资源管理</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id507731">12.2.2. 在Spring的application context中创建 <code class="interfacename">SessionFactory</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id506863">12.2.3. 
+				<code class="classname">HibernateTemplate</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id507888">12.2.4. 不使用回调的基于Spring的DAO实现</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508002">12.2.5. 基于Hibernate3的原生API实现DAO</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508226">12.2.6. 编程式的事务划分</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508338">12.2.7. 声明式的事务划分</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508535">12.2.8. 事务管理策略</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#id508796">12.2.9. 容器资源 vs 本地资源</a></span></dt>
+<dt><span class="section"><a href="ch12s02.html#orm-hibernate-invalid-jdbc-access-error">12.2.10. 在应用服务器中使用Hibernate的注意点</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s03.html">12.3. JDO</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s03.html#id509295">12.3.1. 建立PersistenceManagerFactory</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id509435">12.3.2. 
+				<code class="classname">JdoTemplate</code>和<code class="classname">JdoDaoSupport</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id509667">12.3.3. 基于原生的JDO API实现DAO</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id509923">12.3.4. 事务管理</a></span></dt>
+<dt><span class="section"><a href="ch12s03.html#id510036">12.3.5. JdoDialect</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s04.html">12.4. Oracle TopLink</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s04.html#id510232">12.4.1. 
+				<code class="interfacename">SessionFactory</code> 抽象层</a></span></dt>
+<dt><span class="section"><a href="ch12s04.html#id510404">12.4.2. 
+				<code class="classname">TopLinkTemplate</code> 和
+      <code class="classname">TopLinkDaoSupport</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s04.html#id510655">12.4.3. 基于原生的TopLink API的DAO实现</a></span></dt>
+<dt><span class="section"><a href="ch12s04.html#id510973">12.4.4. 事务管理</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s05.html">12.5. iBATIS SQL Maps</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s05.html#id511191">12.5.1. iBATIS 1.x和2.x的概览与区别</a></span></dt>
+<dt><span class="section"><a href="ch12s05.html#id511375">12.5.2. iBATIS SQL Maps 1.x</a></span></dt>
+<dt><span class="section"><a href="ch12s05.html#id511677">12.5.3. iBATIS SQL Maps 2.x</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch12s06.html">12.6. JPA</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch12s06.html#id512127">12.6.1. 在Spring环境中建立JPA</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id512836">12.6.2. 
+				<code class="classname">JpaTemplate</code> 和 <code class="classname">JpaDaoSupport</code>
+			</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513039">12.6.3. 基于原生的JPA实现DAO</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513260">12.6.4. 异常转化</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513358">12.6.5. 事务管理</a></span></dt>
+<dt><span class="section"><a href="ch12s06.html#id513452">12.6.6. JpaDialect</a></span></dt>
+</dl></dd>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="orm-introduction"></a>12.1.&#160;简介</h2></div></div></div>
+<p>Spring在资源管理，DAO实现支持以及事务策略等方面提供了与 <span class="emphasis"><em>Hibernate、JDO、Oracle TopLink、iBATIS SQL Mappings</em></span> 以及 <span class="emphasis"><em>JPA</em></span> 的集成。
+以Hibernate为例，Spring通过使用许多IoC的便捷特性对它提供了一流的支持，帮助你处理很多典型的Hibernate整合的问题。
+所有的这些支持，都遵循Spring通用的事务和DAO异常体系。通常来说有两种不同的整合风格：你可以使用Spring提供的DAO模板，或者直接使用Hibernate/JDO/TopLink等工具的原生API编写DAO。
+无论采取哪种风格，这些DAO都可以通过IoC进行配置，并参与到Spring的资源和事务管理中去。</p>
+<p>当你选择使用O/R Mapping工具来创建数据访问应用程序的时候，Spring为你提供了重大的支持。
+首先你应该了解的是，一旦使用了Spring对O/R Mapping的支持，你不需要亲自做所有的事情。
+无论如何，在决定花费力气并冒着风险去构造类似的内部底层架构之前，我们都建议你考虑和使用Spring的解决方案。
+无论您采用何种技术，Spring对大部分O/R Mapping的支持都可以以library的形式被调用，
+因为所有的内容都被设计成一组可重用的JavaBeans。在Spring的IoC容器中使用这些类，更是有着配置和部署简单的好处。
+因而，在这一章中你看到的大多数例子都是在Spring的 <code class="interfacename">ApplicationContext</code> 中进行的配置。</p>
+<p>使用Spring构建你的O/R Mapping DAO的好处包括：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
+					<span class="emphasis"><em>测试简单。</em></span> Spring的IoC使得替换不同的实现和配置变得非常简单，
+这些内容包括：Hibernate <code class="interfacename">SessionFactory</code> 的位置，JDBC <code class="interfacename">DataSource</code>，
+事务管理器以及映射对象的实现（如果需要）等。这样也就很容易隔离并测试持久化相关的代码的各个部分。
+        </p></li>
+<li><p>
+					<span class="emphasis"><em>异常封装。</em></span> Spring能够封装你所选择的O/R Mapping工具所抛出的异常，
+将它们从专有的、潜在的checked exception转化为一组抽象的runtime DataAccessException体系。
+这可以使你仅需要在恰当的应用程序层次去处理大部分不可恢复的持久层异常，从而避免了很多令人讨厌的catch/throw以及异常声明。
+当然，你还是可以在你需要的地方捕捉和处理异常。回想一下JDBC异常（包括与DB相关的Dialect）被转变为同样的异常体系，这就意味着你可以在一致的编程模型中处理JDBC操作。</p></li>
+<li><p>
+					<span class="emphasis"><em>通用的资源管理。</em></span> Spring的application context能够处理诸如Hibernate的 <code class="interfacename">SessionFactory</code>，
+JDBC的 <code class="interfacename">DataSource</code>，iBatis的SQL Maps配置对象以及其他相关资源的定位和配置。
+这样，这些配置的值很容易被管理和修改。Spring提供了简单、有效、安全的对持久层资源的处理。
+以Hibernate为例，通常在使用Hibernate时，需要使用同一个Hibernate <code class="interfacename">Session</code> 对象以确保高效和恰当地事务处理。
+Spring让我们能够很容易透明地创建并绑定一个 <code class="interfacename">Session</code> 到当前线程。
+你可以使用以下两种办法之一：通过使用一个外部的template包装类在Java代码层次实现，
+或者通过Hibernate的 <code class="interfacename">SessionFactory</code> 暴露当前 <code class="interfacename">Session</code> 对象（对于那些建立在Hibernate3原生的API上的DAO）。
+这样，对于任何的事务环境（本地事务或者JTA），Spring解决了许多在Hibernate使用中不断出现的这样那样的问题。
+        </p></li>
+<li><p>
+					<span class="emphasis"><em>综合的事务管理。</em></span> Spring允许你封装你的O/R Mapping代码，
+这可以通过声明式的AOP方法拦截器或者在Java代码级别上使用一个外部的template包装类。
+无论使用哪一种方式，事务控制都会帮助你做相关处理，例如万一有异常发生时的事务操作（rollback）。
+正如我们下面要讨论的一样，你能够使用和替换各种事务管理器，却不会使你的Hibernate/JDO相关的代码受到影响。
+例如，不管采用本地事务还是JTA，完整的Service层的代码（如声明式事务管理）在这种场景下都是相同的。
+作为一个附加的功能，JDBC相关的代码能够在事务级别上与你所使用的O/R映射代码无缝整合。
+这一功能对于那些诸如批量处理、BLOB的操作等并不适合采用O/R Mapping操作的，但是需要与O/R Mapping操作一起参与相同的事务来说是相当有用的。</p></li>
+<li><p>
+					<span class="emphasis"><em>避免绑定特定技术允许mix-and-match的实现策略。</em></span>
+虽然Hibernate非常强大、灵活、开源而且免费，但它还是使用了自己的特定的API。
+此外，有人也许会争辩：iBatis更轻便而且在不需要复杂的O/R映射策略的应用中使用时能够表现得非常优秀。
+如果可以选择的话，使用标准或抽象的API来实现主要的应用需求通常是更好的，尤其是当你可能会因为功能、性能或其他方面的原因而需要切换到另一种实现的时候。
+举例来说，Spring对Hibernate事务和异常抽象，允许你通过IoC机制轻松封装mapper和DAO对象来实现数据访问功能，这些特性都能够使你在 <span class="emphasis"><em>不牺牲Hibernate强大功能</em></span> 的情况下在你的应用程序中隔离Hibernate的相关代码。
+处理DAO的高层次的service代码无需知道DAO的具体实现。这一机制可以很容易使用mix-and-match方案互不干扰地实现数据访问层（比如在一些地方用Hibernate，一些地方使用JDBC，其他地方使用iBatis），
+mix-and-match的特性也有利于处理遗留代码并在各种技术（JDBC、Hibernate和iBatis）之间取长补短.
+        </p></li>
+</ul></div>
+<p>在Spring发布包中的PetClinic提供了各种可选择的DAO实现和application context对JDBC、Hibernate、Oracle TopLink和JPA的配置。
+因而PetClinic能够作为一个Spring的web应用示例程序来描述Hibernate、TopLink和JPA的使用方法的。它同时涵盖了声明式事务中不同事务策略的配置。</p>
+<p>JPetStore示例主要举例说明了iBATIS SQL Map在Spring环境中的使用。它同时包含了两套不同的Web层选择，一套基于Spring Web MVC，而另外一套则基于Struts。</p>
+<p>除了Spring自身提供的示例之外，有很多其他的基于Spring的O/R Mapping的示例，他们由各自的供应商提供。
+例如：JDO的JPOX实现（<a href="http://www.jpox.org/" target="_top">http://www.jpox.org/</a>）以及Kodo（<a href="http://www.bea.com/kodo" target="_top">http://www.bea.com/kodo</a>）。</p>
+</div>
+</div></body>
+</html>

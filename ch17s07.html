@@ -1,0 +1,29 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>17.7.&#160;在选择这些技术时的一些考虑</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch17.html" title="第&#160;17&#160;章&#160;使用Spring进行远程访问与Web服务">
+<link rel="prev" href="ch17s06.html" title="17.6.&#160;对远程接口不提供自动探测">
+<link rel="next" href="ch18.html" title="第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="sect1" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id557517"></a>17.7.&#160;在选择这些技术时的一些考虑</h2></div></div></div>
+<p>
+		这里提到的每种技术都有它的缺点。你在选择一种技术时，应该仔细考虑你的需要，你所暴露的服务和你在远程访问时传送的对象。
+		</p>
+<p>
+		当使用RMI时，通过HTTP协议访问对象是不可能的，除非你用HTTP包裹RMI流。RMI是一种重量级的协议，因为它支持整个对象的序列化，当要求网络上传输复杂数据结构时这样的序列化是非常重要的。然而，RMI-JRMP只能绑定到Java客户端：它是一种Java-to-Java的远程访问解决方案。
+		</p>
+<p>如果你需要基于HTTP的远程访问而且还要求使用Java序列化，Spring的HTTP调用器是一个很好的选择。它和RMI调用器使用相同的基础设施，仅仅使用HTTP作为传输方式。注意HTTP调用器不仅只能用在Java-to-Java的远程访问，而且在客户端和服务器端都必须使用Spring。（Spring为非RMI接口提供的RMI调用器也要求客户端和服务器端都使用Spring）
+		</p>
+<p>
+		当在异构环境中，Hessian和Burlap将可能极有价值。因为它们可以使用在非Java的客户端。然而，对非Java支持仍然是有限的。已知的问题包括含有延迟初始化的collection对象的Hibernate对象的序列化。如果你有一个这样的数据结构，应当考虑使用RMI或HTTP调用器，而不是Hessian。
+		</p>
+<p>在使用服务集群和需要JMS代理（JMS broker）来处理负载均衡，发现和自动-失败恢复服务时JMS是很有用的。缺省情况下，在使用JMS远程服务时使用Java序列化，但是JMS提供者也可以使用不同的机制例如XStream来让服务器用其他技术。</p>
+<p>最后的一点是，相对于RMI，EJB有一个优点是它支持标准的基于角色的认证和授权，以及远程事务传递。用RMI调用器或HTTP调用器来支持安全上下文的传递是可能的，虽然这不由核心Spring提供：Spring提供了合适的钩子来插入第三方或定制的解决方案。</p>
+</div></body>
+</html>

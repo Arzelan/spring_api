@@ -1,0 +1,37 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt04.html" title="部分&#160;IV.&#160;整合">
+<link rel="prev" href="ch17s07.html" title="17.7.&#160;在选择这些技术时的一些考虑">
+<link rel="next" href="ch18s02.html" title="18.2.&#160;访问EJB">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="ejb"></a>第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成
+	</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch18.html#ejb-introduction">18.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch18s02.html">18.2. 访问EJB</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch18s02.html#ejb-access-concepts">18.2.1. 概念</a></span></dt>
+<dt><span class="section"><a href="ch18s02.html#ejb-access-local">18.2.2. 访问本地的无状态Session Bean(SLSB)</a></span></dt>
+<dt><span class="section"><a href="ch18s02.html#ejb-access-remote">18.2.3. 访问远程SLSB</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch18s03.html">18.3. 使用Spring提供的辅助类实现EJB组件</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="ejb-introduction"></a>18.1.&#160;简介</h2></div></div></div>
+<p>做为一个轻量级的容器，Spring常被认为EJB是的替代品。我们也相信，对于很多(不一定是绝大多数)应用和情况，相比采用EJB及EJB容器来实现同样的功能，采用Spring作为容器，借助它对事务，ORM和JDBC存取这些领域的良好支持，的确会是一个更好的选择。</p>
+<p>不过，需要特别注意的是，使用了Spring并不是说我们就不能用EJB了。实际上，Spring使得访问EJB和实现EJB及其内部功能更加方便。另外，如果通过Spring来访问EJB组件服务，以后就可以在本地EJB组件，远程EJB组件，或者是POJO(简单Java对象)这些变体之间透明地切换实现方式，而不需要改变客户端的代码。</p>
+<p>本章，我们来看看Spring是如何帮助我们访问和实现EJB组件的。Spring在访问无状态Session Bean(SLSBs)的时候特别有用，现在我们就由此开始讨论。</p>
+</div>
+</div></body>
+</html>

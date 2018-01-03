@@ -1,0 +1,90 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>4.4.&#160;ResourceLoader</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch04.html" title="第&#160;4&#160;章&#160;资源">
+<link rel="prev" href="ch04s03.html" title="4.3.&#160;内置 Resource 实现">
+<link rel="next" href="ch04s05.html" title="4.5.&#160; ResourceLoaderAware 接口">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id459791"></a>4.4.&#160;<code class="interfacename">ResourceLoader</code>
+		</h2></div></div></div>
+<p>
+			<code class="interfacename">ResourceLoader</code> 接口由能返回(或者载入)<code class="interfacename">Resource</code> 实例的对象来实现。
+		</p>
+<pre class="programlisting">public interface ResourceLoader {
+    Resource getResource(String location);
+}</pre>
+<p>所有的application context都实现了 <code class="interfacename">ResourceLoader</code> 接口，
+			因此它们可以用来获取<code class="interfacename">Resource</code> 实例。
+		</p>
+<p>当你调用特定application context的 <code class="methodname">getResource()</code> 方法，
+			而且资源路径并没有特定的前缀时，你将获得与该application context相应的 <code class="interfacename">Resource</code> 类型。例如：假定下面的代码片断是基于<code class="classname">ClassPathXmlApplicationContext</code> 实例上执行的：
+		</p>
+<pre class="programlisting">Resource template = ctx.getResource("some/resource/path/myTemplate.txt");</pre>
+<p>这将返回<code class="classname">ClassPathResource</code>；如果是基于<code class="classname">FileSystemXmlApplicationContext</code> 实例上执行的，那你将获得<code class="classname">FileSystemResource</code>。而对于 <code class="classname">WebApplicationContext</code>
+你将获得<code class="classname">ServletContextResource</code>，依此类推。
+		</p>
+<p>这样你可以在特定的application context中用流行的方法载入资源。
+		</p>
+<p>另一方面，无论什么类型的application context，
+			你可以通过使用特定的前缀 <code class="literal">classpath:</code> 强制使用<code class="classname">ClassPathResource</code>。
+		</p>
+<pre class="programlisting">Resource template = ctx.getResource("classpath:some/resource/path/myTemplate.txt");</pre>
+<p>同样的，你可以用任何标准的 <code class="classname">java.net.URL</code> 前缀，强制使用 <code class="classname">UrlResource</code> ：
+		</p>
+<pre class="programlisting">Resource template = ctx.getResource("file:/some/resource/path/myTemplate.txt");</pre>
+<pre class="programlisting">Resource template = ctx.getResource("http://myhost.com/resource/path/myTemplate.txt");</pre>
+<p>下面的表格概述了 <code class="classname">String</code> 到 <code class="interfacename">Resource</code> 的转换规则：
+        </p>
+<div class="table">
+<a name="id459970"></a><p class="title"><b>表&#160;4.1.&#160;Resource strings</b></p>
+<div class="table-contents"><table summary="Resource strings" width="100%" border="1">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th align="center">前缀</th>
+<th align="center">例子</th>
+<th align="center">说明</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><p>classpath:</p></td>
+<td><p> <code class="literal">classpath:com/myapp/config.xml</code>
+			            </p></td>
+<td><p>从classpath中加载。</p></td>
+</tr>
+<tr>
+<td><p>file:</p></td>
+<td><p> <code class="literal">file:/data/config.xml</code>
+			            </p></td>
+<td><p>作为 <code class="classname">URL</code> 从文件系统中加载。<sup>[<a name="id460088" href="#ftn.id460088">a</a>]</sup> </p></td>
+</tr>
+<tr>
+<td><p>http:</p></td>
+<td><p> <code class="literal">http://myserver/logo.png</code>
+			            </p></td>
+<td><p>作为 <code class="classname">URL</code> 加载。</p></td>
+</tr>
+<tr>
+<td><p>(none)</p></td>
+<td><p> <code class="literal">/data/config.xml</code> </p></td>
+<td><p> 根据
+			            <code class="interfacename">ApplicationContext</code> 进行判断。 </p></td>
+</tr>
+</tbody>
+<tbody class="footnotes"><tr><td colspan="3"><div class="footnote"><p><sup>[<a name="ftn.id460088" href="#id460088">a</a>] </sup>参考标题为 <a href="ch04s07.html#resources-filesystemresource-caveats" title="4.7.3.&#160;
+				FileSystemResource 提示">第&#160;4.7.3&#160;节 “
+				<code class="classname">FileSystemResource</code> 提示”</a> 的章节。</p></div></td></tr></tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div></body>
+</html>

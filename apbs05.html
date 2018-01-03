@@ -1,0 +1,64 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>B.5.&#160;Registering the handler and the schema</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="apb.html" title="附录&#160;B.&#160;Extensible XML authoring">
+<link rel="prev" href="apbs04.html" title="B.4.&#160;Coding a BeanDefinitionParser">
+<link rel="next" href="apc.html" title="附录&#160;C.&#160;spring-beans-2.0.dtd">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id598651"></a>B.5.&#160;Registering the handler and the schema</h2></div></div></div>
+<p>
+				We're done implementing the <code class="interfacename">NamespaceHandler</code> and the <code class="interfacename">BeanDefinitionParser</code> that will
+				take care of parsing the custom XML Schema for us. We now have the following artifacts:
+				</p>
+<div class="itemizedlist"><ul type="disc" compact>
+<li><p><code class="classname">org.springframework.samples.xml.MyNamespaceHandler</code> - 
+						namespace handler that will register one or more <code class="interfacename">BeanDefinitionParser</code> instances</p></li>
+<li><p><code class="classname">org.springframework.samples.xml.SimpleDateFormatBeanDefinitionParser</code> - 
+						used my the namespace handler to parse elements of type <code class="literal">dateformat</code></p></li>
+<li><p><code class="literal">org/springframework/samples/xml/myns.xsd</code> - the actual schema that 
+						will be used in the Spring configuration files 
+						(<span class="bold"><strong>note that this file needs to be on the classpath, alongside your 
+						namespace handler and parser classes as we'll see later on</strong></span>)</p></li>
+</ul></div>
+<p>
+			</p>
+<p>
+				The last thing we need to do is to get the namespace ready for use by registering
+				it in two special purpose properties files. These properties files are both placed in the META-INF
+				directory and can, for example, be distributed alongside your binary classes in a JAR file. Spring will 
+				automatically pick up the new namespaces and handlers once it finds the properties
+				files on the classpath.
+			</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id598763"></a>B.5.1.&#160;<code class="literal">META-INF/spring.handlers</code></h3></div></div></div>
+<p>
+					The properties file called <code class="literal">spring.handlers</code> contains a mapping
+					of XML Schema URIs to namespace handler classes. So for our example, we need to 
+					specify the following here:
+				</p>
+<pre class="programlisting">http\://www.mycompany.com/schema/myns=org.springframework.samples.xml.MyNamespaceHandler</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id598795"></a>B.5.2.&#160;<code class="literal">META-INF/spring.schemas</code></h3></div></div></div>
+<p>
+					The properties file called <code class="literal">spring.schemas</code> contains a mapping
+					of XML Schema locations (referred to along with the schema declaration in XML files
+					that use the schema as part of the <code class="literal">xsi:schemaLocation</code> attribute)
+					to classpath resources. This file is needed to prevent Spring from having to use a default
+					<code class="interfacename">EntityResolver</code> that requires Internet access to retrieve the 
+					schema file. If you specify the mapping in this properties file, Spring will
+					search for the schema on the classpath (in this case <code class="literal">'myns.xsd'</code>
+					in the <code class="literal">'org.springframework.samples.xml'</code> package):
+				</p>
+<pre class="programlisting">http\://www.mycompany.com/schema/myns/myns.xsd=org/springframework/samples/xml/myns.xsd</pre>
+</div>
+</div></body>
+</html>

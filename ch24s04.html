@@ -1,0 +1,108 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>24.4.&#160;场景</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch24.html" title="第&#160;24&#160;章&#160;动态语言支持">
+<link rel="prev" href="ch24s03.html" title="24.3.&#160;定义动态语言支持的bean">
+<link rel="next" href="ch24s05.html" title="24.5.&#160;更多的资源">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="dynamic-language-scenarios"></a>24.4.&#160;场景</h2></div></div></div>
+<p>
+			在某些可能的场景下，使用脚本语言定义Spring管理的bean的是有好处的，当然这样的场景是各式各样的。这一节描述了两个可能在Spring中使用动态语言支持特征的用例。
+        </p>
+<p>
+			请注意Spring的发布包中包括了一个动态语言支持的示例项目(示例项目只是一个小项目，其范围是用于演示Spring框架的某些特定的特征)。
+        </p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="dynamic-language-scenarios-controllers"></a>24.4.1.&#160;Spring MVC控制器脚本化</h3></div></div></div>
+<p>
+				有一组类可以使用dynamic-language-backed bean并从中获益，那就是Spring MVC控制器。在纯Spring MVC应用中，贯穿整个web应用的导航流程，相当大的部分都封装在Spring MVC控制器的代码中。因为web应用的导航流程和其他表示层逻辑需要能够积极响应业务需求的变化和问题，通过编辑一个或多个动态语言源文件也许可以更容易响应这样那样的变化，而且通过这种方式，一个处于运行状态的应用可以立即反映出所做的改动。
+			</p>
+<p>
+				象Spring这样由项目支持的轻量级架构模型中，你的目标是拥有一个真正<span class="emphasis"><em>瘦小</em></span> 的表示层，而应用的所有业务逻辑都在包装在领域层和服务层的类中，将Spring MVC控制器作为dynamic-language-backed bean来进行开发，可以简单的编辑保存文本文件就可以修改表示层逻辑，这些动态语言源文件的任何变化都可以(取决于配置)自动的反射为bean(底层为动态语言源文件)的变化。
+			</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>
+					请注意为了自动提取dynamic-language-backed bean的任何变化，你必须启用'refreshable beans' 功能。关于该特征的详细情况请参考<a href="ch24s03.html#dynamic-language-refreshable-beans" title="24.3.1.2.&#160;Refreshable bean">第&#160;24.3.1.2&#160;节 “Refreshable bean”</a>一节。
+				</p>
+</div>
+<p>
+				下面的示例是使用Groovy动态语言实现的<code class="interfacename">org.springframework.web.servlet.mvc.Controller</code>。这个例子选自Spring发布包中提供的动态语言支持示例项目。关于该项目的详情请参考Spring发布包中的<code class="filename">'samples/showcases/dynamvc/'</code>目录。
+			</p>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">&lt;!-- from the file '/WEB-INF/groovy/FortuneController.groovy' --&gt;</span></em>
+package org.springframework.showcase.fortune.web;
+
+import org.springframework.showcase.fortune.service.FortuneService;
+import org.springframework.showcase.fortune.domain.Fortune;
+import org.springframework.web.servlet.ModelAndView;
+import org.springframework.web.servlet.mvc.Controller;
+
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+
+public class FortuneController implements Controller {
+
+    @Property FortuneService fortuneService
+
+    public ModelAndView handleRequest(
+            HttpServletRequest request, HttpServletResponse httpServletResponse) {
+
+        return new ModelAndView("tell", "fortune", this.fortuneService.tellFortune())
+    }
+
+}</pre>
+<p>
+			上面的<code class="interfacename">Controller</code>接口的相关的bean定义如下：
+			</p>
+<pre class="programlisting">&lt;lang:groovy id="fortune"
+             refresh-check-delay="3000"
+             script-source="/WEB-INF/groovy/FortuneController.groovy"&gt;
+    &lt;lang:property name="fortuneService" ref="fortuneService"/&gt;
+&lt;/lang:groovy&gt;
+</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="dynamic-language-scenarios-validators"></a>24.4.2.&#160;Validator脚本化</h3></div></div></div>
+<p>
+				使用Spring进行应用开发的另一个领域，也就是校验，也许会从dynamic-language-backed bean提供的柔韧性中获益。使用松散类型的动态语言（相对Java语言）<span class="emphasis"><em>也许</em></span>可以很容易的表示复杂的校验逻辑（可能是通过内置的正则表达式）。
+			</p>
+<p>
+				使用dynamic-language-backed bean作为校验器，可以很容易的改变校验逻辑，只要编辑修改简单的文本文件即可；任何此类修改可以自动反射(取决于配置方式)，这些都是在程序运行的时候进行的，不需要重启应用程序。
+			</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>
+					请注意为了自动提取dynamic-language-backed bean的任何变化，你必须启用 'refreshable beans' 功能。关于该特征的详细情况请参考<a href="ch24s03.html#dynamic-language-refreshable-beans" title="24.3.1.2.&#160;Refreshable bean">第&#160;24.3.1.2&#160;节 “Refreshable bean”</a>一节。
+				</p>
+</div>
+<p>
+				下面的示例是使用Groovy动态语言实现的<code class="interfacename">org.springframework.validation.Validator</code>。（关于<code class="interfacename">Validator</code>接口的讨论请参考<a href="ch05s02.html" title="5.2.&#160;使用Spring的Validator接口进行校验">第&#160;5.2&#160;节 “使用Spring的<code class="interfacename">Validator</code>接口进行校验”</a> 一节）
+			</p>
+<pre class="programlisting">import org.springframework.validation.Validator
+import org.springframework.validation.Errors
+import org.springframework.beans.TestBean
+
+public class TestBeanValidator implements Validator {
+
+    boolean supports(Class clazz) {
+        return TestBean.isAssignableFrom(clazz)
+    }
+    
+    void validate(Object bean, Errors errors) {
+        String name = bean.getName()
+        if(name == null || name.trim().length == 0) {
+            errors.reject("whitespace", "Cannot be composed wholly of whitespace")
+        }
+    }
+}</pre>
+</div>
+</div></body>
+</html>

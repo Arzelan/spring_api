@@ -1,0 +1,63 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>17.4.&#160;使用HTTP调用器暴露服务</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch17.html" title="第&#160;17&#160;章&#160;使用Spring进行远程访问与Web服务">
+<link rel="prev" href="ch17s03.html" title="17.3.&#160;使用Hessian或者Burlap通过HTTP远程调用服务">
+<link rel="next" href="ch17s05.html" title="17.5.&#160;Web服务">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="sect1" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id556740"></a>17.4.&#160;使用HTTP调用器暴露服务</h2></div></div></div>
+<p>
+			和使用自身序列化机制的轻量级协议Burlap和Hessian相反，Spring HTTP调用器使用标准Java序列化机制来通过HTTP暴露业务。如果你的参数或返回值是复杂类型，并且不能通过Hessian和Burlap的序列化机制进行序列化，HTTP调用器就很有优势（参阅下一节，选择远程技术时的考虑）。
+		</p>
+<p>
+		实际上，Spring可以使用J2SE提供的标准功能或Commons的HttpClient来实现HTTP调用。如果你需要更先进，更容易使用的功能，就使用后者。你可以参考 <a href="http://jakarta.apache.org/commons/httpclient" target="_top">jakarta.apache.org/commons/httpclient</a>。
+		</p>
+<div class="sect2" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id556779"></a>17.4.1.&#160;暴露服务对象</h3></div></div></div>
+<p>
+				为服务对象设置HTTP调用器和你在Hessian或Burlap中使用的方式类似。就象为Hessian支持提供的 <code class="literal">HessianServiceExporter</code>，Spring的HTTP调用器提供了 <code class="literal">org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter</code>。为了暴露 <code class="literal">AccountService</code>（上述的），使用下面的配置：
+</p>
+<pre class="programlisting">
+&lt;bean name="/AccountService" class="org.springframework.remoting.httpinvoker.HttpInvokerServiceExporter"&gt;
+  &lt;property name="service" ref="accountService"/&gt;
+  &lt;property name="serviceInterface" value="example.AccountService"/&gt;
+&lt;/bean&gt;
+</pre>
+<p>
+			</p>
+</div>
+<div class="sect2" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id556827"></a>17.4.2.&#160;在客户端连接服务</h3></div></div></div>
+<p>
+				同样，从客户端连接业务与你使用Hessian或Burlap时所做的很相似。使用代理，Spring可以将你调用的HTTP POST请求转换成被暴露服务的URL。
+</p>
+<pre class="programlisting">
+&lt;bean id="httpInvokerProxy" class="org.springframework.remoting.httpinvoker.HttpInvokerProxyFactoryBean"&gt;
+  &lt;property name="serviceUrl" value="http://remotehost:8080/AccountService"/&gt;
+  &lt;property name="serviceInterface" value="example.AccountService"/&gt;
+&lt;/bean&gt;
+</pre>
+<p>
+			</p>
+<p>
+就象上面说的一样，你可以选择使用你想使用的HTTP客户端。缺省情况下，HttpInvokerPropxy使用J2SE的HTTP功能，但是你也可以通过设置<code class="literal">httpInvokerRequestExecutor</code>属性选择使用Commons HttpClient：
+
+</p>
+<pre class="programlisting">
+&lt;property name="httpInvokerRequestExecutor"&gt;
+	&lt;bean class="org.springframework.remoting.httpinvoker.CommonsHttpInvokerRequestExecutor"/&gt;
+&lt;/property&gt;
+</pre>
+<p>
+			</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,100 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>25.3.&#160;注解</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch25.html" title="第&#160;25&#160;章&#160;注解和源代码级的元数据支持">
+<link rel="prev" href="ch25s02.html" title="25.2.&#160;Spring的元数据支持">
+<link rel="next" href="ch25s04.html" title="25.4.&#160;集成Jakarta Commons Attributes">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="metadata-annotations"></a>25.3.&#160;注解</h2></div></div></div>
+<p>
+			Spring有很多自定义的(Java5+)注解。
+		</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="metadata-annotations-required"></a>25.3.1.&#160;@<code class="interfacename">Required</code></h3></div></div></div>
+<p>
+				<code class="literal">org.springframework.beans.factory.annotation</code>包
+				中的@<code class="interfacename">Required</code>注解能用来<span class="emphasis"><em>标记</em></span>
+				属性，标示为<span class="emphasis"><em>'需要设置'</em></span>(例如，一个类中的被注解的(setter)
+				方法必须配置一个用来依赖注入的值)，否则一个<code class="classname">Exception</code>
+				必须(并且将会)在运行时被容器抛出。
+			</p>
+<p>
+				演示这个注解用法的最好办法是给出像下面这样的范例：
+			</p>
+<pre class="programlisting">public class SimpleMovieLister {
+
+    <em class="lineannotation"><span class="lineannotation">// the <code class="classname">SimpleMovieLister</code> has a dependency on the <code class="interfacename">MovieFinder</code></span></em>
+    private MovieFinder movieFinder;
+
+    <em class="lineannotation"><span class="lineannotation">// a setter method so that the Spring container can 'inject' a <code class="interfacename">MovieFinder</code></span></em>
+    @Required
+    public void setMovieFinder(MovieFinder movieFinder) {
+        this.movieFinder = movieFinder;
+    }
+    
+    <em class="lineannotation"><span class="lineannotation">// business logic that actually 'uses' the injected <code class="interfacename">MovieFinder</code> is omitted...</span></em>
+}</pre>
+<p>
+				还好上面的类定义看起来比较简单。基本上(在Spring IoC容器的上下文中)，
+				所有针对<code class="classname">SimpleMovieLister</code>类的<code class="interfacename">BeanDefinitions</code>
+				一定要提供一个值(用Spring API的话来讲就是那个属性一定要设置一个<code class="classname">PropertyValue</code>)。
+			</p>
+<p>
+				让我们看一个<span class="bold"><strong>不</strong></span>能通过验证的XML配置范例。
+			</p>
+<pre class="programlisting">&lt;bean id="movieLister" class="x.y.SimpleMovieLister"&gt;
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- whoops, no MovieFinder is set (and this property is @<code class="interfacename">Required</code>) --&gt;</span></em>
+&lt;/bean&gt;</pre>
+<p>
+				运行时Spring容器会生成下面的消息(追踪堆栈的剩下部分被删除了)。
+			</p>
+<pre class="programlisting">Exception in thread "main" java.lang.IllegalArgumentException:
+    Property 'movieFinder' is required for bean 'movieLister'.</pre>
+<p>
+				现在先停一下……还有最后一点(小的)Spring配置需要用来<span class="emphasis"><em>'开启'</em></span>这个行为。
+				简单注解一下你类的<span class="emphasis"><em>'setter'</em></span>属性不足以实现这个行为。
+				你还需要能发现@<code class="interfacename">Required</code>注解并能适当地处理它的东西。
+			</p>
+<p>
+				进入<code class="classname">RequiredAnnotationBeanPostProcessor</code>类。
+				这是一个由Spring提供的特殊的<code class="interfacename">BeanPostProcessor</code>实现，
+				@<code class="interfacename">Required</code>-aware能提供<span class="emphasis"><em>'要求属性未被设置时提示'</em></span>的逻辑。
+				它<span class="emphasis"><em>很</em></span>容易配置；只要简单地把下列bean定义放入你的Spring XML配置中。
+			</p>
+<pre class="programlisting">&lt;bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"/&gt;</pre>
+<p>
+				最后，你能配置一个<code class="classname">RequiredAnnotationBeanPostProcessor</code>类的实例
+				来查找<span class="emphasis"><em>另一个</em></span><code class="interfacename">Annotation</code>类型。
+				如果你已经有自己的@<code class="interfacename">Required</code>风格的注解这会是件很棒的事。
+				简单地把它插入一个<code class="classname">RequiredAnnotationBeanPostProcessor</code>的定义中就可以了。
+			</p>
+<p>
+				看个例子，让我们假设你(和你的组织/团队)已经定义了一个叫做@<code class="interfacename">Mandatory</code>
+				的属性。你能建一个如下的<code class="classname">RequiredAnnotationBeanPostProcessor</code>实例
+				@<code class="interfacename">Mandatory</code>-aware：
+			</p>
+<pre class="programlisting">&lt;bean class="org.springframework.beans.factory.annotation.RequiredAnnotationBeanPostProcessor"&gt;
+    &lt;property name="requiredAnnotationType" value="your.company.package.Mandatory"/&gt;
+&lt;/bean&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id587285"></a>25.3.2.&#160;Spring中的其它@Annotations</h3></div></div></div>
+<p>
+				注解也被用于Spring中的其他地方。相比在这里说明，那些注解在他们各自的章节或与他们相关的章节中予以说明。
+			</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><a href="ch09s05.html#transaction-declarative-annotations" title="9.5.6.&#160;使用 @Transactional">第&#160;9.5.6&#160;节 “使用 <code class="interfacename">@Transactional</code>”</a></p></li>
+<li><p><a href="ch06s08.html#aop-atconfigurable" title="6.8.1.&#160;在Spring中使用AspectJ来为domain object进行依赖注入">第&#160;6.8.1&#160;节 “在Spring中使用AspectJ来为domain object进行依赖注入”</a></p></li>
+<li><p><a href="ch06s02.html" title="6.2.&#160;@AspectJ支持">第&#160;6.2&#160;节 “@AspectJ支持”</a></p></li>
+</ul></div>
+</div>
+</div></body>
+</html>

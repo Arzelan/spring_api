@@ -1,0 +1,152 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>25.6.&#160;使用属性来减少MVC web层配置</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch25.html" title="第&#160;25&#160;章&#160;注解和源代码级的元数据支持">
+<link rel="prev" href="ch25s05.html" title="25.5.&#160;元数据和Spring AOP自动代理">
+<link rel="next" href="ch25s07.html" title="25.7.&#160;元数据属性的其它用法">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id588146"></a>25.6.&#160;使用属性来减少MVC web层配置</h2></div></div></div>
+<p>
+			Spring元数据从1.0开始的另一个主要用处就是提供简化Spring MVC web层配置的方案。
+		</p>
+<p>
+			Spring MVC提供了<span class="emphasis"><em>处理类映射</em></span>的灵活性：将输入的请求映射到控制器(或者其它处理类)的实例上。
+			通常处理类映射是在相关的Spring<code class="classname">DispatcherServlet</code>的<code class="literal">xxxx-servlet.xml</code>
+			文件中配置的。
+		</p>
+<p>			
+			将这些映射保存在<code class="classname">DispatcherServlet</code>配置文件中通常是一个好主意。它提供了最大的灵活性，特别是：
+		</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
+					控制器实例通过XML bean定义由Spring IoC显式管理。
+				</p></li>
+<li><p>
+					因为映射在控制器之外，所以同一个控制器实例可以在一个<code class="classname">DispatcherServlet</code>上下文中获得多个映射，或者在不同的配置中重用。
+				</p></li>
+<li><p>					
+					Spring MVC可以支持基于任何标准的映射，而不仅仅是其它很多框架中支持的请求URL到控制器的映射。
+				</p></li>
+</ul></div>
+<p>
+			然而，这的确意味着对于每一个控制器，我们都同时需要一个控制器映射(通常在一个控制器映射XML的bean定义中)和一个控制器自己的XML映射。
+		</p>
+<p>
+			Spring提供了一种基于源码级属性的简单方式，这在很简单的场景中是很引人注目的选择。
+		</p>
+<p class="remark"><i><span class="remark">
+			本节描述的方式最适合简单的MVC相关场景。这也牺牲了一些Spring MVC的能力，比如在不同的映射中使用相同的控制器的能力，和基于请求URL之外的其它映射的能力。
+		</span></i></p>
+<p>
+			这种方式中，控制器标识了一个或多个类级别的元数据属性，每一个都指定一个它们会被映射到的URL。
+		</p>
+<p>
+			下面的例子展示了这种方式。在每个例子中，我们都会有一个依赖于<code class="interfacename">Cruncher</code>	类型的业务对象的控制器。
+			同样，这个依赖通过依赖注入解决。这个<code class="interfacename">Cruncher</code>需要通过相关的<code class="classname">DispatcherServlet</code> XML文件或上级上下文的bean定义中获取。
+		</p>
+<p>
+			我们给这个控制器类绑定了一个指定需要映射的URL的属性。我们将这种依赖通过一个JavaBean属性或构造器参数来传递。
+			这个依赖一定要能够通过自动配置来解决：也就是说，在上下文中一定正好有一个<code class="interfacename">Cruncher</code>类型的业务对象。
+		</p>
+<pre class="programlisting">/**
+ * Normal comments here
+ *
+ * @@org.springframework.web.servlet.handler.metadata.PathMap("/bar.cgi")
+ */
+public class BarController extends AbstractController {
+
+    private Cruncher cruncher;
+
+    public void setCruncher(Cruncher cruncher) {
+        this.cruncher = cruncher;
+    }
+
+    protected ModelAndView handleRequestInternal (
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        System.out.println("Bar Crunching c and d =" + cruncher.concatenate("c", "d"));
+        return new ModelAndView("test");
+    }
+}</pre>
+<p>			
+			要让这个自动映射能生效，我们需要将下面的内容加到相关的 <code class="literal">xxxx-servlet.xml</code>	文件中，以指定属性处理器的映射关系。
+			这个特定的处理器映射能够处理任意多的带有上文的属性的控制器。这个bean的id("commonsAttributesHandlerMapping")并不重要，类型才是关键：
+		</p>
+<pre class="programlisting">&lt;bean id="commonsAttributesHandlerMapping"      
+    class="org.springframework.web.servlet.handler.metadata.CommonsPathMapHandlerMapping"/&gt;</pre>
+<p>			
+			在上面的例子中，我们现在<span class="emphasis"><em>不需要</em></span>一个Attributes bean定义。这是因为这个类直接通过Commons Attributes API运行，而不是通过Spring的元数据抽象。
+		</p>
+<p>
+			我们现在不需要为每个控制器指定XML配置。控制器会被自动映射到指定的URL。它们通过Spring的自动匹配能力从IoC中获益。
+			例如，上面展示的简单控制器的"cruncher" bean属性中的依赖，就是在当前的web应用上下文中自动获取的。Setter和Constructor依赖注入都可以实现零配置。
+		</p>
+<p>
+			一个支持多个URL路径的构造器注入的例子：
+		</p>
+<pre class="programlisting">/**
+ * Normal comments here
+ *
+ * @@org.springframework.web.servlet.handler.metadata.PathMap("/foo.cgi")
+ * @@org.springframework.web.servlet.handler.metadata.PathMap("/baz.cgi")
+ */
+public class FooController extends AbstractController {
+
+    private Cruncher cruncher;
+
+    public FooController(Cruncher cruncher) {
+        this.cruncher = cruncher;
+    }
+
+    protected ModelAndView handleRequestInternal (
+            HttpServletRequest request, HttpServletResponse response) throws Exception {
+        return new ModelAndView("test");
+    }
+}</pre>
+<p>这个方式有下面一些好处:</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
+					显著的减少了配置工作量。每次增加一个控制器，我们<span class="emphasis"><em>不</em></span>需要增加XML配置。通过属性驱动的事务管理，一旦建立了基本的基础设施，就非常容易增加更多的应用类。
+				</p></li>
+<li><p>
+					我们保留了很多Spring IoC的能力来配置控制器。
+				</p></li>
+</ul></div>
+<p>
+			这个方式有以下一些局限性：
+		</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
+					一个更复杂的构建进程中的一次性开销。我们需要一个属性编译步骤和一个属性索引步骤。然而，一旦构建好了，这就不应该成为问题。
+				</p></li>
+<li><p>
+					现在只支持Commons Attributes，虽然将来可能会增加对其它属性提供者的支持。
+				</p></li>
+<li><p>
+					这种控制器只支持"根据类型自动匹配"的依赖注入。即使这样，它们也比Struts Action(框架中没有IoC支持)和WebWork Action(只有原始的IoC支持)要先进得多。
+				</p></li>
+<li><p>依靠IoC自动解析可能容易引起混乱。</p></li>
+</ul></div>
+<p>
+			因为根据类型自动匹配意味着必须要有一个依赖于特定类型的bean，如果我们使用AOP一定要小心。例如，在使用<code class="classname">TransactionProxyFactoryBean</code>的常见情形中，
+			我们碰到<span class="emphasis"><em>两个</em></span>像<code class="interfacename">Cruncher</code>这样的业务接口的实现：原始的POJO定义和事务AOP代理。因为应用上下文不能清晰地解析依赖的类型，
+			这肯定不能运行。解决方案是使用AOP自动代理，构建好自动代理基础设施保证只定义了一个<code class="interfacename">Cruncher</code> 的实现，这个实现被自动通知。从而这个
+			方式能够象上文描述的那样与声明式面向属性的服务良好协作。这样也很容易构建，因为属性编译步骤必须恰当的去管理web控制器目标。
+		</p>
+<p>
+			与其它的元数据功能不同的是，目前只有一个可用的Commons Attributes实现：<code class="classname">org.springframework.web.servlet.handler.metadata.CommonsPathMapHandlerMapping</code>。
+			这个局限是因为我们不仅仅需要属性编译，也需要属性<span class="emphasis"><em>索引</em></span>：从属性API获得所有带有<code class="literal">PathMap</code>属性的类。
+			<code class="classname">org.springframework.metadata.Attributes</code>抽象接口目前还没有提供	索引功能，
+			也许将来会提供。(如果你希望增加对另外的属性实现的支持 - 它一定要支持索引 - 你	可以方便地扩展<code class="classname">CommonsPathMapHandlerMapping</code>类的父类
+			<code class="classname">AbstractPathMapHandlerMapping</code>，然后实现2个<code class="literal">protected</code> <code class="literal">abstract</code>方法，以使用你感兴趣的属性API)
+		</p>
+<p>			
+			总的来说，我们在构建过程中需要两个额外的步骤：属性编译和属性索引。前面已经讲解了属性索引任务的使用。请注意，Commons Attributes目前需要一个jar文件作为索引的输入。
+		</p>
+</div></body>
+</html>

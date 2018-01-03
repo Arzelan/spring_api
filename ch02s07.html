@@ -1,0 +1,79 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>2.7.&#160;移植到Spring 2.0</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch02.html" title="第&#160;2&#160;章&#160;Spring 2.0 的新特性">
+<link rel="prev" href="ch02s06.html" title="2.6.&#160;其他特性">
+<link rel="next" href="ch02s08.html" title="2.8.&#160;更新的样例应用">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="new-in-2-migrating"></a>2.7.&#160;移植到Spring 2.0</h2></div></div></div>
+<p>最后一节中详细说明了从Spring 1.2.x移植到Spring 2.0的过程中可能出现的问题。</p>
+<p>先让我们来有所保留地看看下面这句话, 从Spring 1.2移植到Spring 2.0<span class="emphasis"><em>应该</em></span>就是简单地把Spring 2.0的jar文件放进应用程序目录中的合适位置。</p>
+<p>上一句话的关键字理所当然是“<span class="quote"><span class="emphasis"><em>应该</em></span></span>”。
+    到底是不是无缝升级依赖于你的代码中究竟用了多少Spring API。
+    Spring 2.0移除了很多在Spring 1.2.x代码库中标为deprecated的代码，所以如果你用了这些类或方法，
+    你应该使用它们的替代类或方法(下面总结了些)。</p>
+<p>关于配置，Spring 1.2.x风格的XML配置与Spring 2.0完全兼容。你仍然可以继续使用Spring 1.2.x DTD，
+    不过这样你就不能充分利用一些Spring 2.0的新功能(例如<a href="ch02s02.html#new-in-2-ioc-scopes" title="2.2.2.&#160;新的bean作用域">作用域</a>、
+    <a href="ch02s03.html#new-in-2-aop-configuration" title="2.3.1.&#160;更加简单的AOP XML配置">更易用的AOP</a> 和 <a href="ch02s04.html#new-in-2-middle-tier-transaction-configuration" title="2.4.1.&#160;在XML里更为简单的声明性事务配置">事务配置</a>)，
+    但绝对不会有问题。</p>
+<p>建议的移植策略是放入Spring 2.0的jar文件以便能使用改进过的代码(修正bug、优化等等)。
+    然后增量地开始尝试Spring 2.0的新特性和配置。例如，你可以选择先在切面配置上运用Spring 2.0风格作为开始；
+    90%的旧式Spring 1.2.x配置(引用1.2.x DTD)加上10%的Spring 2.0配置(引用2.0 DTD和XSD)是完全有效的。要记住，
+    在使用Spring 2.0库的同时并非一定要升级XML配置。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-migrating-changes"></a>2.7.1.&#160;一些变化</h3></div></div></div>
+<p>如需了解全部变化，请参考Spring Framework 2.0发布包顶层目录里的<code class="filename">'changelog.txt'</code>文件。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="new-in-2-migrating-packaging"></a>2.7.1.1.&#160;Jar包</h4></div></div></div>
+<p>1.2.x和2.0的Spring Framework jar文件有很多不同之处。
+		    特别是现在JDO、Hibernate 2/3、TopLink的ORM集成类有专门的jar文件：它们不再被打包在核心文件
+		    <code class="filename">'spring.jar'</code>中了。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="new-in-2-migrating-xml-configuration"></a>2.7.1.2.&#160;XML配置</h4></div></div></div>
+<p>Spring 2.0的XSD在描述Spring XML元数据格式方面比先前的DTD更丰富。
+		    旧的DTD仍然得到支持，但如果可能我们鼓励在bean定义文件头部引用XSD文件。</p>
+<p>有一点被改变了，那就是定义bean作用域的方式。如果你使用的是Spring 1.2 DTD，那么你能继续用<code class="literal">'singleton'</code>属性。
+		    如果你选择<a href="ch02s02.html#new-in-2-ioc-configuration" title="2.2.1.&#160;更简单的XML配置">引用新的Spring 2.0 DTD</a>，它不允许使用<code class="literal">'singleton'</code>属性，
+		    那么可以用<code class="literal">'scope'</code>属性来定义bean的生命周期作用域。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="new-in-2-migrating-deprecated"></a>2.7.1.3.&#160;Deprecated的类和方法</h4></div></div></div>
+<p>一些以前被标记为<code class="literal">@deprecated</code>的类和方法Spring 2.0代码库中被完全删除了。
+		    Spring团队决定把2.0版本作为一个新的开始，那些被deprecated的代码应该被除去而不是在可预见的未来继续在代码中出现。</p>
+<p>就如前面所说的，如需了解全部变化，请参考Spring Framework 2.0发布包顶层目录里的<code class="filename">'changelog.txt'</code>文件。</p>
+<p>下面的类/接口已经从Spring 2.0的代码中删除了。</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><code class="interfacename">ResultReader</code> : 使用<code class="interfacename">RowMapper</code>接口代替。</p></li>
+<li><p><code class="interfacename">BeanReferenceFactoryBean</code> : 使用别名机制代替</p></li>
+<li><p><code class="classname">BeanDefinitionRegistryBuilder</code> : 使用<code class="classname">BeanDefinitionReaderUtils</code>类上的方法代替</p></li>
+<li><p><code class="classname">BeanFactoryBootstrap</code> : 考虑使用一个<code class="interfacename">BeanFactoryLocator</code>
+                    或是自定义引导类代替</p></li>
+<li><p><code class="classname">RequestUtils</code> : 使用<code class="classname">ServletRequestUtils</code>代替</p></li>
+</ul></div>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="new-in-2-migrating-ojb"></a>2.7.1.4.&#160;Apache OJB</h4></div></div></div>
+<p>请注意Spring主代码中的Apache OJB支持被<span class="emphasis"><em>完全删除</em></span>了；
+		    但仍然可以在<a href="https://springmodules.dev.java.net/" target="_top">Spring Modules项目</a>中找到Apache OJB的集成库。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="new-in-2-migrating-ibatis"></a>2.7.1.5.&#160;iBatis</h4></div></div></div>
+<p>请注意iBATIS SQL Maps 1.3支持被完全去除了。如果你还在使用iBATIS SQL Maps 1.3，
+		    请升级到iBATIS SQL Maps 2.0/2.1。</p>
+</div>
+</div>
+</div></body>
+</html>

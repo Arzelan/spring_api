@@ -1,0 +1,45 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>2.4.&#160;中间层</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch02.html" title="第&#160;2&#160;章&#160;Spring 2.0 的新特性">
+<link rel="prev" href="ch02s03.html" title="2.3.&#160;面向切面编程(AOP)">
+<link rel="next" href="ch02s05.html" title="2.5.&#160;Web层">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="new-in-2-middle-tier"></a>2.4.&#160;中间层</h2></div></div></div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-middle-tier-transaction-configuration"></a>2.4.1.&#160;在XML里更为简单的声明性事务配置</h3></div></div></div>
+<p>Spring 2.0关于事务的配置方式发生了重大的变化。早先的1.2.x版本的配置方式仍然有效（并且受支持），但是新的方式明显更加简洁，并成为最推荐的方式。
+			Spring 2.0 同时提供了AspectJ切面库，你可以使用它来生成更漂亮的事务性对象 - 甚至可以不是由Spring IoC容器产生的。</p>
+<p>标题为 <a href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">第&#160;9&#160;章 <i>事务管理</i></a> 的部分包含所有的细节。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-middle-tier-jpa"></a>2.4.2.&#160;JPA</h3></div></div></div>
+<p>Spring 2.0提供了JPA抽象层，在所起的作用与常规使用模式上，类似于Spring的JDBC抽象层。</p>
+<p>如果你对使用实现JPA作为自己持久层的基础感兴趣，标题为 <a href="ch12s06.html" title="12.6.&#160;JPA">第&#160;12.6&#160;节 “JPA”</a> 的部分专门描述了在这个领域Spring的支持与附加值。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-middle-tier-async-jms"></a>2.4.3.&#160;异步的JMS</h3></div></div></div>
+<p>在Spring 2.0之前，Spring的JMS的作用局限于发送消息和<span class="emphasis"><em>同步</em></span>接收消息。
+			这个功能（封装在 <code class="classname">JmsTemplate</code> 类中）当然是很好的，
+			但是，它没有满足<span class="emphasis"><em>异步</em></span>消息接收的需要。</p>
+<p>Spring 2.0现在提供对异步消息接收的完整支持。在标题为 <a href="ch19s04.html#jms-asynchronousMessageReception" title="19.4.2.&#160;异步接收 - 消息驱动的POJOs">第&#160;19.4.2&#160;节 “异步接收 - 消息驱动的POJOs”</a> 的部分有详细的描述。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="new-in-2-middle-tier-jdbc"></a>2.4.4.&#160;JDBC</h3></div></div></div>
+<p>在Spring的JDBC支持库中，有几个小的(但同样值得注意的)新类。首先，<a href="ch11s02.html#jdbc-NamedParameterJdbcTemplate" title="11.2.2.&#160;NamedParameterJdbcTemplate类"><code class="classname">NamedParameterJdbcTemplate</code></a>，
+			提供了在编写JDBC语句时，对使用命名参数（与之相对的是编写JDBC语句时只使用常规的占位符（<code class="literal">'?'</code>））的支持。</p>
+<p>另一个新类，<a href="ch11s02.html#jdbc-SimpleJdbcTemplate" title="11.2.3.&#160;SimpleJdbcTemplate类"><code class="classname">SimpleJdbcTemplate</code></a>，
+			致力于在使用Java 5+ (Tiger)开发时更加简单地使用<code class="classname">JdbcTemplate</code>。</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,133 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;17&#160;章&#160;使用Spring进行远程访问与Web服务</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt04.html" title="部分&#160;IV.&#160;整合">
+<link rel="prev" href="pt04.html" title="部分&#160;IV.&#160;整合">
+<link rel="next" href="ch17s02.html" title="17.2.&#160;使用RMI暴露服务">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="remoting"></a>第&#160;17&#160;章&#160;使用Spring进行远程访问与Web服务</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="sect1"><a href="ch17.html#id555338">17.1. 简介</a></span></dt>
+<dt><span class="sect1"><a href="ch17s02.html">17.2. 使用RMI暴露服务</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch17s02.html#id556274">17.2.1. 使用 <code class="literal">RmiServiceExporter</code> 暴露服务</a></span></dt>
+<dt><span class="sect2"><a href="ch17s02.html#id556400">17.2.2. 在客户端链接服务</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch17s03.html">17.3. 使用Hessian或者Burlap通过HTTP远程调用服务</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch17s03.html#id556485">17.3.1. 为Hessian配置DispatcherServlet</a></span></dt>
+<dt><span class="sect2"><a href="ch17s03.html#id556551">17.3.2. 使用HessianServiceExporter暴露你的bean</a></span></dt>
+<dt><span class="sect2"><a href="ch17s03.html#id556603">17.3.3. 客户端连接服务</a></span></dt>
+<dt><span class="sect2"><a href="ch17s03.html#id556640">17.3.4. 使用Burlap</a></span></dt>
+<dt><span class="sect2"><a href="ch17s03.html#id556667">17.3.5. 对通过Hessian或Burlap暴露的服务使用HTTP基础认证</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch17s04.html">17.4. 使用HTTP调用器暴露服务</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch17s04.html#id556779">17.4.1. 暴露服务对象</a></span></dt>
+<dt><span class="sect2"><a href="ch17s04.html#id556827">17.4.2. 在客户端连接服务</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch17s05.html">17.5. Web服务</a></span></dt>
+<dd><dl>
+<dt><span class="sect2"><a href="ch17s05.html#id556923">17.5.1. 使用JAXI-RPC暴露服务</a></span></dt>
+<dt><span class="sect2"><a href="ch17s05.html#id556993">17.5.2. 访问Web服务</a></span></dt>
+<dt><span class="sect2"><a href="ch17s05.html#id557204">17.5.3. 注册bean映射</a></span></dt>
+<dt><span class="sect2"><a href="ch17s05.html#id557251">17.5.4. 注册自己的处理方法</a></span></dt>
+<dt><span class="sect2"><a href="ch17s05.html#id557354">17.5.5. 使用XFire来暴露Web服务</a></span></dt>
+</dl></dd>
+<dt><span class="sect1"><a href="ch17s06.html">17.6. 对远程接口不提供自动探测</a></span></dt>
+<dt><span class="sect1"><a href="ch17s07.html">17.7. 在选择这些技术时的一些考虑</a></span></dt>
+</dl>
+</div>
+<div class="sect1" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id555338"></a>17.1.&#160;简介</h2></div></div></div>
+<p>
+			Spring为各种远程访问技术的集成提供了工具类。Spring远程支持是由普通（Spring）POJO实现的，这使得开发具有远程访问功能的服务变得相当容易。目前，Spring支持四种远程技术：
+			</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>
+						<span class="emphasis"><em>远程方法调用（RMI）</em></span>。通过使用 <code class="literal">RmiProxyFactoryBean</code> 和 <code class="literal">RmiServiceExporter</code>，Spring同时支持传统的RMI（使用java.rmi.Remote接口和java.rmi.RemoteException）和通过RMI调用器实现的透明远程调用（支持任何Java接口）。
+					</p></li>
+<li><p>
+						<span class="emphasis"><em>Spring的HTTP调用器</em></span>。Spring提供了一种特殊的允许通过HTTP进行Java串行化的远程调用策略，支持任意Java接口（就像RMI调用器）。相对应的支持类是 <code class="literal">HttpInvokerProxyFactoryBean</code> 和 <code class="literal">HttpInvokerServiceExporter</code>。
+					</p></li>
+<li><p>
+						<span class="emphasis"><em>Hessian</em></span>。通过 <code class="literal">HessianProxyFactoryBean</code> 和 <code class="literal">HessianServiceExporter</code>，可以使用Caucho提供的基于HTTP的轻量级二进制协议来透明地暴露服务。
+					</p></li>
+<li><p>
+						<span class="emphasis"><em>Burlap</em></span>。 Burlap是Caucho的另外一个子项目，可以作为Hessian基于XML的替代方案。Spring提供了诸如 <code class="literal">BurlapProxyFactoryBean</code> 和 <code class="literal">BurlapServiceExporter</code> 的支持类。
+					</p></li>
+<li><p>
+						<span class="emphasis"><em>JAX RPC</em></span>。Spring通过JAX-RPC为远程Web服务提供支持。
+					</p></li>
+<li><p>
+						<span class="emphasis"><em>JMS（待实现）</em></span>。
+					</p></li>
+</ul></div>
+<p>
+		</p>
+<p>
+			在讨论Spring对远程访问的支持时，我们将使用下面的域模型和对应的服务：
+			</p>
+<pre class="programlisting">
+// Account domain object
+public class Account implements Serializable{
+  private String name;
+
+  public String getName();
+  public void setName(String name) {
+    this.name = name;
+  }
+}
+			</pre>
+<p>
+			</p>
+<pre class="programlisting">
+// Account service
+public interface AccountService {
+
+  public void insertAccount(Account acc);
+
+  public List getAccounts(String name);
+}
+			</pre>
+<p>
+			</p>
+<pre class="programlisting">
+// Remote Account service
+public interface RemoteAccountService extends Remote {
+
+  public void insertAccount(Account acc) throws RemoteException;
+
+  public List getAccounts(String name) throws RemoteException;
+}
+			</pre>
+<p>
+			</p>
+<pre class="programlisting">
+// ... and corresponding implement doing nothing at the moment
+public class AccountServiceImpl implements AccountService {
+
+  public void insertAccount(Account acc) {
+    // do something
+  }
+
+  public List getAccounts(String name) {
+    // do something
+  }
+}
+			</pre>
+<p>
+		</p>
+<p>我们将从使用RMI把服务暴露给远程客户端开始并探讨使用RMI的一些缺点。然后我们将演示一个使用Hessian的例子。</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,65 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>22.4.&#160;使用 JavaMail MimeMessageHelper</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch22.html" title="第&#160;22&#160;章&#160;Spring邮件抽象层">
+<link rel="prev" href="ch22s03.html" title="22.3.&#160;使用Spring邮件抽象">
+<link rel="next" href="ch23.html" title="第&#160;23&#160;章&#160;Spring中的定时调度(Scheduling)和线程池(Thread Pooling)">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id578425"></a>22.4.&#160;使用 JavaMail <code class="classname">MimeMessageHelper</code></h2></div></div></div>
+<p>
+  		<code class="classname">org.springframework.mail.javamail.MimeMessageHelper</code>是处理JavaMail邮件常用的顺手组件之一。它可以让你摆脱繁复的<code class="literal">javax.mail.internet</code>API类。下面是一些通常的场景：
+  	</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id578453"></a>22.4.1.&#160;创建一条简单的<code class="classname">MimeMessage</code>，并且发送出去</h3></div></div></div>
+<p>
+  			使用<code class="classname">MimeMessageHelper</code>来创建和发送 <code class="classname">MimeMessage</code>消息是非常容易的:</p>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">// of course you would use DI in any real-world cases</span></em>
+JavaMailSenderImpl sender = new JavaMailSenderImpl();
+sender.setHost("mail.host.com");
+
+MimeMessage message = sender.createMimeMessage();
+MimeMessageHelper helper = new MimeMessageHelper(message);
+helper.setTo("test@host.com");
+helper.setText("Thank you for ordering!");
+
+sender.send(message);</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id579116"></a>22.4.2.&#160;发送附件和嵌入式资源(inline resources)</h3></div></div></div>
+<p>
+			Email允许添加附件，也允许在multipart信件中内嵌资源。内嵌资源可能是你在信件中希望使用的图像，或者样式表，但是又不想把它们作为附件。下面的例子演示如何使用<code class="classname">MimeMessageHelper</code>来发送带有内嵌图像的email。</p>
+<pre class="programlisting">JavaMailSenderImpl sender = new JavaMailSenderImpl();
+sender.setHost("mail.host.com");
+
+MimeMessage message = sender.createMimeMessage();
+
+<em class="lineannotation"><span class="lineannotation">// use the true flag to indicate you need a multipart message</span></em>
+MimeMessageHelper helper = new MimeMessageHelper(message, true);
+helper.setTo("test@host.com");
+
+<em class="lineannotation"><span class="lineannotation">// use the true flag to indicate the text included is HTML</span></em>
+helper.setText("&lt;html&gt;&lt;body&gt;&lt;img src='cid:identifier1234'&gt;&lt;/body&gt;&lt;/html&gt;", true);
+
+<em class="lineannotation"><span class="lineannotation">// let's include the infamous windows Sample file (this time copied to c:/)</span></em>
+FileSystemResource res = new FileSystemResource(new File("c:/Sample.jpg"));
+helper.addInline("identifier1234", res);
+
+<em class="lineannotation"><span class="lineannotation">// if you would need to include the file as an attachment, use
+// the various addAttachment() methods on the MimeMessageHelper</span></em>
+
+sender.send(message);</pre>
+<div class="warning" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">警告</h3>
+<p>如你所见，嵌入式资源使用Content-ID(上例中是<code class="literal">identifier1234</code>)来插入到mime信件中去。你加入文本或者资源的顺序是非常重要的。首先，你加入文本，随后是资源。如果你弄反了顺序，它将无法正常运作！</p>
+</div>
+</div>
+</div></body>
+</html>

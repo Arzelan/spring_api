@@ -1,0 +1,97 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>20.5.&#160;JSR-160连接器</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch20.html" title="第&#160;20&#160;章&#160;JMX">
+<link rel="prev" href="ch20s04.html" title="20.4.&#160;控制bean的 ObjectName">
+<link rel="next" href="ch20s06.html" title="20.6.&#160;通过代理访问MBeans">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="jmx-jsr160"></a>20.5.&#160;JSR-160连接器</h2></div></div></div>
+<p>
+			对远程访问，Spring JMX模块在包 <code class="literal">org.springframework.jmx.support</code> 中提供了两种 <code class="classname">FactoryBean</code> 实现来创建服务器端和客户端连接器。
+		</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-jsr160-server"></a>20.5.1.&#160;服务器端连接器</h3></div></div></div>
+<p>
+				要创建一个Spring JMX，启动暴露一个JSR-60 <code class="classname">JMXConnectorServer</code>，用下面的配置：
+			</p>
+<pre class="programlisting">&lt;bean id="serverConnector" class="org.springframework.jmx.support.ConnectorServerFactoryBean"/&gt;</pre>
+<p>
+				缺省情况下，<code class="literal">ConnectorServerFactoryBean</code> 创建一个与
+				<code class="literal">"service:jmx:jmxmp://localhost:9875"</code> 绑定的 <code class="classname">JMXConnectorServer</code>。
+				bean <code class="literal">serverConnector</code> 因此通过本机端口为9875上的JMXMP协议把本地的 <code class="classname">MBeanServer</code>暴露给客户端。
+				注意在JSR 160规范中，JMXMP是标记为可选的：
+				当前，主要的开源JMX实现，MX4J和由J2SE5.0提供的那个都 <span class="emphasis"><em>不</em></span> 支持JMXMP。
+			</p>
+<p>
+				要指定其他的URL并用 <code class="classname">MBeanServer</code> 来注册 <code class="classname">JMXConnectorServer</code>，
+				分别用 <code class="literal">serviceUrl</code> 和 <code class="classname">ObjectName</code> 属性：
+			</p>
+<pre class="programlisting">&lt;bean id="serverConnector"
+      class="org.springframework.jmx.support.ConnectorServerFactoryBean"&gt;
+  &lt;property name="objectName" value="connector:name=rmi"/&gt;
+  &lt;property name="serviceUrl" 
+            value="service:jmx:rmi://localhost/jndi/rmi://localhost:1099/myconnector"/&gt;
+&lt;/bean&gt;</pre>
+<p>
+				如果设置属性 <code class="classname">ObjectName</code>，Spring会在这个 <code class="classname">ObjectName</code> 下用<code class="classname">MBeanServer</code>自动注册连接器。
+				下面的例子展示了一整套参数，在创建一个JMXConnector时，你可以把它们传递给 <code class="classname">ConnectorServerFactoryBean</code>。
+			</p>
+<pre class="programlisting">&lt;bean id="serverConnector"
+      class="org.springframework.jmx.support.ConnectorServerFactoryBean"&gt;
+  &lt;property name="objectName" value="connector:name=iiop"/&gt;
+  &lt;property name="serviceUrl" 
+               value="service:jmx:iiop://localhost/jndi/iiop://localhost:900/myconnector"/&gt;
+  &lt;property name="threaded" value="true"/&gt;
+  &lt;property name="daemon" value="true"/&gt;
+  &lt;property name="environment"&gt;
+    &lt;map&gt;
+      &lt;entry key="someKey" value="someValue"/&gt;
+    &lt;/map&gt;
+  &lt;/property&gt;
+&lt;/bean&gt;</pre>
+<p>
+				注意，在使用基于RMI的连接器时，你需要启动查找服务（tnameserv或rmiregistry）来完成名字注册。
+				如果你用Spring通过RMI输出远程服务，那么Spring将已经创建了一个RMI注册。
+				如果没有，你可以用下面的配置很容易就启动一个注册：
+			</p>
+<pre class="programlisting">&lt;bean id="registry" class="org.springframework.remoting.rmi.RmiRegistryFactoryBean"&gt;
+  &lt;property name="port" value="1099"/&gt;
+&lt;/bean&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-jsr160-client"></a>20.5.2.&#160;客户端连接器</h3></div></div></div>
+<p>
+				要创建一个 <code class="classname">MBeanServerConnection</code> 到远程，
+				JSR-160用 <code class="classname">MBeanServerConnectionFactoryBean</code> 激活了 <code class="classname">MBeanServer</code> ，
+				如下面所示：
+			</p>
+<pre class="programlisting">&lt;bean id="clientConnector" class="org.springframework.jmx.support.MBeanServerConnectionFactoryBean"&gt;
+  &lt;property name="serviceUrl" value="service:jmx:rmi://localhost:9875"/&gt;
+&lt;/bean&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="jmx-jsr160-protocols"></a>20.5.3.&#160;基于Burlap/Hessian/SOAP的JMX</h3></div></div></div>
+<p>
+				JSR-160允许扩展客户端和服务器端之间的通信方式。上面的例子使用了强制的基于RMI的实现和JRMP（可选的），
+				这是由JSR-160规范（IIOP和JRMP）所要求的。通过使用其他的提供商或JMX实现（如 <a href="http://mx4j.sourceforge.net" target="_top">MX4J</a>），
+				你可以从基于简单HTTP或SSL的诸如SOAP、Hessian、Burlap协议中获益。
+			</p>
+<pre class="programlisting">&lt;bean id="serverConnector" class="org.springframework.jmx.support.ConnectorServerFactoryBean"&gt;
+  &lt;property name="objectName" value="connector:name=burlap"/&gt;
+  &lt;property name="serviceUrl" value="service:jmx:burlap://localhost:9874"/&gt;
+&lt;/bean&gt;</pre>
+<p>
+				在上面的例子中，使用了MX4J3.0.0，更多的信息参见官方的MX4J文档。
+			</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,2415 @@
+<HTML>
+<HEAD><meta http-equiv="Content-Type" content="text/html; charset=GBK"></HEAD>
+<BODY>
+<OBJECT type="text/site properties">
+<param name="ImageType" value="Folder">
+</OBJECT>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring Framework 开发参考手册">
+<param name="Local" value="index.html"></OBJECT></LI>
+<UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="前言">
+<param name="Local" value="pr01.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch01.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="概览">
+<param name="Local" value="ch01.html#introduction-overview"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用场景">
+<param name="Local" value="ch01s02.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring 2.0 的新特性">
+<param name="Local" value="ch02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch02.html#new-in-2-intro"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制反转(IoC)容器">
+<param name="Local" value="ch02s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="更简单的XML配置">
+<param name="Local" value="ch02s02.html#new-in-2-ioc-configuration"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="新的bean作用域">
+<param name="Local" value="ch02s02.html#new-in-2-ioc-scopes"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="可扩展的XML编写">
+<param name="Local" value="ch02s02.html#new-in-2-ioc-custom-configuration"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="面向切面编程(AOP)">
+<param name="Local" value="ch02s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="更加简单的AOP XML配置">
+<param name="Local" value="ch02s03.html#new-in-2-aop-configuration"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对@AspectJ 切面的支持">
+<param name="Local" value="ch02s03.html#new-in-2-aop-aspectJ"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="中间层">
+<param name="Local" value="ch02s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在XML里更为简单的声明性事务配置">
+<param name="Local" value="ch02s04.html#new-in-2-middle-tier-transaction-configuration"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JPA">
+<param name="Local" value="ch02s04.html#new-in-2-middle-tier-jpa"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="异步的JMS">
+<param name="Local" value="ch02s04.html#new-in-2-middle-tier-async-jms"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JDBC">
+<param name="Local" value="ch02s04.html#new-in-2-middle-tier-jdbc"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Web层">
+<param name="Local" value="ch02s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring MVC的表单标签库">
+<param name="Local" value="ch02s05.html#new-in-2-web-form-tags"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring MVC合理的默认值">
+<param name="Local" value="ch02s05.html#new-in-2-web-convention"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Portlet 框架">
+<param name="Local" value="ch02s05.html#new-in-2-web-portlet"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="其他特性">
+<param name="Local" value="ch02s06.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="动态语言支持">
+<param name="Local" value="ch02s06.html#new-in-2-other-dynamic-language-support"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JMX">
+<param name="Local" value="ch02s06.html#new-in-2-other-jmx"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="任务规划">
+<param name="Local" value="ch02s06.html#new-in-2-other-taskexecutor"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对Java 5（Tiger）的支持">
+<param name="Local" value="ch02s06.html#new-in-2-other-java5"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="移植到Spring 2.0">
+<param name="Local" value="ch02s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="一些变化">
+<param name="Local" value="ch02s07.html#new-in-2-migrating-changes"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Jar包">
+<param name="Local" value="ch02s07.html#new-in-2-migrating-packaging"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="XML配置">
+<param name="Local" value="ch02s07.html#new-in-2-migrating-xml-configuration"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Deprecated的类和方法">
+<param name="Local" value="ch02s07.html#new-in-2-migrating-deprecated"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Apache OJB">
+<param name="Local" value="ch02s07.html#new-in-2-migrating-ojb"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="iBatis">
+<param name="Local" value="ch02s07.html#new-in-2-migrating-ibatis"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="更新的样例应用">
+<param name="Local" value="ch02s08.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="改进的文档">
+<param name="Local" value="ch02s09.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="核心技术">
+<param name="Local" value="pt01.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制反转容器">
+<param name="Local" value="ch03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch03.html#beans-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="容器和bean的基本原理">
+<param name="Local" value="ch03s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="容器">
+<param name="Local" value="ch03s02.html#beans-factory"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置元数据">
+<param name="Local" value="ch03s02.html#id435692"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="实例化容器">
+<param name="Local" value="ch03s02.html#id435879"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="组成基于XML配置元数据">
+<param name="Local" value="ch03s02.html#beans-factory-xml-import"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="多种bean">
+<param name="Local" value="ch03s02.html#beans-definition"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="命名bean">
+<param name="Local" value="ch03s02.html#beans-beanname"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="bean的别名">
+<param name="Local" value="ch03s02.html#beans-beanname-alias"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="实例化bean">
+<param name="Local" value="ch03s02.html#beans-factory-class"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="用构造器来实例化">
+<param name="Local" value="ch03s02.html#beans-factory-class-ctor"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 静态工厂方法实例化">
+<param name="Local" value="ch03s02.html#beans-factory-class-static-factory-method"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用实例工厂方法实例化">
+<param name="Local" value="ch03s02.html#beans-factory-class-instance-factory-method"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用容器">
+<param name="Local" value="ch03s02.html#beans-factory-client"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="依赖">
+<param name="Local" value="ch03s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="注入依赖">
+<param name="Local" value="ch03s03.html#beans-factory-collaborators"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Setter注入">
+<param name="Local" value="ch03s03.html#beans-setter-injection"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="构造器注入">
+<param name="Local" value="ch03s03.html#beans-constructor-injection"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="一些例子">
+<param name="Local" value="ch03s03.html#beans-some-examples"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="构造器参数的解析">
+<param name="Local" value="ch03s03.html#id438148"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="构造器参数类型匹配">
+<param name="Local" value="ch03s03.html#id438242"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="构造器参数的索引">
+<param name="Local" value="ch03s03.html#id438272"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="bean属性及构造器参数详解">
+<param name="Local" value="ch03s03.html#beans-factory-properties-detailed"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="直接量(基本类型、Strings类型等。)">
+<param name="Local" value="ch03s03.html#beans-value-element"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="idref元素">
+<param name="Local" value="ch03s03.html#beans-idref-element"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="引用其它的bean（协作者）">
+<param name="Local" value="ch03s03.html#beans-ref-element"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="内部bean">
+<param name="Local" value="ch03s03.html#beans-inner-beans"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="集合">
+<param name="Local" value="ch03s03.html#beans-collection-elements"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="集合合并">
+<param name="Local" value="ch03s03.html#beans-collection-elements-merging"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="强类型集合(仅适用于Java5+)">
+<param name="Local" value="ch03s03.html#id439447"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Nulls">
+<param name="Local" value="ch03s03.html#beans-null-element"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="XML-based configuration metadata shortcuts">
+<param name="Local" value="ch03s03.html#id439669"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="组合属性名称">
+<param name="Local" value="ch03s03.html#id439954"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用depends-on">
+<param name="Local" value="ch03s03.html#beans-factory-dependson"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="延迟初始化bean">
+<param name="Local" value="ch03s03.html#beans-factory-lazy-init"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自动装配（autowire）协作者">
+<param name="Local" value="ch03s03.html#beans-factory-autowire"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="设置Bean使自动装配失效">
+<param name="Local" value="ch03s03.html#beans-factory-autowire-candidate"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="依赖检查">
+<param name="Local" value="ch03s03.html#beans-factory-dependencies"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="方法注入">
+<param name="Local" value="ch03s03.html#beans-factory-method-injection"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Lookup方法注入">
+<param name="Local" value="ch03s03.html#id441158"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自定义方法的替代方案">
+<param name="Local" value="ch03s03.html#id441493"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="bean的作用域">
+<param name="Local" value="ch03s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Singleton作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-singleton"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Prototype作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-prototype"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="其他作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-other"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="初始化web配置">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-other-web-configuration"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Request作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-request"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Session作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-session"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="global session作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-global-session"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="作用域bean与依赖">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-other-injection"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="自定义作用域">
+<param name="Local" value="ch03s04.html#beans-factory-scopes-custom"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="定制bean特性">
+<param name="Local" value="ch03s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Lifecycle接口">
+<param name="Local" value="ch03s05.html#beans-factory-lifecycle"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="初始化回调">
+<param name="Local" value="ch03s05.html#beans-factory-lifecycle-initializingbean"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="析构回调">
+<param name="Local" value="ch03s05.html#beans-factory-lifecycle-disposablebean"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="缺省的初始化和析构方法">
+<param name="Local" value="ch03s05.html#beans-factory-lifecycle-default-init-destroy-methods"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在非web应用中优雅地关闭Spring IoC容器">
+<param name="Local" value="ch03s05.html#id444072"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="了解自己">
+<param name="Local" value="ch03s05.html#beans-factory-aware"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="BeanFactoryAware">
+<param name="Local" value="ch03s05.html#beans-factory-aware-beanfactoryaware"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="BeanNameAware">
+<param name="Local" value="ch03s05.html#beans-factory-aware-beannameaware"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="bean定义的继承">
+<param name="Local" value="ch03s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="容器扩展点">
+<param name="Local" value="ch03s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="用BeanPostProcessor定制bean">
+<param name="Local" value="ch03s07.html#beans-factory-extension-bpp"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用BeanPostProcessor的Hello World示例">
+<param name="Local" value="ch03s07.html#beans-factory-extension-bpp-examples-hw"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="RequiredAnnotationBeanPostProcessor示例">
+<param name="Local" value="ch03s07.html#beans-factory-extension-bpp-examples-rabpp"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="用BeanFactoryPostProcessor定制配置元数据">
+<param name="Local" value="ch03s07.html#beans-factory-extension-factory-postprocessors"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="PropertyPlaceholderConfigurer示例">
+<param name="Local" value="ch03s07.html#beans-factory-placeholderconfigurer"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="PropertyOverrideConfigurer示例">
+<param name="Local" value="ch03s07.html#beans-factory-overrideconfigurer"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用FactoryBean定制实例化逻辑">
+<param name="Local" value="ch03s07.html#beans-factory-extension-factorybean"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="ApplicationContext">
+<param name="Local" value="ch03s08.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="利用MessageSource实现国际化">
+<param name="Local" value="ch03s08.html#context-functionality-messagesource"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事件">
+<param name="Local" value="ch03s08.html#context-functionality-events"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="底层资源的访问">
+<param name="Local" value="ch03s08.html#context-functionality-resources"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ApplicationContext在WEB应用中的实例化">
+<param name="Local" value="ch03s08.html#context-create"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="粘合代码和可怕的singleton">
+<param name="Local" value="ch03s09.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Singleton-helper类">
+<param name="Local" value="ch03s09.html#id447497"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="资源">
+<param name="Local" value="ch04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch04.html#id458413"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Resource 接口">
+<param name="Local" value="ch04s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="内置 Resource 实现">
+<param name="Local" value="ch04s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="UrlResource">
+<param name="Local" value="ch04s03.html#id459423"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ClassPathResource">
+<param name="Local" value="ch04s03.html#id459528"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="FileSystemResource">
+<param name="Local" value="ch04s03.html#id459609"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ServletContextResource">
+<param name="Local" value="ch04s03.html#id459642"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="InputStreamResource">
+<param name="Local" value="ch04s03.html#id459685"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ByteArrayResource">
+<param name="Local" value="ch04s03.html#id459753"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="ResourceLoader">
+<param name="Local" value="ch04s04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ResourceLoaderAware 接口">
+<param name="Local" value="ch04s05.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="把Resource作为属性来配置">
+<param name="Local" value="ch04s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Application context 和Resource 路径">
+<param name="Local" value="ch04s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="构造application context">
+<param name="Local" value="ch04s07.html#id460435"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建 ClassPathXmlApplicationContext 实例 - 简介">
+<param name="Local" value="ch04s07.html#id460549"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Application context构造器中资源路径的通配符">
+<param name="Local" value="ch04s07.html#id460649"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Ant风格的pattern">
+<param name="Local" value="ch04s07.html#id460724"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="潜在的可移植性">
+<param name="Local" value="ch04s07.html#id460786"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="classpath*: 前缀">
+<param name="Local" value="ch04s07.html#id460848"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="其他关于通配符的说明">
+<param name="Local" value="ch04s07.html#id460982"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="FileSystemResource 提示">
+<param name="Local" value="ch04s07.html#resources-filesystemresource-caveats"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="校验，数据绑定，BeanWrapper，与属性编辑器">
+<param name="Local" value="ch05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch05.html#validation-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring的Validator接口进行校验">
+<param name="Local" value="ch05s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="从错误代码到错误信息">
+<param name="Local" value="ch05s03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Bean处理和BeanWrapper">
+<param name="Local" value="ch05s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="设置和获取属性值以及嵌套属性">
+<param name="Local" value="ch05s04.html#beans-beans-conventions"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="内建的PropertyEditor实现">
+<param name="Local" value="ch05s04.html#beans-beans-conversion"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="注册用户自定义的PropertyEditor">
+<param name="Local" value="ch05s04.html#beans-beans-conversion-customeditor-registration"></OBJECT></LI>
+</UL></UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring进行面向切面编程（AOP）">
+<param name="Local" value="ch06.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch06.html#aop-introduction"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AOP概念">
+<param name="Local" value="ch06.html#aop-introduction-defn"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring AOP的功能和目标">
+<param name="Local" value="ch06.html#aop-introduction-spring-defn"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring的AOP代理">
+<param name="Local" value="ch06.html#aop-introduction-proxies"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="@AspectJ支持">
+<param name="Local" value="ch06s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="启用@AspectJ支持">
+<param name="Local" value="ch06s02.html#id467270"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明一个切面">
+<param name="Local" value="ch06s02.html#id468399"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明一个切入点（pointcut）">
+<param name="Local" value="ch06s02.html#id468480"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="切入点指定者的支持">
+<param name="Local" value="ch06s02.html#id468577"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="合并切入点表达式">
+<param name="Local" value="ch06s02.html#id468816"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="共享常见的切入点（pointcut）定义">
+<param name="Local" value="ch06s02.html#aop-common-pointcuts"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="示例">
+<param name="Local" value="ch06s02.html#id469054"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明通知">
+<param name="Local" value="ch06s02.html#id469523"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="前置通知（Before advice）">
+<param name="Local" value="ch06s02.html#id469533"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="返回后通知（After returning advice）">
+<param name="Local" value="ch06s02.html#id469581"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="抛出后通知（After throwing advice）">
+<param name="Local" value="ch06s02.html#id469685"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="后通知（After (finally) advice）">
+<param name="Local" value="ch06s02.html#id469791"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="环绕通知（Around Advice）">
+<param name="Local" value="ch06s02.html#aop-ataspectj-around-advice"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知参数（Advice parameters）">
+<param name="Local" value="ch06s02.html#aop-ataspectj-advice-params"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="访问当前的连接点">
+<param name="Local" value="ch06s02.html#id469997"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="传递参数给通知（Advice）">
+<param name="Local" value="ch06s02.html#id470069"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="决定参数名">
+<param name="Local" value="ch06s02.html#id470263"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="处理参数">
+<param name="Local" value="ch06s02.html#id470431"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知（Advice）顺序">
+<param name="Local" value="ch06s02.html#aop-ataspectj-advice-ordering"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="引入（Introductions）">
+<param name="Local" value="ch06s02.html#id470608"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="切面实例化模型">
+<param name="Local" value="ch06s02.html#id470710"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="例子">
+<param name="Local" value="ch06s02.html#aop-ataspectj-example"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Schema-based AOP support">
+<param name="Local" value="ch06s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明一个切面">
+<param name="Local" value="ch06s03.html#id471150"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明一个切入点">
+<param name="Local" value="ch06s03.html#id471204"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明通知">
+<param name="Local" value="ch06s03.html#id471318"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知（Advice）">
+<param name="Local" value="ch06s03.html#id471330"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="返回后通知（After returning advice）">
+<param name="Local" value="ch06s03.html#id471426"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="抛出异常后通知（After throwing advice）">
+<param name="Local" value="ch06s03.html#id471495"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="后通知（After (finally) advice）">
+<param name="Local" value="ch06s03.html#id471570"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知">
+<param name="Local" value="ch06s03.html#id471600"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知参数">
+<param name="Local" value="ch06s03.html#id471717"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知顺序">
+<param name="Local" value="ch06s03.html#id471923"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="引入">
+<param name="Local" value="ch06s03.html#id471954"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="切面实例化模型">
+<param name="Local" value="ch06s03.html#id472087"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Advisors">
+<param name="Local" value="ch06s03.html#id472103"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="例子">
+<param name="Local" value="ch06s03.html#id472200"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="AOP声明风格的选择">
+<param name="Local" value="ch06s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring AOP还是完全用AspectJ？">
+<param name="Local" value="ch06s04.html#id468123"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring AOP中使用@AspectJ还是XML？">
+<param name="Local" value="ch06s04.html#id468172"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="混合切面类型">
+<param name="Local" value="ch06s05.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="代理机制">
+<param name="Local" value="ch06s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="编程方式创建@AspectJ代理">
+<param name="Local" value="ch06s07.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Spring应用中使用AspectJ">
+<param name="Local" value="ch06s08.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Spring中使用AspectJ来为domain object进行依赖注入">
+<param name="Local" value="ch06s08.html#aop-atconfigurable"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="@Configurable object的单元测试">
+<param name="Local" value="ch06s08.html#id473526"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="多application context情况下的处理">
+<param name="Local" value="ch06s08.html#id473579"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring中其他的AspectJ切面">
+<param name="Local" value="ch06s08.html#aop-ajlib-other"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring IoC来配置AspectJ的切面">
+<param name="Local" value="ch06s08.html#aop-aj-configure"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Spring应用中使用AspectJ Load-time weaving（LTW）">
+<param name="Local" value="ch06s08.html#aop-aj-ltw"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="其它资源">
+<param name="Local" value="ch06s09.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring AOP APIs">
+<param name="Local" value="ch07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch07.html#aop-api-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring中的切入点API">
+<param name="Local" value="ch07s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="概念">
+<param name="Local" value="ch07s02.html#id479350"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="切入点实施">
+<param name="Local" value="ch07s02.html#id479511"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AspectJ切入点表达式">
+<param name="Local" value="ch07s02.html#id479581"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="便利的切入点实现">
+<param name="Local" value="ch07s02.html#id479610"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="静态切入点">
+<param name="Local" value="ch07s02.html#id479625"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="正则表达式切入点">
+<param name="Local" value="ch07s02.html#id479646"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="属性驱动的切入点">
+<param name="Local" value="ch07s02.html#id479797"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="动态切入点">
+<param name="Local" value="ch07s02.html#id479816"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制流切入点">
+<param name="Local" value="ch07s02.html#id479846"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="切入点的基类">
+<param name="Local" value="ch07s02.html#id479909"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自定义切入点">
+<param name="Local" value="ch07s02.html#id479949"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring的通知API">
+<param name="Local" value="ch07s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知的生命周期">
+<param name="Local" value="ch07s03.html#id479990"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring里的通知类型">
+<param name="Local" value="ch07s03.html#aop-api-advice-types"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="拦截around通知">
+<param name="Local" value="ch07s03.html#id480057"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="前置通知">
+<param name="Local" value="ch07s03.html#id480176"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="异常通知">
+<param name="Local" value="ch07s03.html#id480299"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="后置通知">
+<param name="Local" value="ch07s03.html#id480441"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="引入通知">
+<param name="Local" value="ch07s03.html#id480517"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring里的advisor（Advisor） API">
+<param name="Local" value="ch07s04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用ProxyFactoryBean创建AOP代理">
+<param name="Local" value="ch07s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基础">
+<param name="Local" value="ch07s05.html#aop-pfb-1"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JavaBean属性">
+<param name="Local" value="ch07s05.html#aop-pfb-2"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于JDK和CGLIB的代理">
+<param name="Local" value="ch07s05.html#aop-pfb-proxy-types"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对接口进行代理">
+<param name="Local" value="ch07s05.html#id481801"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对类进行代理">
+<param name="Local" value="ch07s05.html#id482046"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用“全局”advisor">
+<param name="Local" value="ch07s05.html#aop-global-advisors"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="简化代理定义">
+<param name="Local" value="ch07s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用ProxyFactory通过编程创建AOP代理">
+<param name="Local" value="ch07s07.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="操作被通知对象">
+<param name="Local" value="ch07s08.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用“自动代理（autoproxy）”功能">
+<param name="Local" value="ch07s09.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自动代理bean定义">
+<param name="Local" value="ch07s09.html#aop-autoproxy-choices"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="BeanNameAutoProxyCreator">
+<param name="Local" value="ch07s09.html#id482736"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DefaultAdvisorAutoProxyCreator">
+<param name="Local" value="ch07s09.html#id482819"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AbstractAdvisorAutoProxyCreator">
+<param name="Local" value="ch07s09.html#id482977"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用元数据驱动的自动代理">
+<param name="Local" value="ch07s09.html#aop-autoproxy-metadata"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用TargetSources">
+<param name="Local" value="ch07s10.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="热交换目标源">
+<param name="Local" value="ch07s10.html#aop-ts-swap"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="池化目标源">
+<param name="Local" value="ch07s10.html#aop-ts-pool"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="原型目标源">
+<param name="Local" value="ch07s10.html#aop-ts-prototype"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ThreadLocal目标源">
+<param name="Local" value="ch07s10.html#aop-ts-threadlocal"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="定义新的通知类型">
+<param name="Local" value="ch07s11.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="更多资源">
+<param name="Local" value="ch07s12.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="测试">
+<param name="Local" value="ch08.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch08.html#testing-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="单元测试">
+<param name="Local" value="ch08s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="集成测试">
+<param name="Local" value="ch08s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Context管理和缓存">
+<param name="Local" value="ch08s03.html#id488614"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="测试fixture的依赖注入">
+<param name="Local" value="ch08s03.html#id488729"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理">
+<param name="Local" value="ch08s03.html#id488989"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="方便的变量">
+<param name="Local" value="ch08s03.html#id489119"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="示例">
+<param name="Local" value="ch08s03.html#id489204"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="运行集成测试">
+<param name="Local" value="ch08s03.html#id489446"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="更多资源">
+<param name="Local" value="ch08s04.html"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="中间层数据访问">
+<param name="Local" value="pt02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理">
+<param name="Local" value="ch09.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch09.html#transaction-intro"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="动机">
+<param name="Local" value="ch09s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="关键抽象">
+<param name="Local" value="ch09s03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用资源同步的事务">
+<param name="Local" value="ch09s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="高层次方案">
+<param name="Local" value="ch09s04.html#id492018"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="低层次方案">
+<param name="Local" value="ch09s04.html#id492060"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="TransactionAwareDataSourceProxy">
+<param name="Local" value="ch09s04.html#id490628"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明式事务管理">
+<param name="Local" value="ch09s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="理解Spring的声明式事务管理实现">
+<param name="Local" value="ch09s05.html#id492333"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="第一个例子">
+<param name="Local" value="ch09s05.html#transaction-declarative-first-example"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="回滚">
+<param name="Local" value="ch09s05.html#transaction-declarative-rolling-back"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="为不同的bean配置不同的事务语义">
+<param name="Local" value="ch09s05.html#transaction-declarative-diff-tx"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;tx:advice/&gt; 有关的设置">
+<param name="Local" value="ch09s05.html#transaction-declarative-txadvice-settings"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 @Transactional">
+<param name="Local" value="ch09s05.html#transaction-declarative-annotations"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="@Transactional 有关的设置">
+<param name="Local" value="ch09s05.html#transaction-declarative-attransactional-settings"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="插入事务操作">
+<param name="Local" value="ch09s05.html#transaction-declarative-applying-more-than-just-tx-advice"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="结合AspectJ使用 @Transactional">
+<param name="Local" value="ch09s05.html#transaction-declarative-aspectj"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="编程式事务管理">
+<param name="Local" value="ch09s06.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 TransactionTemplate">
+<param name="Local" value="ch09s06.html#id495521"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 PlatformTransactionManager">
+<param name="Local" value="ch09s06.html#transaction-programmatic-ptm"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="选择编程式事务管理还是声明式事务管理">
+<param name="Local" value="ch09s07.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="与特定应用服务器集成">
+<param name="Local" value="ch09s08.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="BEA WebLogic">
+<param name="Local" value="ch09s08.html#id495805"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="IBM WebSphere">
+<param name="Local" value="ch09s08.html#id495836"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="公共问题的解决方案">
+<param name="Local" value="ch09s09.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对一个特定的 DataSource 使用错误的事务管理器">
+<param name="Local" value="ch09s09.html#id495903"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="更多的资源">
+<param name="Local" value="ch09s10.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="DAO支持">
+<param name="Local" value="ch10.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch10.html#dao-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="一致的异常层次">
+<param name="Local" value="ch10s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="一致的DAO支持抽象类">
+<param name="Local" value="ch10s03.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用JDBC进行数据访问">
+<param name="Local" value="ch11.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch11.html#jdbc-introduction"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring JDBC包结构">
+<param name="Local" value="ch11.html#id500600"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="利用JDBC核心类实现JDBC的基本操作和错误处理">
+<param name="Local" value="ch11s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JdbcTemplate类">
+<param name="Local" value="ch11s02.html#jdbc-JdbcTemplate"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="NamedParameterJdbcTemplate类">
+<param name="Local" value="ch11s02.html#jdbc-NamedParameterJdbcTemplate"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SimpleJdbcTemplate类">
+<param name="Local" value="ch11s02.html#jdbc-SimpleJdbcTemplate"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DataSource接口">
+<param name="Local" value="ch11s02.html#id502366"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SQLExceptionTranslator接口">
+<param name="Local" value="ch11s02.html#jdbc-SQLExceptionTranslator"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="执行SQL语句">
+<param name="Local" value="ch11s02.html#id502841"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="执行查询">
+<param name="Local" value="ch11s02.html#id502876"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="更新数据库">
+<param name="Local" value="ch11s02.html#id503030"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制数据库连接">
+<param name="Local" value="ch11s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DataSourceUtils类">
+<param name="Local" value="ch11s03.html#jdbc-DataSourceUtils"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SmartDataSource接口">
+<param name="Local" value="ch11s03.html#jdbc-SmartDataSource"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AbstractDataSource类">
+<param name="Local" value="ch11s03.html#jdbc-AbstractDataSource"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SingleConnectionDataSource类">
+<param name="Local" value="ch11s03.html#jdbc-SingleConnectionDataSource"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DriverManagerDataSource类">
+<param name="Local" value="ch11s03.html#jdbc-DriverManagerDataSource"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="TransactionAwareDataSourceProxy类">
+<param name="Local" value="ch11s03.html#jdbc-TransactionAwareDataSourceProxy"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DataSourceTransactionManager类">
+<param name="Local" value="ch11s03.html#jdbc-DataSourceTransactionManager"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="用Java对象来表达JDBC操作">
+<param name="Local" value="ch11s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SqlQuery类">
+<param name="Local" value="ch11s04.html#jdbc-SqlQuery"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MappingSqlQuery类">
+<param name="Local" value="ch11s04.html#jdbc-MappingSqlQuery"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SqlUpdate类">
+<param name="Local" value="ch11s04.html#jdbc-SqlUpdate"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="StoredProcedure类">
+<param name="Local" value="ch11s04.html#jdbc-StoredProcedure"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SqlFunction类">
+<param name="Local" value="ch11s04.html#jdbc-SqlFunction"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用ORM工具进行数据访问">
+<param name="Local" value="ch12.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch12.html#orm-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Hibernate">
+<param name="Local" value="ch12s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="资源管理">
+<param name="Local" value="ch12s02.html#id507645"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Spring的application context中创建 SessionFactory">
+<param name="Local" value="ch12s02.html#id507731"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="HibernateTemplate">
+<param name="Local" value="ch12s02.html#id506863"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="不使用回调的基于Spring的DAO实现">
+<param name="Local" value="ch12s02.html#id507888"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于Hibernate3的原生API实现DAO">
+<param name="Local" value="ch12s02.html#id508002"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="编程式的事务划分">
+<param name="Local" value="ch12s02.html#id508226"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明式的事务划分">
+<param name="Local" value="ch12s02.html#id508338"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理策略">
+<param name="Local" value="ch12s02.html#id508535"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="容器资源 vs 本地资源">
+<param name="Local" value="ch12s02.html#id508796"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在应用服务器中使用Hibernate的注意点">
+<param name="Local" value="ch12s02.html#orm-hibernate-invalid-jdbc-access-error"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JDO">
+<param name="Local" value="ch12s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="建立PersistenceManagerFactory">
+<param name="Local" value="ch12s03.html#id509295"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JdoTemplate和JdoDaoSupport">
+<param name="Local" value="ch12s03.html#id509435"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于原生的JDO API实现DAO">
+<param name="Local" value="ch12s03.html#id509667"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理">
+<param name="Local" value="ch12s03.html#id509923"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JdoDialect">
+<param name="Local" value="ch12s03.html#id510036"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Oracle TopLink">
+<param name="Local" value="ch12s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SessionFactory 抽象层">
+<param name="Local" value="ch12s04.html#id510232"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="TopLinkTemplate 和 TopLinkDaoSupport">
+<param name="Local" value="ch12s04.html#id510404"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于原生的TopLink API的DAO实现">
+<param name="Local" value="ch12s04.html#id510655"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理">
+<param name="Local" value="ch12s04.html#id510973"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="iBATIS SQL Maps">
+<param name="Local" value="ch12s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="iBATIS 1.x和2.x的概览与区别">
+<param name="Local" value="ch12s05.html#id511191"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="iBATIS SQL Maps 1.x">
+<param name="Local" value="ch12s05.html#id511375"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建SqlMap">
+<param name="Local" value="ch12s05.html#id511381"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 SqlMapTemplate 和 SqlMapDaoSupport">
+<param name="Local" value="ch12s05.html#id511540"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="iBATIS SQL Maps 2.x">
+<param name="Local" value="ch12s05.html#id511677"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建SqlMapClient">
+<param name="Local" value="ch12s05.html#id511684"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 SqlMapClientTemplate 和 SqlMapClientDaoSupport">
+<param name="Local" value="ch12s05.html#id511812"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于原生的iBATIS API的DAO实现">
+<param name="Local" value="ch12s05.html#id512010"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JPA">
+<param name="Local" value="ch12s06.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Spring环境中建立JPA">
+<param name="Local" value="ch12s06.html#id512127"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="LocalEntityManagerFactoryBean">
+<param name="Local" value="ch12s06.html#id512143"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="LocalContainerEntityManagerFactoryBean">
+<param name="Local" value="ch12s06.html#id512209"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Tomcat上创建">
+<param name="Local" value="ch12s06.html#id512371"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="OC4J setup (10.1.3.1+)">
+<param name="Local" value="ch12s06.html#id512620"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通用LoadTimeWeaver">
+<param name="Local" value="ch12s06.html#id512667"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="处理多个持久化单元">
+<param name="Local" value="ch12s06.html#id512753"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JpaTemplate 和 JpaDaoSupport">
+<param name="Local" value="ch12s06.html#id512836"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于原生的JPA实现DAO">
+<param name="Local" value="ch12s06.html#id513039"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="异常转化">
+<param name="Local" value="ch12s06.html#id513260"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理">
+<param name="Local" value="ch12s06.html#id513358"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JpaDialect">
+<param name="Local" value="ch12s06.html#id513452"></OBJECT></LI>
+</UL></UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Web">
+<param name="Local" value="pt03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Web框架">
+<param name="Local" value="ch13.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="介绍">
+<param name="Local" value="ch13.html#mvc-introduction"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="与其他web框架的集成">
+<param name="Local" value="ch13.html#mvc-introduction-pluggability"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring Web MVC框架的特点">
+<param name="Local" value="ch13.html#mvc-features"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="DispatcherServlet">
+<param name="Local" value="ch13s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制器">
+<param name="Local" value="ch13s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AbstractController 和 WebContentGenerator">
+<param name="Local" value="ch13s03.html#mvc-controller-abstractcontroller"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="其它的简单控制器">
+<param name="Local" value="ch13s03.html#mvc-controller-othersimplecontrollers"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MultiActionController">
+<param name="Local" value="ch13s03.html#mvc-controller-multiaction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="命令控制器">
+<param name="Local" value="ch13s03.html#mvc-controller-command"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="处理器映射（handler mapping）">
+<param name="Local" value="ch13s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="BeanNameUrlHandlerMapping">
+<param name="Local" value="ch13s04.html#mvc-handlermapping-beanname"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SimpleUrlHandlerMapping">
+<param name="Local" value="ch13s04.html#mvc-handlermapping-urlhandlermapping"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="拦截器（HandlerInterceptor）">
+<param name="Local" value="ch13s04.html#mvc-handlermapping-interceptor"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="视图与视图解析">
+<param name="Local" value="ch13s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="视图解析器">
+<param name="Local" value="ch13s05.html#mvc-viewresolver-resolver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="视图解析链">
+<param name="Local" value="ch13s05.html#mvc-viewresolver-chaining"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="重定向(Rediret)到另一个视图">
+<param name="Local" value="ch13s05.html#id523746"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="RedirectView">
+<param name="Local" value="ch13s05.html#id523850"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="redirect:前缀">
+<param name="Local" value="ch13s05.html#id523914"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="forward:前缀">
+<param name="Local" value="ch13s05.html#id524008"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="本地化解析器">
+<param name="Local" value="ch13s06.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AcceptHeaderLocaleResolver">
+<param name="Local" value="ch13s06.html#mvc-localeresolver-acceptheader"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="CookieLocaleResolver">
+<param name="Local" value="ch13s06.html#mvc-localeresolver-cookie"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SessionLocaleResolver">
+<param name="Local" value="ch13s06.html#mvc-localeresolver-session"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="LocaleChangeInterceptor">
+<param name="Local" value="ch13s06.html#mvc-localeresolver-interceptor"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用主题">
+<param name="Local" value="ch13s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch13s07.html#mvc-themeresolver-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="如何定义主题">
+<param name="Local" value="ch13s07.html#mvc-themeresolver-defining"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="主题解析器">
+<param name="Local" value="ch13s07.html#mvc-themeresolver-resolving"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring对分段文件上传（multipart file upload）的支持">
+<param name="Local" value="ch13s08.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="介绍">
+<param name="Local" value="ch13s08.html#mvc-multipart-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用MultipartResolver">
+<param name="Local" value="ch13s08.html#mvc-multipart-resolver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在表单中处理分段文件上传">
+<param name="Local" value="ch13s08.html#mvc-multipart-forms"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring的表单标签库">
+<param name="Local" value="ch13s09.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置标签库">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-configuration"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="form标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-formtag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="input标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-inputtag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="checkbox标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-checkboxtag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="radiobutton标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-radiobuttontag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="password标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-passwordtag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="select标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-selecttag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="option标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-optiontag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="options标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-optionstag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="textarea标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-textAreatag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="hidden标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-hiddeninputtag"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="errors标签">
+<param name="Local" value="ch13s09.html#mvc-formtaglib-errorstag"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="处理异常">
+<param name="Local" value="ch13s10.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="惯例优先原则(convention over configuration)">
+<param name="Local" value="ch13s11.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对控制器的支持： ControllerClassNameHandlerMapping">
+<param name="Local" value="ch13s11.html#mvc-coc-ccnhm"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对模型的支持：ModelMap (ModelAndView)">
+<param name="Local" value="ch13s11.html#mvc-coc-modelmap"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对视图的支持： RequestToViewNameTranslator">
+<param name="Local" value="ch13s11.html#mvc-coc-r2vnt"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="其它资源">
+<param name="Local" value="ch13s12.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="集成视图技术">
+<param name="Local" value="ch14.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch14.html#view-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JSP和JSTL">
+<param name="Local" value="ch14s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="视图解析器">
+<param name="Local" value="ch14s02.html#view-jsp-resolver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="'Plain-old' JSPs versus JSTL 'Plain-old' JSP与JSTL">
+<param name="Local" value="ch14s02.html#view-jsp-jstl"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="帮助简化开发的额外的标签">
+<param name="Local" value="ch14s02.html#view-jsp-tags"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Tiles">
+<param name="Local" value="ch14s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="需要的资源">
+<param name="Local" value="ch14s03.html#view-tiles-dependencies"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="如何集成Tiles">
+<param name="Local" value="ch14s03.html#view-tiles-integrate"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="InternalResourceViewResolver">
+<param name="Local" value="ch14s03.html#view-tiles-internal"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ResourceBundleViewResolver">
+<param name="Local" value="ch14s03.html#view-tiles-resource"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Velocity和FreeMarker">
+<param name="Local" value="ch14s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="需要的资源">
+<param name="Local" value="ch14s04.html#view-velocity-dependencies"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Context 配置">
+<param name="Local" value="ch14s04.html#view-velocity-contextconfig"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建模板">
+<param name="Local" value="ch14s04.html#view-velocity-createtemplates"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="高级配置">
+<param name="Local" value="ch14s04.html#view-velocity-advancedconfig"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="velocity.properties">
+<param name="Local" value="ch14s04.html#view-velocity-example-velocityproperties"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="FreeMarker">
+<param name="Local" value="ch14s04.html#id536750"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="绑定支持和表单处理">
+<param name="Local" value="ch14s04.html#view-velocity-forms"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="用于绑定的宏">
+<param name="Local" value="ch14s04.html#view-velocity-validation"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简单绑定">
+<param name="Local" value="ch14s04.html#view-velocity-validationmessages"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="表单输入生成宏">
+<param name="Local" value="ch14s04.html#id535658"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="输入域">
+<param name="Local" value="ch14s04.html#id538051"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="选择输入域">
+<param name="Local" value="ch14s04.html#id538133"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="重载HTML转码行为并使你的标签符合XHTML">
+<param name="Local" value="ch14s04.html#id538281"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="XSLT">
+<param name="Local" value="ch14s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="写在段首">
+<param name="Local" value="ch14s05.html#view-xslt-firstwords"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Bean 定义">
+<param name="Local" value="ch14s05.html#view-xslt-beandefs"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="标准MVC控制器代码">
+<param name="Local" value="ch14s05.html#view-xslt-controllercode"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="把模型数据转化为XML">
+<param name="Local" value="ch14s05.html#view-xslt-subclassing"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="定义视图属性">
+<param name="Local" value="ch14s05.html#view-xslt-viewdefinitions"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="文档转换">
+<param name="Local" value="ch14s05.html#view-xslt-transforming"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="小结">
+<param name="Local" value="ch14s05.html#view-xslt-summary"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="文档视图（PDF/Excel）">
+<param name="Local" value="ch14s06.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch14s06.html#view-document-intro"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置和安装">
+<param name="Local" value="ch14s06.html#view-document-config"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="文档视图定义">
+<param name="Local" value="ch14s06.html#view-document-configviews"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Controller 代码">
+<param name="Local" value="ch14s06.html#view-document-configcontroller"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Excel视图子类">
+<param name="Local" value="ch14s06.html#view-document-configsubclasses"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="PDF视图子类">
+<param name="Local" value="ch14s06.html#view-document-configsubclasspdf"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JasperReports">
+<param name="Local" value="ch14s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="依赖的资源">
+<param name="Local" value="ch14s07.html#view-jasper-reports-dependencies"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置">
+<param name="Local" value="ch14s07.html#view-jasper-reports-configuration"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置ViewResolver">
+<param name="Local" value="ch14s07.html#view-jasper-reports-configuration-resolver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置View">
+<param name="Local" value="ch14s07.html#view-jasper-reports-configuration-views"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="关于报表文件">
+<param name="Local" value="ch14s07.html#view-jasper-reports-configuration-report-files"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 JasperReportsMultiFormatView">
+<param name="Local" value="ch14s07.html#view-jasper-reports-configuration-multiformat-view"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="构造ModelAndView">
+<param name="Local" value="ch14s07.html#view-jasper-reports-model"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用子报表">
+<param name="Local" value="ch14s07.html#view-jasper-reports-subreports"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置子报表文件">
+<param name="Local" value="ch14s07.html#view-jasper-reports-subreports-config-reports"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置子报表数据源">
+<param name="Local" value="ch14s07.html#view-jasper-reports-subreports-config-datasources"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置Exporter的参数">
+<param name="Local" value="ch14s07.html#view-jasper-reports-exporter-parameters"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="集成其它Web框架">
+<param name="Local" value="ch15.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch15.html#intro"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通用配置">
+<param name="Local" value="ch15s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JavaServer Faces">
+<param name="Local" value="ch15s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DelegatingVariableResolver">
+<param name="Local" value="ch15s03.html#jsf-delegatingvariableresolver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="FacesContextUtils">
+<param name="Local" value="ch15s03.html#jsf-facescontextutils"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Struts">
+<param name="Local" value="ch15s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ContextLoaderPlugin">
+<param name="Local" value="ch15s04.html#struts-contextloaderplugin"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DelegatingRequestProcessor">
+<param name="Local" value="ch15s04.html#struts-delegatingrequestprocessor"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DelegatingActionProxy">
+<param name="Local" value="ch15s04.html#struts-delegatingactionproxy"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="ActionSupport 类">
+<param name="Local" value="ch15s04.html#struts-actionsupport"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Tapestry">
+<param name="Local" value="ch15s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="注入 Spring 托管的 beans">
+<param name="Local" value="ch15s05.html#view-tapestry-di"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="将 Spring Beans 注入到 Tapestry 页面中">
+<param name="Local" value="ch15s05.html#view-tapestry-pre40-style-di"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="组件定义文件">
+<param name="Local" value="ch15s05.html#view-tapestry-componentdefs"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="添加抽象访问方法">
+<param name="Local" value="ch15s05.html#view-tapestry-getters"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="将 Spring Beans 注入到 Tapestry 页面中 - Tapestry 4.0+ 风格">
+<param name="Local" value="ch15s05.html#view-tapestry-40-style-di"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="WebWork">
+<param name="Local" value="ch15s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="更多资源">
+<param name="Local" value="ch15s07.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Portlet MVC框架">
+<param name="Local" value="ch16.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="介绍">
+<param name="Local" value="ch16.html#portlet-introduction"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制器 - MVC中的C">
+<param name="Local" value="ch16.html#id549681"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="视图 - MVC中的V">
+<param name="Local" value="ch16.html#id549741"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Web作用范围的Bean">
+<param name="Local" value="ch16.html#id549763"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="DispatcherPortlet">
+<param name="Local" value="ch16s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ViewRendererServlet">
+<param name="Local" value="ch16s03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制器">
+<param name="Local" value="ch16s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="AbstractController和PortletContentGenerator">
+<param name="Local" value="ch16s04.html#portlet-controller-abstractcontroller"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="其它简单的控制器">
+<param name="Local" value="ch16s04.html#portlet-controller-simple"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Command控制器">
+<param name="Local" value="ch16s04.html#portlet-controller-command"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="PortletWrappingController">
+<param name="Local" value="ch16s04.html#portlet-controller-wrapping"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="处理器映射">
+<param name="Local" value="ch16s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="PortletModeHandlerMapping">
+<param name="Local" value="ch16s05.html#portlet-handlermapping-portletmode"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ParameterHandlerMapping">
+<param name="Local" value="ch16s05.html#portlet-handlermapping-parameter"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="PortletModeParameterHandlerMapping">
+<param name="Local" value="ch16s05.html#portlet-handlermapping-portletmodeparameter"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="增加 HandlerInterceptor">
+<param name="Local" value="ch16s05.html#portlet-handlermapping-interceptor"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="HandlerInterceptorAdapter">
+<param name="Local" value="ch16s05.html#portlet-handlermapping-interceptoradapter"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ParameterMappingInterceptor">
+<param name="Local" value="ch16s05.html#portlet-handlermapping-parameterinterceptor"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="视图和它们的解析">
+<param name="Local" value="ch16s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Multipart文件上传支持">
+<param name="Local" value="ch16s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用PortletMultipartResolver">
+<param name="Local" value="ch16s07.html#portlet-multipart-resolver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="处理表单里的文件上传">
+<param name="Local" value="ch16s07.html#portlet-multipart-forms"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="异常处理">
+<param name="Local" value="ch16s08.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Portlet应用的部署">
+<param name="Local" value="ch16s09.html"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="整合">
+<param name="Local" value="pt04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring进行远程访问与Web服务">
+<param name="Local" value="ch17.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch17.html#id555338"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用RMI暴露服务">
+<param name="Local" value="ch17s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 RmiServiceExporter 暴露服务">
+<param name="Local" value="ch17s02.html#id556274"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在客户端链接服务">
+<param name="Local" value="ch17s02.html#id556400"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Hessian或者Burlap通过HTTP远程调用服务">
+<param name="Local" value="ch17s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="为Hessian配置DispatcherServlet">
+<param name="Local" value="ch17s03.html#id556485"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用HessianServiceExporter暴露你的bean">
+<param name="Local" value="ch17s03.html#id556551"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="客户端连接服务">
+<param name="Local" value="ch17s03.html#id556603"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Burlap">
+<param name="Local" value="ch17s03.html#id556640"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="对通过Hessian或Burlap暴露的服务使用HTTP基础认证">
+<param name="Local" value="ch17s03.html#id556667"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用HTTP调用器暴露服务">
+<param name="Local" value="ch17s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="暴露服务对象">
+<param name="Local" value="ch17s04.html#id556779"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在客户端连接服务">
+<param name="Local" value="ch17s04.html#id556827"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Web服务">
+<param name="Local" value="ch17s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用JAXI-RPC暴露服务">
+<param name="Local" value="ch17s05.html#id556923"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="访问Web服务">
+<param name="Local" value="ch17s05.html#id556993"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="注册bean映射">
+<param name="Local" value="ch17s05.html#id557204"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="注册自己的处理方法">
+<param name="Local" value="ch17s05.html#id557251"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用XFire来暴露Web服务">
+<param name="Local" value="ch17s05.html#id557354"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="对远程接口不提供自动探测">
+<param name="Local" value="ch17s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在选择这些技术时的一些考虑">
+<param name="Local" value="ch17s07.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Enterprise Java Bean(EJB)集成">
+<param name="Local" value="ch18.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch18.html#ejb-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="访问EJB">
+<param name="Local" value="ch18s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="概念">
+<param name="Local" value="ch18s02.html#ejb-access-concepts"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="访问本地的无状态Session Bean(SLSB)">
+<param name="Local" value="ch18s02.html#ejb-access-local"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="访问远程SLSB">
+<param name="Local" value="ch18s02.html#ejb-access-remote"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring提供的辅助类实现EJB组件">
+<param name="Local" value="ch18s03.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JMS">
+<param name="Local" value="ch19.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch19.html#id558882"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring JMS">
+<param name="Local" value="ch19s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="JmsTemplate">
+<param name="Local" value="ch19s02.html#id560748"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="连接工厂">
+<param name="Local" value="ch19s02.html#id560854"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="(消息)目的地管理">
+<param name="Local" value="ch19s02.html#id560948"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="消息侦听容器">
+<param name="Local" value="ch19s02.html#id561115"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SimpleMessageListenerContainer">
+<param name="Local" value="ch19s02.html#id561177"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DefaultMessageListenerContainer">
+<param name="Local" value="ch19s02.html#id561201"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="ServerSessionMessageListenerContainer">
+<param name="Local" value="ch19s02.html#id561231"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务管理">
+<param name="Local" value="ch19s02.html#id561267"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="发送一条消息">
+<param name="Local" value="ch19s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用消息转换器">
+<param name="Local" value="ch19s03.html#id560453"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SessionCallback 和ProducerCallback">
+<param name="Local" value="ch19s03.html#id561810"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="接收消息">
+<param name="Local" value="ch19s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="同步接收">
+<param name="Local" value="ch19s04.html#id561874"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="异步接收 - 消息驱动的POJOs">
+<param name="Local" value="ch19s04.html#jms-asynchronousMessageReception"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="SessionAwareMessageListener 接口">
+<param name="Local" value="ch19s04.html#id562018"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MessageListenerAdapter">
+<param name="Local" value="ch19s04.html#id562142"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务中的多方参与">
+<param name="Local" value="ch19s04.html#id562537"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JMX">
+<param name="Local" value="ch20.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="介绍">
+<param name="Local" value="ch20.html#jmx-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="输出bean到JMX">
+<param name="Local" value="ch20s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建一个MBeanServer">
+<param name="Local" value="ch20s02.html#jmx-exporting-mbeanserver"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="复用现有的MBeanServer">
+<param name="Local" value="ch20s02.html#id564781"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MBean的惰性初始化">
+<param name="Local" value="ch20s02.html#jmx-exporting-lazy"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MBean的自动注册">
+<param name="Local" value="ch20s02.html#jmx-exporting-auto"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制注册行为">
+<param name="Local" value="ch20s02.html#jmx-exporting-registration-behavior"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制bean的管理接口">
+<param name="Local" value="ch20s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MBeanInfoAssembler 接口">
+<param name="Local" value="ch20s03.html#jmx-interface-assembler"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用源码级元数据">
+<param name="Local" value="ch20s03.html#jmx-interface-metadata"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用JDK 5.0注解">
+<param name="Local" value="ch20s03.html#jmx-interface-annotations"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="源代码级的元数据类型">
+<param name="Local" value="ch20s03.html#jmx-interface-metadata-types"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="接口AutodetectCapableMBeanInfoAssembler">
+<param name="Local" value="ch20s03.html#jmx-interface-autodetect"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="用Java接口定义管理接口">
+<param name="Local" value="ch20s03.html#jmx-interface-java"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用MethodNameBasedMBeanInfoAssembler">
+<param name="Local" value="ch20s03.html#jmx-interface-methodnames"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="控制bean的 ObjectName">
+<param name="Local" value="ch20s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="从Properties中读取ObjectName">
+<param name="Local" value="ch20s04.html#jmx-naming-properties"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 MetadataNamingStrategy">
+<param name="Local" value="ch20s04.html#jmx-naming-metadata"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JSR-160连接器">
+<param name="Local" value="ch20s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="服务器端连接器">
+<param name="Local" value="ch20s05.html#jmx-jsr160-server"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="客户端连接器">
+<param name="Local" value="ch20s05.html#jmx-jsr160-client"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基于Burlap/Hessian/SOAP的JMX">
+<param name="Local" value="ch20s05.html#jmx-jsr160-protocols"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="通过代理访问MBeans">
+<param name="Local" value="ch20s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="通知">
+<param name="Local" value="ch20s07.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="为通知注册监听器">
+<param name="Local" value="ch20s07.html#jmx-notifications-listeners"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="发布通知">
+<param name="Local" value="ch20s07.html#jmx-notifications-publishing"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="更多资源">
+<param name="Local" value="ch20s08.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JCA CCI">
+<param name="Local" value="ch21.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="介绍">
+<param name="Local" value="ch21.html#id572912"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置CCI">
+<param name="Local" value="ch21s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="连接器配置">
+<param name="Local" value="ch21s02.html#id573025"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="在Spring中配置ConnectionFactory">
+<param name="Local" value="ch21s02.html#id573148"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="配置CCI连接">
+<param name="Local" value="ch21s02.html#id573265"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用一个 CCI 单连接">
+<param name="Local" value="ch21s02.html#id573434"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring的 CCI访问支持">
+<param name="Local" value="ch21s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="记录转换">
+<param name="Local" value="ch21s03.html#cci-record-creator"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="CciTemplate 类">
+<param name="Local" value="ch21s03.html#id573703"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="DAO支持">
+<param name="Local" value="ch21s03.html#id574002"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自动输出记录生成">
+<param name="Local" value="ch21s03.html#automatic-output-generation"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="总结">
+<param name="Local" value="ch21s03.html#template-summary"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="直接使用一个 CCI Connection 接口和Interaction接口">
+<param name="Local" value="ch21s03.html#id574599"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="CciTemplate 使用示例">
+<param name="Local" value="ch21s03.html#id574724"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="建模CCI访问为操作对象">
+<param name="Local" value="ch21s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MappingRecordOperation">
+<param name="Local" value="ch21s04.html#id575254"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MappingCommAreaOperation">
+<param name="Local" value="ch21s04.html#id572808"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自动输出记录生成">
+<param name="Local" value="ch21s04.html#id572860"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="总结">
+<param name="Local" value="ch21s04.html#id575370"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MappingRecordOperation 使用示例">
+<param name="Local" value="ch21s04.html#id575525"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="MappingCommAreaOperation 使用示例">
+<param name="Local" value="ch21s04.html#id575643"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="事务">
+<param name="Local" value="ch21s05.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring邮件抽象层">
+<param name="Local" value="ch22.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch22.html#mail-introduction"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring邮件抽象结构">
+<param name="Local" value="ch22s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用Spring邮件抽象">
+<param name="Local" value="ch22s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="可插拔的MailSender实现">
+<param name="Local" value="ch22s03.html#id578392"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 JavaMail MimeMessageHelper">
+<param name="Local" value="ch22s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建一条简单的MimeMessage，并且发送出去">
+<param name="Local" value="ch22s04.html#id578453"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="发送附件和嵌入式资源(inline resources)">
+<param name="Local" value="ch22s04.html#id579116"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring中的定时调度(Scheduling)和线程池(Thread Pooling)">
+<param name="Local" value="ch23.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch23.html#id578333"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用OpenSymphony Quartz 调度器">
+<param name="Local" value="ch23s02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用JobDetailBean">
+<param name="Local" value="ch23s02.html#id579754"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 MethodInvokingJobDetailFactoryBean">
+<param name="Local" value="ch23s02.html#id579898"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用triggers和SchedulerFactoryBean来包装任务">
+<param name="Local" value="ch23s02.html#id580056"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用JDK Timer支持类">
+<param name="Local" value="ch23s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="创建定制的timers">
+<param name="Local" value="ch23s03.html#id580213"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用 MethodInvokingTimerTaskFactoryBean类">
+<param name="Local" value="ch23s03.html#id580305"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="打包:使用TimerFactoryBean来设置任务">
+<param name="Local" value="ch23s03.html#id580402"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="SpringTaskExecutor抽象">
+<param name="Local" value="ch23s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="TaskExecutor接口">
+<param name="Local" value="ch23s04.html#id580479"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="何时使用TaskExecutor接口">
+<param name="Local" value="ch23s04.html#id580510"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="TaskExecutor类型">
+<param name="Local" value="ch23s04.html#id580546"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用TaskExecutor接口">
+<param name="Local" value="ch23s04.html#id580864"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="动态语言支持">
+<param name="Local" value="ch24.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="介绍">
+<param name="Local" value="ch24.html#id581508"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="第一个例子">
+<param name="Local" value="ch24s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="定义动态语言支持的bean">
+<param name="Local" value="ch24s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="公共概念">
+<param name="Local" value="ch24s03.html#dynamic-language-beans-concepts"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;lang:language/&gt; 元素">
+<param name="Local" value="ch24s03.html#id582689"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Refreshable bean">
+<param name="Local" value="ch24s03.html#dynamic-language-refreshable-beans"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="内置动态语言源文件">
+<param name="Local" value="ch24s03.html#dynamic-language-beans-inline"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="理解dynamic-language-backed bean context的构造器注入">
+<param name="Local" value="ch24s03.html#id583296"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="JRuby beans">
+<param name="Local" value="ch24s03.html#dynamic-language-beans-jruby"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Groovy beans">
+<param name="Local" value="ch24s03.html#dynamic-language-beans-groovy"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="BeanShell beans">
+<param name="Local" value="ch24s03.html#dynamic-language-beans-bsh"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="场景">
+<param name="Local" value="ch24s04.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring MVC控制器脚本化">
+<param name="Local" value="ch24s04.html#dynamic-language-scenarios-controllers"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Validator脚本化">
+<param name="Local" value="ch24s04.html#dynamic-language-scenarios-validators"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="更多的资源">
+<param name="Local" value="ch24s05.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="注解和源代码级的元数据支持">
+<param name="Local" value="ch25.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="简介">
+<param name="Local" value="ch25.html#metadata-concepts"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring的元数据支持">
+<param name="Local" value="ch25s02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="注解">
+<param name="Local" value="ch25s03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="@Required">
+<param name="Local" value="ch25s03.html#metadata-annotations-required"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring中的其它@Annotations">
+<param name="Local" value="ch25s03.html#id587285"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="集成Jakarta Commons Attributes">
+<param name="Local" value="ch25s04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="元数据和Spring AOP自动代理">
+<param name="Local" value="ch25s05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="基本原理">
+<param name="Local" value="ch25s05.html#id587923"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明式事务管理">
+<param name="Local" value="ch25s05.html#metadata-tx"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="缓冲">
+<param name="Local" value="ch25s05.html#metadata-pool"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="自定义元数据">
+<param name="Local" value="ch25s05.html#metadata-arbitrary"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="使用属性来减少MVC web层配置">
+<param name="Local" value="ch25s06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="元数据属性的其它用法">
+<param name="Local" value="ch25s07.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="增加对额外元数据API的支持">
+<param name="Local" value="ch25s08.html"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="XML Schema-based configuration">
+<param name="Local" value="apa.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Introduction">
+<param name="Local" value="apa.html#id590228"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="XML Schema-based configuration">
+<param name="Local" value="apas02.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Referencing the schemas">
+<param name="Local" value="apas02.html#xsd-config-body-referencing"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The util schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;util:constant/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-constant"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Setting a bean property or constructor arg from a field value">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-frfb"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;util:property-path/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-property-path"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Using &lt;util:property-path/&gt; to set a bean property or constructor-argument">
+<param name="Local" value="apas02.html#id591448"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;util:properties/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-properties"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;util:list/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-list"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;util:map/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-map"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;util:set/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-util-set"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="The jee schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:jndi-lookup/&gt; (simple)">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-jndi-lookup"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:jndi-lookup/&gt; (with single JNDI environment setting)">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-jndi-lookup-environment-single"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:jndi-lookup/&gt; (with multiple JNDI environment settings)">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-jndi-lookup-evironment-multiple"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:jndi-lookup/&gt; (complex)">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-jndi-lookup-complex"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:local-slsb/&gt; (simple)">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-local-slsb"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:local-slsb/&gt; (complex)">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-local-slsb-complex"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="&lt;jee:remote-slsb/&gt;">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-jee-remote-slsb"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="The lang schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-lang"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The tx (transaction) schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-tx"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The aop schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-aop"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The tool schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-tool"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The beans schema">
+<param name="Local" value="apas02.html#xsd-config-body-schemas-beans"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Setting up your IDE">
+<param name="Local" value="apas03.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Setting up Eclipse">
+<param name="Local" value="apas03.html#xsd-config-setup-eclipse"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Setting up IntelliJ IDEA">
+<param name="Local" value="apas03.html#xsd-config-setup-idea"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Integration issues">
+<param name="Local" value="apas03.html#xsd-config-integration"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="XML parsing errors in the Resin v.3 application server">
+<param name="Local" value="apas03.html#id594323"></OBJECT></LI>
+</UL></UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Extensible XML authoring">
+<param name="Local" value="apb.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Introduction">
+<param name="Local" value="apb.html#id597910"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Authoring the schema">
+<param name="Local" value="apbs02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Coding a NamespaceHandler">
+<param name="Local" value="apbs03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Coding a BeanDefinitionParser">
+<param name="Local" value="apbs04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Registering the handler and the schema">
+<param name="Local" value="apbs05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="META-INF/spring.handlers">
+<param name="Local" value="apbs05.html#id598763"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="META-INF/spring.schemas">
+<param name="Local" value="apbs05.html#id598795"></OBJECT></LI>
+</UL></UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="spring-beans-2.0.dtd">
+<param name="Local" value="apc.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="spring.tld">
+<param name="Local" value="apd.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Introduction">
+<param name="Local" value="apd.html#spring.tld-intro"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The bind tag">
+<param name="Local" value="apds02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The escapeBody tag">
+<param name="Local" value="apds03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The hasBindErrors tag">
+<param name="Local" value="apds04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The htmlEscape tag">
+<param name="Local" value="apds05.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The message tag">
+<param name="Local" value="apds06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The nestedPath tag">
+<param name="Local" value="apds07.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The theme tag">
+<param name="Local" value="apds08.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The transform tag">
+<param name="Local" value="apds09.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="spring-form.tld">
+<param name="Local" value="ape.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Introduction">
+<param name="Local" value="ape.html#spring-form.tld-intro"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The checkbox tag">
+<param name="Local" value="apes02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The errors tag">
+<param name="Local" value="apes03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The form tag">
+<param name="Local" value="apes04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The hidden tag">
+<param name="Local" value="apes05.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The input tag">
+<param name="Local" value="apes06.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The label tag">
+<param name="Local" value="apes07.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The option tag">
+<param name="Local" value="apes08.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The options tag">
+<param name="Local" value="apes09.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The password tag">
+<param name="Local" value="apes10.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The radiobutton tag">
+<param name="Local" value="apes11.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The select tag">
+<param name="Local" value="apes12.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="The textarea tag">
+<param name="Local" value="apes13.html"></OBJECT></LI>
+</UL><LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring 2.0 开发手册中文化项目">
+<param name="Local" value="apf.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="声明">
+<param name="Local" value="apf.html#id630489"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="致谢">
+<param name="Local" value="apfs02.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="参与人员及任务分配">
+<param name="Local" value="apfs03.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring 2.0 正式版开发手册翻译说明">
+<param name="Local" value="apfs04.html"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="项目历程">
+<param name="Local" value="apfs05.html"></OBJECT></LI>
+<UL>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring 2.0 RC2 开发手册翻译项目">
+<param name="Local" value="apfs05.html#id634727"></OBJECT></LI>
+<LI><OBJECT type="text/sitemap">
+<param name="Name" value="Spring 2.0 正式版开发手册翻译项目">
+<param name="Local" value="apfs05.html#id635866"></OBJECT></LI>
+</UL></UL></UL>
+</UL>
+</BODY></HTML>

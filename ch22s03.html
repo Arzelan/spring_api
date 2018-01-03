@@ -1,0 +1,142 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>22.3.&#160;使用Spring邮件抽象</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch22.html" title="第&#160;22&#160;章&#160;Spring邮件抽象层">
+<link rel="prev" href="ch22s02.html" title="22.2.&#160;Spring邮件抽象结构">
+<link rel="next" href="ch22s04.html" title="22.4.&#160;使用 JavaMail MimeMessageHelper">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="mail-usage"></a>22.3.&#160;使用Spring邮件抽象</h2></div></div></div>
+<p>假设某个业务接口名为
+    <code class="interfacename">OrderManager</code>:</p>
+<pre class="programlisting">public interface OrderManager {
+
+    void placeOrder(Order order);
+}</pre>
+<p>同时有一个用例为：需要生成带有订单号的email信件, 并向客户发送该订单。
+    为此，我们会使用<code class="interfacename">MailSender</code>接口和<code class="classname">SimpleMailMessage</code>类。</p>
+<p><span class="emphasis"><em>请注意,通常情况下,我们在业务代码中使用接口而让Spring ioc容器负责组装我们需要的合作者。</em></span></p>
+<p>以下是<code class="interfacename">OrderManager</code>的实现:</p>
+<pre class="programlisting">import org.springframework.mail.MailException;
+import org.springframework.mail.MailSender;
+import org.springframework.mail.SimpleMailMessage;
+
+public class OrderManagerImpl implements OrderManager {
+
+    private MailSender mailSender;
+    private SimpleMailMessage message;
+
+    public void setMailSender(MailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    public void setMessage(SimpleMailMessage message) {
+        this.message = message;
+    }
+
+    public void placeOrder(Order order) {
+
+        <em class="lineannotation"><span class="lineannotation">// Do the business calculations...</span></em>
+        <em class="lineannotation"><span class="lineannotation">// Call the collaborators to persist the order...</span></em>
+
+        //Create a thread safe "sandbox" of the message
+        SimpleMailMessage msg = new SimpleMailMessage(this.message);
+        msg.setTo(order.getCustomer().getEmailAddress());
+        msg.setText(
+            "Dear "
+                + order.getCustomer().getFirstName()
+                + order.getCustomer().getLastName()
+                + ", thank you for placing order. Your order number is "
+                + order.getOrderNumber());
+        try{
+            mailSender.send(msg);
+        }
+        catch(MailException ex) {
+            //log it and go on
+            System.err.println(ex.getMessage());            
+        }
+    }
+}</pre>
+<p>上面的代码的bean定义应该是这样的:</p>
+<pre class="programlisting">&lt;bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl"&gt;
+  &lt;property name="host" value="mail.mycompany.com"/&gt;
+&lt;/bean&gt;
+
+&lt;bean id="mailMessage" class="org.springframework.mail.SimpleMailMessage"&gt;
+  &lt;property name="from" value="customerservice@mycompany.com"/&gt;
+  &lt;property name="subject" value="Your order"/&gt;
+&lt;/bean&gt;
+
+&lt;bean id="orderManager" class="com.mycompany.businessapp.support.OrderManagerImpl"&gt;
+  &lt;property name="mailSender" ref="mailSender"/&gt;
+  &lt;property name="message" ref="mailMessage"/&gt;
+&lt;/bean&gt;</pre>
+<p>下面是<code class="interfacename">OrderManager</code>接口的实现，使用了<code class="interfacename">MimeMessagePreparator</code>回调接口。
+	请注意这里的mailSender属性的类型为<code class="interfacename">JavaMailSender</code>,这样做是为了能够使用JavaMail的<code class="classname">MimeMessage</code>：
+    </p>
+<pre class="programlisting">import javax.mail.Message;
+import javax.mail.MessagingException;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
+
+import javax.mail.internet.MimeMessage;
+import org.springframework.mail.MailException;
+import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.mail.javamail.MimeMessagePreparator;
+
+public class OrderManagerImpl implements OrderManager {
+
+    private JavaMailSender mailSender;
+    
+    public void setMailSender(JavaMailSender mailSender) {
+        this.mailSender = mailSender;
+    }
+
+    public void placeOrder(final Order order) {
+
+        <em class="lineannotation"><span class="lineannotation">// Do the business calculations...</span></em>
+        <em class="lineannotation"><span class="lineannotation">// Call the collaborators to persist the order...</span></em>
+        
+        MimeMessagePreparator preparator = new MimeMessagePreparator() {
+        
+            public void prepare(MimeMessage mimeMessage) throws MessagingException {
+        
+                mimeMessage.setRecipient(Message.RecipientType.TO, 
+                        new InternetAddress(order.getCustomer().getEmailAddress()));
+                mimeMessage.setFrom(new InternetAddress("mail@mycompany.com"));
+                mimeMessage.setText(
+                    "Dear "
+                        + order.getCustomer().getFirstName()
+                        + order.getCustomer().getLastName()
+                        + ", thank you for placing order. Your order number is "
+                        + order.getOrderNumber());
+            }
+        };
+        try {
+            mailSender.send(preparator);
+        }
+        catch (MailException ex) {
+            //log it and go on
+            System.err.println(ex.getMessage());            
+        }
+    }
+}</pre>
+<p>如果你想获得JavaMail<code class="classname"> MimeMessage</code>的全部能力，你可以使用<code class="classname">MimeMessagePreparator</code>。</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>以上的邮件代码是一个横切关注点，是重构为定制SpringAOP advice的完美候选者,这样就可以在目标对象<code class="interfacename">OrderManager</code>合适的joinpoint中运行。请参阅<a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a>章节。
+	</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id578392"></a>22.3.1.&#160;可插拔的MailSender实现</h3></div></div></div>
+<p>Spring直接提供两种<code class="interfacename">MailSender</code>的实现:标准的JavaMail实现,和基于Jason Hunter 编写的<code class="classname">MailMessage</code>类之上的实现,后者位于<a href="http://servlets.com/cos" target="_top">http://servlets.com/cos</a>
+      (com.oreilly.servlet)。进一步的资料请查阅相关Javadocs。</p>
+</div>
+</div></body>
+</html>

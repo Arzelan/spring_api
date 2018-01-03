@@ -1,0 +1,835 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>9.5.&#160;声明式事务管理</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+<link rel="prev" href="ch09s04.html" title="9.4.&#160;使用资源同步的事务">
+<link rel="next" href="ch09s06.html" title="9.6.&#160;编程式事务管理">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="transaction-declarative"></a>9.5.&#160;声明式事务管理</h2></div></div></div>
+<p><em><span class="remark">大多数Spring用户选择声明式事务管理。这是对应用代码影响最小的选择，因此也最符合 <span class="emphasis"><em>非侵入式</em></span> 轻量级容器的理念。</span></em></p>
+<p>Spring的声明式事务管理是通过Spring AOP实现的，因为事务方面的代码与Spring绑定并以一种样板式风格使用，不过尽管如此，你一般并不需要理解AOP概念就可以有效地使用Spirng的声明式事务管理。</p>
+<p>从考虑EJB CMT和Spring声明式事务管理的相似以及不同之处出发是很有益的。它们的基本方法是相似的：都可以指定事务管理到单独的方法；如果需要可以在事务上下文调用 <code class="literal">setRollbackOnly()</code> 方法。不同之处在于：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>不像EJB CMT绑定在JTA上，Spring声明式事务管理可以在任何环境下使用。只需更改配置文件，它就可以和JDBC、JDO、Hibernate或其他的事务机制一起工作。</p></li>
+<li><p>Spring的声明式事务管理可以被应用到任何类（以及那个类的实例）上，不仅仅是像EJB那样的特殊类。</p></li>
+<li><p>Spring提供了声明式的<span class="emphasis"><em>回滚规则</em></span>：EJB没有对应的特性，我们将在下面讨论。回滚可以声明式的控制，不仅仅是编程式的。</p></li>
+<li><p>Spring允许你通过AOP定制事务行为。例如，如果需要，你可以在事务回滚中插入定制的行为。你也可以增加任意的通知，就象事务通知一样。使用EJB CMT，除了使用<code class="literal">setRollbackOnly()</code>，你没有办法能够影响容器的事务管理。</p></li>
+<li><p>Spring不提供高端应用服务器提供的跨越远程调用的事务上下文传播。如果你需要这些特性，我们推荐你使用EJB。然而，不要轻易使用这些特性。通常我们并不希望事务跨越远程调用。</p></li>
+</ul></div>
+<div class="sidebar">
+<p class="title"><b><code class="classname">TransactionProxyFactoryBean</code>在哪儿？</b></p>
+<p>Spring2.0及以后的版本中声明式事务的配置与之前的版本有相当大的不同。主要差异在于不再需要配置<code class="classname">TransactionProxyFactoryBean</code>了。</p>
+<p>Spring2.0之前的旧版本风格的配置仍然是有效的；你可以简单地认为新的<code class="literal">&lt;tx:tags/&gt;</code>替你定义了<code class="classname">TransactionProxyFactoryBean</code>。</p>
+</div>
+<p>回滚规则的概念比较重要：它使我们能够指定什么样的异常（和throwable）将导致自动回滚。我们在配置文件中声明式地指定，无须在Java代码中。同时，我们仍旧可以通过调用 <code class="interfacename">TransactionStatus</code> 的 <code class="literal">setRollbackOnly()</code> 方法编程式地回滚当前事务。通常，我们定义一条规则，声明 <code class="exceptionname">MyApplicationException</code> 必须总是导致事务回滚。这种方式带来了显著的好处，它使你的业务对象不必依赖于事务设施。典型的例子是你不必在代码中导入Spring API，事务等。</p>
+<p>对EJB来说，默认的行为是EJB容器在遇到 <span class="emphasis"><em>系统异常</em></span>（通常指运行时异常）时自动回滚当前事务。EJB CMT遇到 <span class="emphasis"><em>应用异常</em></span>（例如，除了 <code class="exceptionname">java.rmi.RemoteException</code> 外别的checked exception）时并不会自动回滚。默认式Spring处理声明式事务管理的规则遵守EJB习惯（只在遇到unchecked exceptions时自动回滚），但通常定制这条规则会更有用。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id492333"></a>9.5.1.&#160;理解Spring的声明式事务管理实现</h3></div></div></div>
+<p>本节的目的是消除与使用声明式事务管理有关的神秘性。简单点儿总是好的，这份参考文档只是告诉你给你的类加上<code class="interfacename">@Transactional</code>注解，在配置文件中添加（<code class="literal">'&lt;tx:annotation-driven/&gt;'</code>）行，然后期望你理解整个过程是怎么工作的。此节讲述Spring的声明式事务管理内部的工作机制，以帮助你在面对事务相关的问题时不至于误入迷途，回朔到上游平静的水域。</p>
+<div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">提示</h3>
+<p>阅读Spring源码是理解清楚Spring事务支持的一个好方法。Spring的Javadoc提供的信息丰富而完整。我们建议你在开发自己的Spring应用时把日志级别设为<code class="literal">'DEBUG'</code>级，这样你能更清楚地看到幕后发生的事。</p>
+</div>
+<p>在理解Spring的声明式事务管理方面最重要的概念是：Spring的事务管理是通过AOP<span class="emphasis"><em>代理</em></span>实现的。其中的事务通知由<span class="emphasis"><em>元数据</em></span>（目前基于XML或注解）驱动。代理对象与事务元数据结合产生了一个AOP代理，它使用一个<code class="classname">PlatformTransactionManager</code>实现品配合<code class="classname">TransactionInterceptor</code>，在<span class="emphasis"><em>方法调用</em></span>前后实施事务。</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>尽管使用Spring声明式事务管理不需要AOP（尤其是Spring AOP）的知识，但了解这些是很有帮助的。你可以在 <a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a> 章找到关于Spring AOP的全部内容。</p>
+</div>
+<p>概念上来说，在事务代理上调用方法的工作过程看起来像这样：</p>
+<p>
+				</p>
+<div class="mediaobject" align="center"><img src="images/tx.png" align="middle"></div>
+<p>
+			</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-first-example"></a>9.5.2.&#160;第一个例子</h3></div></div></div>
+<p>请看下面的接口和它的实现。这个例子的意图是介绍概念，使用 <code class="classname">Foo</code> 和 <code class="classname">Bar</code> 这样的名字只是为了让你关注于事务的用法，而不是领域模型。</p>
+<pre class="programlisting">
+				<em class="lineannotation"><span class="lineannotation">&lt;!-- 我们想做成事务性的服务接口 --&gt;
+            </span></em>
+
+package x.y.service;
+
+public interface FooService {
+
+    Foo getFoo(String fooName);
+
+    Foo getFoo(String fooName, String barName);
+
+    void insertFoo(Foo foo);
+
+    void updateFoo(Foo foo);
+
+}</pre>
+<pre class="programlisting">
+				<em class="lineannotation"><span class="lineannotation">&lt;!-- 上述接口的一个实现 --&gt;
+            </span></em>
+
+package x.y.service;
+
+public class DefaultFooService implements FooService {
+
+    public Foo getFoo(String fooName) {
+        throw new UnsupportedOperationException();
+    }
+
+    public Foo getFoo(String fooName, String barName) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void insertFoo(Foo foo) {
+        throw new UnsupportedOperationException();
+    }
+
+    public void updateFoo(Foo foo) {
+        throw new UnsupportedOperationException();
+    }
+}</pre>
+<p>
+				<span class="emphasis"><em>（对该例的目的来说，上例中实现类（<code class="classname">DefaultFooService</code>）的每个方法在其方法体中抛出 <code class="exceptionname">UnsupportedOperationException</code> 的做法是恰当的，我们可以看到，事务被创建出来，响应 <code class="exceptionname">UnsupportedOperationException</code> 的抛出，然后回滚。）</em></span>
+			</p>
+<p>我们假定，<code class="interfacename">FooService</code>的前两个方法（<code class="literal">getFoo(String)</code>和<code class="literal">getFoo(String, String)</code>）必须执行在只读事务上下文中，其余方法（<code class="literal">insertFoo(Foo)</code>和<code class="literal">updateFoo(Foo)</code>）必须执行在读写事务上下文中。</p>
+<p>使用XML方式元数据的声明式配置的话，你得这么写（不要想着一次全部理解，所有内容会在后面的章节详细讨论）：</p>
+<pre class="programlisting">
+				<em class="lineannotation"><span class="lineannotation">&lt;!-- <code class="literal">'context.xml'</code>文件的内容如下： --&gt;
+            </span></em>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       <em class="lineannotation"><span class="lineannotation"><span class="bold"><strong>xmlns:tx="http://www.springframework.org/schema/tx"</strong></span></span></em>
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       <em class="lineannotation"><span class="lineannotation"><span class="bold"><strong>http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd</strong></span></span></em>
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- 这是我们将要配置并使它具有事务性的Service对象 --&gt;
+  </span></em>
+  &lt;bean id="fooService" class="x.y.service.DefaultFooService"/&gt;
+
+  <em class="lineannotation"><span class="lineannotation">
+  &lt;!-- the transactional advice (i.e. what 'happens'; see the <code class="literal">&lt;aop:advisor/&gt;</code> bean below) --&gt;
+  </span></em>
+  &lt;tx:advice id="txAdvice" transaction-manager="txManager"&gt;
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- the transactional semantics... --&gt;
+    </span></em>
+    &lt;tx:attributes&gt;
+      <em class="lineannotation"><span class="lineannotation">&lt;!-- all methods starting with <code class="literal">'get'</code> are read-only --&gt;
+      </span></em>
+      &lt;tx:method name="get*" read-only="true"/&gt;
+      <em class="lineannotation"><span class="lineannotation">&lt;!-- other methods use the default transaction settings (see below) --&gt;
+      </span></em>
+      &lt;tx:method name="*"/&gt;
+    &lt;/tx:attributes&gt;
+  &lt;/tx:advice&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- ensure that the above transactional advice runs for any execution
+      of an operation defined by the <code class="interfacename">FooService</code> interface --&gt;
+      </span></em>
+  &lt;aop:config&gt;
+    &lt;aop:pointcut id="fooServiceOperation" expression="execution(* x.y.service.FooService.*(..))"/&gt;
+    &lt;aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceOperation"/&gt;
+  &lt;/aop:config&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- don't forget the <code class="interfacename">DataSource</code> --&gt;
+  </span></em>
+  &lt;bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"&gt;
+    &lt;property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/&gt;
+    &lt;property name="url" value="jdbc:oracle:thin:@rj-t42:1521:elvis"/&gt;
+    &lt;property name="username" value="scott"/&gt;
+    &lt;property name="password" value="tiger"/&gt;
+  &lt;/bean&gt;
+
+  <em class="lineannotation"><span class="lineannotation">
+  &lt;!-- similarly, don't forget the (particular) <code class="interfacename">PlatformTransactionManager</code> --&gt;
+  </span></em>
+  &lt;bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;
+    &lt;property name="dataSource" ref="dataSource"/&gt;
+  &lt;/bean&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- other <code class="literal">&lt;bean/&gt;</code> definitions here --&gt;
+  </span></em>
+&lt;/beans&gt;</pre>
+<p>
+				我们来分析一下上面的配置。我们要把一个服务对象（<code class="literal">'fooService'</code> bean）做成事务性的。我们想施加的事务语义封装在<code class="literal">&lt;tx:advice/&gt;</code>定义中。<code class="literal">&lt;tx:advice/&gt;</code>
+				“<span class="quote"><span class="emphasis"><em>把所有以 <code class="literal">'get'</code> 开头的方法看做执行在只读事务上下文中，其余的方法执行在默认语义的事务上下文中</em></span></span>”。
+				其中的 <code class="literal">'transaction-manager'</code> 属性被设置为一个指向 <code class="interfacename">PlatformTransactionManager</code> bean的名字（这里指 <code class="literal">'txManager'</code>），该bean将实际上实施事务管理。</p>
+<div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">提示</h3>
+<p>事实上，如果 <code class="interfacename">PlatformTransactionManager</code> bean的名字是 <code class="literal">'transactionManager'</code> 的话，你的事务通知（<code class="literal">&lt;tx:advice/&gt;</code>）中的 <code class="literal">'transaction-manager'</code> 属性可以忽略。否则你则需要像上例那样明确指定。</p>
+</div>
+<p>配置中最后一段是 <code class="literal">&lt;aop:config/&gt;</code> 的定义，它确保由 <code class="literal">'txAdvice'</code> bean定义的事务通知在应用中合适的点被执行。首先我们定义了 一个切面，它匹配 <code class="interfacename">FooService</code> 接口定义的所有操作，我们把该切面叫做 <code class="literal">'fooServiceOperation'</code>。然后我们用一个通知器（advisor）把这个切面与 <code class="literal">'txAdvice'</code> 绑定在一起，表示当 <code class="literal">'fooServiceOperation'</code> 执行时，<code class="literal">'txAdvice'</code> 定义的通知逻辑将被执行。</p>
+<p><code class="literal">&lt;aop:pointcut/&gt;</code> 元素定义是AspectJ的切面表示法，可参考Spring 2.0 <a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a>章获得更详细的内容。</p>
+<p>一个普遍性的需求是让整个服务层成为事务性的。满足该需求的最好方式是让切面表达式匹配服务层的所有操作方法。例如：</p>
+<pre class="programlisting">&lt;aop:config&gt;
+    &lt;aop:pointcut id="fooServiceMethods" expression="execution(* x.y.service.*.*(..))"/&gt;
+    &lt;aop:advisor advice-ref="txAdvice" pointcut-ref="fooServiceMethods"/&gt;
+  &lt;/aop:config&gt;</pre>
+<p>
+				<span class="emphasis"><em>（这个例子中假定你所有的服务接口定义在 <code class="literal">'x.y.service'</code> 包中。你同样可以参考 <a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a> 章获得更详细内容。）</em></span>
+			</p>
+<p>现在，既然我们已经分析了整个配置，你可能会问了，“<span class="quote"><span class="emphasis"><em>好吧，但是所有这些配置做了什么？</em></span></span>”。</p>
+<p>上面的配置将为由 <code class="literal">'fooService'</code> 定义的bean创建一个代理对象，这个代理对象被装配了事务通知，所以当它的相应方法被调用时，一个事务将被启动、挂起、被标记为只读，或者其它（根据该方法所配置的事务语义）。</p>
+<p>我们来看看下面的例子，测试一下上面的配置。</p>
+<pre class="programlisting">public final class Boot {
+
+    public static void main(final String[] args) throws Exception {
+        ApplicationContext ctx = new ClassPathXmlApplicationContext("context.xml", Boot.class);
+        FooService fooService = (FooService) ctx.getBean("fooService");
+        fooService.insertFoo (new Foo());
+    }
+}</pre>
+<p>运行上面程序的输出结果看起来像这样（注意为了清楚起见，Log4J的消息和从 <code class="classname">DefaultFooService</code> 的 <code class="methodname">insertFoo(..)</code> 方法抛出的 <code class="exceptionname">UnsupportedOperationException</code> 异常堆栈信息被省略了）。</p>
+<pre class="programlisting">
+				<em class="lineannotation"><span class="lineannotation">&lt;!-- Spring容器开始启动... --&gt;
+				</span></em>
+[AspectJInvocationContextExposingAdvisorAutoProxyCreator] - Creating implicit proxy
+        for bean 'fooService' with 0 common interceptors and 1 specific interceptors
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- the <code class="classname">DefaultFooService</code> is actually proxied --&gt;
+    </span></em>
+[JdkDynamicAopProxy] - Creating JDK dynamic proxy for [x.y.service.DefaultFooService]
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- ... the <code class="literal">insertFoo(..)</code> method is now being invoked on the proxy --&gt;
+    </span></em>
+
+[TransactionInterceptor] - Getting transaction for x.y.service.FooService.insertFoo
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- the transactional advice kicks in here... --&gt;
+    </span></em>
+[DataSourceTransactionManager] - Creating new transaction with name [x.y.service.FooService.insertFoo]
+[DataSourceTransactionManager] - Acquired Connection
+        [org.apache.commons.dbcp.PoolableConnection@a53de4] for JDBC transaction
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- the <code class="literal">insertFoo(..)</code> method from <code class="classname">DefaultFooService</code> throws an exception... --&gt;
+    </span></em>
+[RuleBasedTransactionAttribute] - Applying rules to determine whether transaction should
+        rollback on java.lang.UnsupportedOperationException
+[TransactionInterceptor] - Invoking rollback for transaction on x.y.service.FooService.insertFoo
+        due to throwable [java.lang.UnsupportedOperationException]
+
+   <em class="lineannotation"><span class="lineannotation">&lt;!-- and the transaction is rolled back (by default, <code class="exceptionname">RuntimeException</code> instances cause rollback) --&gt;
+   </span></em>
+[DataSourceTransactionManager] - Rolling back JDBC transaction on Connection
+        [org.apache.commons.dbcp.PoolableConnection@a53de4]
+[DataSourceTransactionManager] - Releasing JDBC Connection after transaction
+[DataSourceUtils] - Returning JDBC Connection to DataSource
+
+Exception in thread "main" java.lang.UnsupportedOperationException
+	at x.y.service.DefaultFooService.insertFoo(DefaultFooService.java:14)
+   <em class="lineannotation"><span class="lineannotation">&lt;!-- AOP infrastructure stack trace elements removed for clarity --&gt;
+   </span></em>
+	at $Proxy0.insertFoo(Unknown Source)
+	at Boot.main(Boot.java:11)</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-rolling-back"></a>9.5.3.&#160;回滚</h3></div></div></div>
+<p>
+            在前面的章节里，概述了如何在你的应用里为类特别是服务层的类指定事务性的基本方法。这一章将描述在一个简单的声明式配置中如何你才能控制事务的回滚。</p>
+<p>
+            一个容易的（和被推荐的）方法是在Spring框架的事务架构里指出当context的事务里的代码抛出 <code class="exceptionname">Exception</code> 时事务进行回滚。Spring框架的事务基础架构代码将从调用的堆栈里捕获到任何未处理的 <code class="exceptionname">Exception</code>，并将标识事务将回滚。
+            </p>
+<p>
+            然而，请注意Spring框架的事务基础架构代码将默认地 <span class="emphasis"><em>只</em></span> 在抛出运行时和unchecked exceptions时才标识事务回滚。
+            也就是说，当抛出一个 <code class="exceptionname">RuntimeException</code> 或其子类例的实例时。（<code class="literal">Errors</code> 也一样 - 默认地 - 标识事务回滚。）从事务方法中抛出的Checked exceptions将 <span class="emphasis"><em>不</em></span> 被标识进行事务回滚。
+            </p>
+<p>
+            就是这些默认的设置；严格规定了哪些 <code class="exceptionname">Exception</code> 类型将被标识进行事务回滚。
+            下面的XML配置片断里示范了如何配置一个checked，应用程序指定的 <code class="exceptionname">Exception</code> 类型来标识事务回滚。
+            </p>
+<pre class="programlisting">&lt;tx:advice id="txAdvice" transaction-manager="txManager"&gt;
+  &lt;tx:attributes&gt;
+	 &lt;tx:method name="get*" read-only="false" <em class="lineannotation"><span class="lineannotation"><span class="bold"><strong>rollback-for="NoProductInStockException"</strong></span></span></em>/&gt;
+	 &lt;tx:method name="*"/&gt;
+  &lt;/tx:attributes&gt;
+&lt;/tx:advice&gt;</pre>
+<p>
+            第二方法是在Spring框架的事务架构里通过 <span class="emphasis"><em>编程式</em></span> 方式指出一个事务将被回滚。
+            虽然这个非常简单，但是这个方法对于Spring框架的事务架构来说，在你的代码是高入侵的和紧藕合的
+            下面的代码片断里示范了Spring框架管理事务的编程式回滚：
+            </p>
+<pre class="programlisting">public void resolvePosition() {
+    try {
+        <em class="lineannotation"><span class="lineannotation">// some business logic...</span></em>
+    } catch (NoProductInStockException ex) {
+        <em class="lineannotation"><span class="lineannotation">// trigger rollback programmatically</span></em>
+        TransactionAspectSupport.currentTransactionStatus().setRollbackOnly();
+    }
+}</pre>
+<p>
+            强烈推荐你尽可能地使用声明式事务回滚方法。
+            编程式方法的回滚对你来说是可见，如果你需要它你就可以使用，但是使用它就直接违反了在你的应用中使用一个纯基于POJO的模型。
+            </p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-diff-tx"></a>9.5.4.&#160;为不同的bean配置不同的事务语义</h3></div></div></div>
+<p>现在我们考虑一下这样的场景，你有许多服务对象，而且想为不同组的对象设置 <span class="emphasis"><em>完全不同</em></span> 的事务语义。在Spring中，你可以通过定义各自特定的 <code class="literal">&lt;aop:advisor/&gt;</code> 元素，每个advisor采用不同的 <code class="literal">'pointcut'</code> 和 <code class="literal">'advice-ref'</code> 属性，来达到目的。</p>
+<p>借助于一个例子，我们假定你所有的服务层类定义在以 <code class="literal">'x.y.service'</code> 为根的包内。为了让service包（或子包）下所有名字以 <code class="literal">'Service'</code> 结尾的类的对象拥有默认的事务语义，你可以配置如下：</p>
+<pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;
+
+&lt;aop:config&gt;
+
+    &lt;aop:pointcut id="serviceOperation" expression="<em class="lineannotation"><span class="lineannotation">execution(* x.y.service..*Service.*(..))</span></em>"/&gt;
+
+        &lt;aop:advisor pointcut-ref="serviceOperation" advice-ref="txAdvice"/&gt;
+
+&lt;/aop:config&gt;
+
+<em class="lineannotation"><span class="lineannotation">&lt;!-- these two beans will be transactional... --&gt;
+</span></em>
+&lt;bean id="fooService" class="x.y.service.DefaultFooService"/&gt;
+&lt;bean id="barService" class="x.y.service.extras.SimpleBarService"/&gt;
+
+<em class="lineannotation"><span class="lineannotation">&lt;!-- ...and these two beans won't --&gt;
+</span></em>
+    &lt;bean id="anotherService" class="org.xyz.SomeService"/&gt; <em class="lineannotation"><span class="lineannotation">&lt;!-- (not in the right package) --&gt;</span></em>
+    &lt;bean id="barManager" class="x.y.service.SimpleBarManager"/&gt; <em class="lineannotation"><span class="lineannotation">&lt;!-- (doesn't end in 'Service') --&gt;</span></em>
+
+    &lt;tx:advice id="txAdvice"&gt;
+        &lt;tx:attributes&gt;
+            &lt;tx:method name="get*" read-only="true"/&gt;
+            &lt;tx:method name="*"/&gt;
+        &lt;/tx:attributes&gt;
+    &lt;/tx:advice&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- other transaction infrastructure beans such as a <code class="interfacename">PlatformTransactionManager</code> omitted... --&gt;</span></em>
+
+&lt;/beans&gt;</pre>
+<p>
+        下面的配置示例演示了两个不同的bean拥有完全不同的事务配置。
+        </p>
+<pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xmlns:aop="http://www.springframework.org/schema/aop"
+    xmlns:tx="http://www.springframework.org/schema/tx"
+    xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+    http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+    http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;
+
+    &lt;aop:config&gt;
+
+        &lt;aop:pointcut id="defaultServiceOperation" expression="<em class="lineannotation"><span class="lineannotation">execution(* x.y.service.*Service.*(..))</span></em>"/&gt;
+        &lt;aop:advisor pointcut-ref="defaultServiceOperation" advice-ref="defaultTxAdvice"/&gt;
+        
+        &lt;aop:pointcut id="noTxServiceOperation" expression="<em class="lineannotation"><span class="lineannotation">execution(* x.y.service.ddl.DefaultDdlManager.*(..))</span></em>"/&gt;
+        &lt;aop:advisor pointcut-ref="noTxServiceOperation" advice-ref="noTxAdvice"/&gt;
+
+    &lt;/aop:config&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- this bean will be transactional (c.f. the <code class="literal">'defaultServiceOperation'</code> pointcut) --&gt;</span></em>
+    &lt;bean id="fooService" class="x.y.service.DefaultFooService"/&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- this bean will also be transactional, but with totally different transactional settings --&gt;</span></em>
+    &lt;bean id="anotherFooService" class="x.y.service.ddl.DefaultDdlManager"/&gt;
+
+    &lt;tx:advice id="defaultTxAdvice"&gt;
+        &lt;tx:attributes&gt;
+            &lt;tx:method name="get*" read-only="true"/&gt;
+            &lt;tx:method name="*"/&gt;
+        &lt;/tx:attributes&gt;
+    &lt;/tx:advice&gt;
+    
+    &lt;tx:advice id="noTxAdvice"&gt;
+        &lt;tx:attributes&gt;
+            &lt;tx:method name="*" propagation="NEVER"/&gt;
+        &lt;/tx:attributes&gt;
+    &lt;/tx:advice&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- other transaction infrastructure beans such as a <code class="interfacename">PlatformTransactionManager</code> omitted... --&gt;</span></em>
+
+&lt;/beans&gt;</pre>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-txadvice-settings"></a>9.5.5.&#160;<code class="literal">&lt;tx:advice/&gt;</code> 有关的设置</h3></div></div></div>
+<p>
+			这一节里将描述通过 <code class="literal">&lt;tx:advice/&gt;</code> 标签来指定不同的事务性设置。默认的 <code class="literal">&lt;tx:advice/&gt;</code> 设置如下：
+            </p>
+<p>
+                </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>事务传播设置是 <code class="literal">REQUIRED</code></p></li>
+<li><p>隔离级别是 <code class="literal">DEFAULT</code></p></li>
+<li><p>事务是 读/写</p></li>
+<li><p>事务超时默认是依赖于事务系统的，或者事务超时没有被支持。</p></li>
+<li><p>任何 <code class="exceptionname">RuntimeException</code> 将触发事务回滚，但是任何 checked <code class="exceptionname">Exception</code> 将不触发事务回滚</p></li>
+</ul></div>
+<p>
+            </p>
+<p>
+            这些默认的设置当然也是可以被改变的。 
+            <code class="literal">&lt;tx:advice/&gt;</code> 和 <code class="literal">&lt;tx:attributes/&gt;</code> 标签里的 <code class="literal">&lt;tx:method/&gt;</code> 各种属性设置总结如下：
+            </p>
+<p>
+                </p>
+<div class="table">
+<a name="id493678"></a><p class="title"><b>表&#160;9.1.&#160;<code class="literal">&lt;tx:method/&gt;</code> 有关的设置</b></p>
+<div class="table-contents"><table summary="&lt;tx:method/&gt; 有关的设置" border="1">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>属性</th>
+<th>是否需要？</th>
+<th>默认值</th>
+<th>描述</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="literal">name</code></td>
+<td>是</td>
+<td>&#160;</td>
+<td>
+                                    <p>
+                                    与事务属性关联的方法名。通配符（*）可以用来指定一批关联到相同的事务属性的方法。
+                                    如：<code class="literal">'get*'</code>、<code class="literal">'handle*'</code>、<code class="literal">'on*Event'</code>等等。
+                                    </p>
+                                </td>
+</tr>
+<tr>
+<td><code class="literal">propagation</code></td>
+<td>不</td>
+<td>REQUIRED</td>
+<td>事务传播行为</td>
+</tr>
+<tr>
+<td><code class="literal">isolation</code></td>
+<td>不</td>
+<td>DEFAULT</td>
+<td>事务隔离级别</td>
+</tr>
+<tr>
+<td><code class="literal">timeout</code></td>
+<td>不</td>
+<td>-1</td>
+<td>事务超时的时间（以秒为单位）</td>
+</tr>
+<tr>
+<td><code class="literal">read-only</code></td>
+<td>不</td>
+<td>false</td>
+<td>事务是否只读？</td>
+</tr>
+<tr>
+<td><code class="literal">rollback-for</code></td>
+<td>不</td>
+<td>&#160;</td>
+<td>
+                                    <p>
+                                    将被触发进行回滚的 <code class="literal">Exception(s)</code>；以逗号分开。
+	                                如：<code class="literal">'com.foo.MyBusinessException,ServletException'</code>
+	                                </p>
+                                </td>
+</tr>
+<tr>
+<td><code class="literal">no-rollback-for</code></td>
+<td>不</td>
+<td>&#160;</td>
+<td>
+                                    <p>
+                                    <span class="emphasis"><em>不</em></span> 被触发进行回滚的 <code class="literal">Exception(s)</code>；以逗号分开。
+	                                如：<code class="literal">'com.foo.MyBusinessException,ServletException'</code>
+	                                </p>
+                                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p><br class="table-break">
+            </p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-annotations"></a>9.5.6.&#160;使用 <code class="interfacename">@Transactional</code></h3></div></div></div>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>
+					<code class="interfacename">@Transactional</code> 注解及其支持类所提供的功能最低要求使用Java 5（Tiger）。
+				</p>
+</div>
+<p>
+			除了基于XML文件的声明式事务配置外，你也可以采用基于注解式的事务配置方法。直接在Java源代码中声明事务语义的做法让事务声明和将受其影响的代码距离更近了，而且一般来说不会有不恰当的耦合的风险，因为，使用事务性的代码几乎总是被部署在事务环境中。
+			</p>
+<p>下面的例子很好地演示了 <code class="interfacename">@Transactional</code> 注解的易用性，随后解释其中的细节。先看看其中的类定义：</p>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">&lt;!-- the service class that we want to make transactional --&gt;</span></em>
+<span class="bold"><strong>@Transactional</strong></span>
+public class DefaultFooService implements FooService {
+
+    Foo getFoo(String fooName);
+
+    Foo getFoo(String fooName, String barName);
+
+    void insertFoo(Foo foo);
+
+    void updateFoo(Foo foo);
+}</pre>
+<p>当上述的POJO定义在Spring IoC容器里时，上述bean实例仅仅通过<span class="emphasis"><em>一</em></span> 行xml配置就可以使它具有事务性的。如下：</p>
+<pre class="programlisting">
+				<em class="lineannotation"><span class="lineannotation">&lt;!-- from the file <code class="literal">'context.xml'</code> --&gt;
+            </span></em>
+&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+       http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+       http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- this is the service object that we want to make transactional --&gt;</span></em>
+  &lt;bean id="fooService" class="x.y.service.DefaultFooService"/&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- enable the configuration of transactional behavior based on annotations --&gt;</span></em>
+  <span class="bold"><strong>&lt;tx:annotation-driven transaction-manager="txManager"/&gt;</strong></span>
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- a <code class="interfacename">PlatformTransactionManager</code> is still required --&gt;</span></em>
+  &lt;bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- (this dependency is defined somewhere else) --&gt;</span></em>
+    &lt;property name="dataSource" ref="dataSource"/&gt;
+  &lt;/bean&gt;
+
+  <em class="lineannotation"><span class="lineannotation">&lt;!-- other <code class="literal">&lt;bean/&gt;</code> definitions here --&gt;
+  </span></em>
+
+&lt;/beans&gt;</pre>
+<div class="tip" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">提示</h3>
+<p>
+                实际上，如果你用  <code class="literal">'transactionManager'</code> 来定义 <code class="interfacename">PlatformTransactionManager</code> bean的名字的话，你就可以忽略 <code class="literal">&lt;tx:annotation-driven/&gt;</code> 标签里的 <code class="literal">'transaction-manager'</code> 属性。
+                如果 <code class="interfacename">PlatformTransactionManager</code> bean你要通过其它名称来注入的话，你必须用 <code class="literal">'transaction-manager'</code> 属性来指定它，如上所示。
+                </p>
+</div>
+<div class="sidebar">
+<p class="title"><b>方法的可见度和 <code class="interfacename">@Transactional</code></b></p>
+<p>
+                <code class="interfacename">@Transactional</code> 注解应该只被应用到 <span class="emphasis"><em>public</em></span> 可见度的方法上。
+                如果你在 protected、private 或者 package-visible 的方法上使用 <code class="interfacename">@Transactional</code> 注解，它也不会报错，
+                但是这个被注解的方法将不会展示已配置的事务设置。
+                </p>
+</div>
+<p>
+				<code class="interfacename">@Transactional</code> 注解可以被应用于接口定义和接口方法、类定义和类的 <span class="emphasis"><em>public</em></span> 方法上。然而，请注意仅仅 <code class="interfacename">@Transactional</code> 注解的出现不足于开启事务行为，它仅仅 <span class="emphasis"><em>是一种元数据</em></span>，能够被可以识别 <code class="interfacename">@Transactional</code> 注解和上述的配置适当的具有事务行为的beans所使用。上面的例子中，其实正是 <code class="literal">&lt;tx:annotation-driven/&gt;</code>元素的出现 <span class="emphasis"><em>开启</em></span> 了事务行为。</p>
+<p>
+            Spring团队的建议是你在具体的类（或类的方法）上使用 <code class="interfacename">@Transactional</code> 
+            注解，而不要使用在类所要实现的任何接口上。你当然可以在接口上使用 <code class="interfacename">@Transactional</code> 
+            注解，但是这将只能当你设置了基于接口的代理时它才生效。因为注解是 <span class="emphasis"><em>不能继承</em></span> 
+            的，这就意味着如果你正在使用基于类的代理时，那么事务的设置将不能被基于类的代理所识别，而且对象也将不会被事务代理所包装（将被确认为<span class="emphasis"><em>严重的</em></span>）。因此，请接受Spring团队的建议并且在具体的类上使用 <code class="interfacename">@Transactional</code> 注解。
+            </p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>
+                当使用 <code class="interfacename">@Transactional</code> 风格的进行声明式事务定义时，你可以通过 
+                <code class="literal">&lt;tx:annotation-driven/&gt;</code> 元素的 "<code class="literal">proxy-target-class</code>" 
+                属性值来控制是基于接口的还是基于类的代理被创建。如果 "<code class="literal">proxy-target-class</code>" 属值被设置为 
+                "<code class="literal">true</code>"，那么基于类的代理将起作用（这时需要CGLIB库cglib.jar在CLASSPATH中）。如果 
+                "<code class="literal">proxy-target-class</code>" 属值被设置为 "<code class="literal">false</code>" 或者这个属性被省略，那么标准的JDK基于接口的代理将起作用。
+                </p>
+</div>
+<p>
+            在多数情形下，方法的事务设置将被优先执行。在下列情况下，例如：
+            <code class="classname">DefaultFooService</code> 类被注解为只读事务，但是，这个类中的 <code class="methodname">updateFoo(Foo)</code> 方法的 <code class="interfacename">@Transactional</code> 注解的事务设置将优先于类级别注解的事务设置。
+            </p>
+<pre class="programlisting">@Transactional(readOnly = true)
+public class DefaultFooService implements FooService {
+
+    public Foo getFoo(String fooName) {
+        <em class="lineannotation"><span class="lineannotation">// do something</span></em>
+    }
+
+    <em class="lineannotation"><span class="lineannotation">// <span class="bold"><strong>these</strong></span> settings have precedence for this method</span></em>
+    @Transactional(readOnly = false, propagation = Propagation.REQUIRES_NEW)
+    public void updateFoo(Foo foo) {
+        <em class="lineannotation"><span class="lineannotation">// do something
+        </span></em>
+    }
+}</pre>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="transaction-declarative-attransactional-settings"></a>9.5.6.1.&#160;<code class="interfacename">@Transactional</code> 有关的设置</h4></div></div></div>
+<p>
+                <code class="interfacename">@Transactional</code> 注解是用来指定接口、类或方法必须拥有事务语义的元数据。
+                如：“<span class="quote"><span class="emphasis"><em>当一个方法开始调用时就开启一个新的只读事务，并停止掉任何现存的事务</em></span></span>”。
+                默认的 <code class="interfacename">@Transactional</code> 设置如下：
+                </p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>事务传播设置是 <code class="literal">PROPAGATION_REQUIRED</code></p></li>
+<li><p>事务隔离级别是 <code class="literal">ISOLATION_DEFAULT</code></p></li>
+<li><p>事务是 读/写</p></li>
+<li><p>事务超时默认是依赖于事务系统的，或者事务超时没有被支持。</p></li>
+<li><p>任何 <code class="exceptionname">RuntimeException</code> 将触发事务回滚，但是任何 checked <code class="exceptionname">Exception</code> 将不触发事务回滚</p></li>
+</ul></div>
+<p>
+	            这些默认的设置当然也是可以被改变的。 
+	            <code class="interfacename">@Transactional</code> 注解的各种属性设置总结如下：
+				</p>
+<p>
+					</p>
+<div class="table">
+<a name="id494565"></a><p class="title"><b>表&#160;9.2.&#160;<code class="interfacename">@Transactional</code> 注解的属性</b></p>
+<div class="table-contents"><table summary="@Transactional 注解的属性" border="1">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>属性</th>
+<th>类型</th>
+<th>描述</th>
+</tr></thead>
+<tbody>
+<tr>
+<td><code class="literal">传播性</code></td>
+<td>枚举型：<code class="classname">Propagation</code>
+</td>
+<td>可选的传播性设置</td>
+</tr>
+<tr>
+<td><code class="literal">隔离性</code></td>
+<td>枚举型：<code class="classname">Isolation</code>
+</td>
+<td>可选的隔离性级别（默认值：<code class="literal">ISOLATION_DEFAULT</code>）</td>
+</tr>
+<tr>
+<td><code class="literal">只读性</code></td>
+<td>布尔型</td>
+<td>读写型事务 vs. 只读型事务</td>
+</tr>
+<tr>
+<td><code class="literal">超时</code></td>
+<td>int型（以秒为单位）</td>
+<td>事务超时</td>
+</tr>
+<tr>
+<td><code class="literal">回滚异常类（rollbackFor）</code></td>
+<td>一组 <code class="classname">Class</code> 类的实例，必须是<code class="classname">Throwable</code> 的子类</td>
+<td>一组异常类，遇到时 <span class="bold"><strong>必须</strong></span> 进行回滚。默认情况下checked exceptions不进行回滚，仅unchecked  exceptions（即<code class="classname">RuntimeException</code>的子类）才进行事务回滚。</td>
+</tr>
+<tr>
+<td><code class="literal">回滚异常类名（rollbackForClassname）</code></td>
+<td>一组 <code class="classname">Class</code> 类的名字，必须是<code class="classname">Throwable</code>的子类</td>
+<td>一组异常类名，遇到时 <span class="bold"><strong>必须</strong></span> 进行回滚</td>
+</tr>
+<tr>
+<td><code class="literal">不回滚异常类（noRollbackFor）</code></td>
+<td>一组 <code class="classname">Class</code> 类的实例，必须是<code class="classname">Throwable</code> 的子类</td>
+<td>一组异常类，遇到时 <span class="bold"><strong>必须不</strong></span> 回滚。</td>
+</tr>
+<tr>
+<td><code class="literal">不回滚异常类名（noRollbackForClassname）</code></td>
+<td>一组 <code class="classname">Class</code> 类的名字，必须是<code class="classname">Throwable</code> 的子类</td>
+<td>一组异常类，遇到时 <span class="bold"><strong>必须不</strong></span> 回滚</td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<p><br class="table-break">
+				</p>
+</div>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-applying-more-than-just-tx-advice"></a>9.5.7.&#160;插入事务操作</h3></div></div></div>
+<p>考虑这样的情况，你有一个类的实例，而且希望 <span class="emphasis"><em>同时</em></span>插入事务性通知（advice）和一些简单的剖析（profiling）通知。那么，在<code class="literal">&lt;tx:annotation-driven/&gt;</code>环境中该怎么做？</p>
+<p>我们调用 <code class="methodname">updateFoo(Foo)</code> 方法时希望这样：</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p>配置的剖析切面（profiling aspect）开始启动，</p></li>
+<li><p>然后进入事务通知（根据配置创建一个新事务或加入一个已经存在的事务），</p></li>
+<li><p>然后执行原始对象的方法，</p></li>
+<li><p>然后事务提交（我们假定这里一切正常），</p></li>
+<li><p>最后剖析切面报告整个事务方法执行过程花了多少时间。</p></li>
+</ul></div>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>这章不是专门讲述AOP的任何细节（除了应用于事务方面的之外）。请参考 <a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a> 章以获得对各种AOP配置及其一般概念的详细叙述。
+                </p>
+</div>
+<p>这里有一份简单的剖析切面（profiling aspect）的代码。<span class="emphasis"><em>（注意，通知的顺序是由 <code class="interfacename">Ordered</code> 接口来控制的。要想了解更多细节，请参考 <a href="ch06s02.html#aop-ataspectj-advice-ordering" title="6.2.4.7.&#160;通知（Advice）顺序">第&#160;6.2.4.7&#160;节 “通知（Advice）顺序”</a> 节。）</em></span>
+			</p>
+<pre class="programlisting">package x.y;
+
+import org.aspectj.lang.ProceedingJoinPoint;
+import org.springframework.util.StopWatch;
+import org.springframework.core.Ordered;
+
+public class SimpleProfiler implements Ordered {
+
+    private int order;
+
+    <em class="lineannotation"><span class="lineannotation">// allows us to control the ordering of advice</span></em>
+    public int getOrder() {
+        return this.order;
+    }
+
+    public void setOrder(int order) {
+        this.order = order;
+    }
+
+    <em class="lineannotation"><span class="lineannotation">// this method <span class="emphasis"><em>is</em></span> the around advice</span></em>
+    public Object profile(ProceedingJoinPoint call) throws Throwable {
+        Object returnValue;
+        StopWatch clock = new StopWatch(getClass().getName());
+        try {
+            clock.start(call.toShortString());
+            returnValue = call.proceed();
+        } finally {
+            clock.stop();
+            System.out.println(clock.prettyPrint());
+        }
+        return returnValue;
+    }
+}
+</pre>
+<p>这里是帮助满足我们上述要求的配置数据。
+            </p>
+<pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xmlns:aop="http://www.springframework.org/schema/aop"
+        xmlns:tx="http://www.springframework.org/schema/tx"
+        xsi:schemaLocation="
+   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;
+
+    &lt;bean id="fooService" class="x.y.service.DefaultFooService"/&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- this is the aspect --&gt;</span></em>
+    &lt;bean id="profiler" class="x.y.SimpleProfiler"&gt;
+        <em class="lineannotation"><span class="lineannotation">&lt;!-- execute before the transactional advice (hence the lower order number) --&gt;
+        </span></em>
+        &lt;property name="order" value="1"/&gt;
+    &lt;/bean&gt;
+    
+    &lt;tx:annotation-driven transaction-manager="txManager"/&gt;
+
+    &lt;aop:config&gt;
+        <em class="lineannotation"><span class="lineannotation">&lt;!-- this advice will execute <span class="bold"><strong>around</strong></span> the transactional advice --&gt;</span></em>
+        &lt;aop:aspect id="profilingAspect" ref="profiler"&gt;
+            &lt;aop:pointcut id="serviceMethodWithReturnValue" expression="execution(!void x.y..*Service.*(..))"/&gt;
+            &lt;aop:around method="profile" pointcut-ref="serviceMethodWithReturnValue"/&gt;
+        &lt;/aop:aspect&gt;
+    &lt;/aop:config&gt;
+
+    &lt;bean id="dataSource" class="org.apache.commons.dbcp.BasicDataSource" destroy-method="close"&gt;
+        &lt;property name="driverClassName" value="oracle.jdbc.driver.OracleDriver"/&gt;
+        &lt;property name="url" value="jdbc:oracle:thin:@rj-t42:1521:elvis"/&gt;
+        &lt;property name="username" value="scott"/&gt;
+        &lt;property name="password" value="tiger"/&gt;
+    &lt;/bean&gt;
+
+    &lt;bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager"&gt;
+        &lt;property name="dataSource" ref="dataSource"/&gt;
+    &lt;/bean&gt;
+
+&lt;/beans&gt;</pre>
+<p>
+            上面配置的结果将获得到一个拥有剖析和事务方面的 <span class="emphasis"><em>按那样的顺序</em></span> 应用于它上面的 <code class="literal">'fooService'</code> bean。
+            许多附加的方面的配置将一起达到这样的效果。
+            </p>
+<p>
+            最后，下面的一些示例演示了使用纯XML声明的方法来达到上面一样的设置效果。
+            </p>
+<pre class="programlisting">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:aop="http://www.springframework.org/schema/aop"
+       xmlns:tx="http://www.springframework.org/schema/tx"
+       xsi:schemaLocation="
+   http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-2.0.xsd
+   http://www.springframework.org/schema/tx http://www.springframework.org/schema/tx/spring-tx-2.0.xsd
+   http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd"&gt;
+
+    &lt;bean id="fooService" class="x.y.service.DefaultFooService"/&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- the profiling advice --&gt;</span></em>
+    &lt;bean id="profiler" class="x.y.SimpleProfiler"&gt;
+        <em class="lineannotation"><span class="lineannotation">&lt;!-- execute before the transactional advice (hence the lower order number) --&gt;</span></em>
+        <span class="bold"><strong>&lt;property name="order" value="1</strong></span>"/&gt;
+    &lt;/bean&gt;
+
+    &lt;aop:config&gt;
+
+        &lt;aop:pointcut id="entryPointMethod" expression="execution(* x.y..*Service.*(..))"/&gt;
+
+        <em class="lineannotation"><span class="lineannotation">&lt;!-- will execute after the profiling advice (c.f. the order attribute) --&gt;
+       </span></em>
+        &lt;aop:advisor advice-ref="txAdvice" pointcut-ref="entryPointMethod"<span class="bold"><strong>order="2</strong></span>"/&gt; 
+        
+        <em class="lineannotation"><span class="lineannotation">&lt;!-- order value is higher than the profiling aspect --&gt;</span></em>
+
+        &lt;aop:aspect id="profilingAspect" ref="profiler"&gt;
+            &lt;aop:pointcut id="serviceMethodWithReturnValue" expression="execution(!void x.y..*Service.*(..))"/&gt;
+            &lt;aop:around method="profile" pointcut-ref="serviceMethodWithReturnValue"/&gt;
+        &lt;/aop:aspect&gt;
+
+    &lt;/aop:config&gt;
+
+    &lt;tx:advice id="txAdvice" transaction-manager="txManager"&gt;
+        &lt;tx:attributes&gt;
+            &lt;tx:method name="get*" read-only="true"/&gt;
+            &lt;tx:method name="*"/&gt;
+        &lt;/tx:attributes&gt;
+    &lt;/tx:advice&gt;
+
+    <em class="lineannotation"><span class="lineannotation">&lt;!-- other &lt;bean/&gt; definitions such as a <code class="interfacename">DataSource</code> and a <code class="interfacename">PlatformTransactionManager</code> here --&gt;</span></em>
+
+&lt;/beans&gt;</pre>
+<p>上面配置的结果是创建了一个 <code class="literal">'fooService'</code> bean，剖析方面和事务方面被 <span class="emphasis"><em>依照顺序</em></span> 施加其上。如果我们希望剖析通知在目标方法执行之前 <span class="emphasis"><em>后于</em></span> 事务通知执行，而且在目标方法执行之后 <span class="emphasis"><em>先于</em></span> 事务通知，我们可以简单地交换两个通知bean的order值。</p>
+<p>如果配置中包含更多的方面，它们将以同样的方式受到影响。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="transaction-declarative-aspectj"></a>9.5.8.&#160;结合AspectJ使用 <code class="interfacename">@Transactional</code></h3></div></div></div>
+<p>通过AspectJ切面，你也可以在Spring容器之外使用Spring框架的 <code class="interfacename">@Transactional</code> 功能。要使用这项功能你必须先给相应的类和方法加上 <code class="interfacename">@Transactional</code>注解，然后把 <code class="filename">spring-aspects.jar</code> 文件中定义的 <code class="classname">org.springframework.transaction.aspectj.AnnotationTransactionAspect</code> 切面连接进（织入）你的应用。同样，该切面必须配置一个事务管理器。你当然可以通过Spring框架容器来处理注入，但因为我们这里关注于在Spring容器之外运行应用，我们将向你展示如何通过手动书写代码来完成。</p>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>在我们继续之前，你可能需要好好读一下前面的<a href="ch09s05.html#transaction-declarative-annotations" title="9.5.6.&#160;使用 @Transactional">第&#160;9.5.6&#160;节 “使用 <code class="interfacename">@Transactional</code>”</a> 和 <a href="ch06.html" title="第&#160;6&#160;章&#160;使用Spring进行面向切面编程（AOP）">第&#160;6&#160;章 <i>使用Spring进行面向切面编程（AOP）</i></a> 两章。</p>
+</div>
+<pre class="programlisting"><em class="lineannotation"><span class="lineannotation">// construct an appropriate transaction manager </span></em>
+DataSourceTransactionManager txManager = new DataSourceTransactionManager(getDataSource());
+
+<em class="lineannotation"><span class="lineannotation">// configure the <code class="classname">AnnotationTransactionAspect</code> to use it; this must be done before executing any transactional methods</span></em>
+AnnotationTransactionAspect.aspectOf().setTransactionManager (txManager); </pre>
+<div class="note" style="margin-left: 0.5in; margin-right: 0.5in;">
+<h3 class="title">注意</h3>
+<p>
+	            使用此切面（aspect），你必须在 <span class="emphasis"><em>实现</em></span> 类（和/或类里的方法）、而 <span class="emphasis"><em>不是</em></span> 类的任何所实现的接口上面进行注解。AspectJ遵循Java的接口上的注解 <span class="emphasis"><em>不被继承</em></span> 的规则。
+	            </p>
+</div>
+<p>
+	        类上的 <code class="interfacename">@Transactional</code> 注解指定了类里的任何 <span class="emphasis"><em>public</em></span> 方法执行的默认事务语义。
+	        </p>
+<p>
+	        类里的方法的 <code class="interfacename">@Transactional</code> 将覆盖掉类注解的默认事务语义（如何存在的话）。
+	        <code class="literal">public</code>、<code class="literal">protected</code>和默认可见的方法可能都被注解。直接对 <code class="literal">protected</code>和默认可见的方法进行注解，让这些方法在执行时去获取所定义的事务划分是唯一的途径。
+	        </p>
+<p>
+			要把 <code class="classname">AnnotationTransactionAspect</code> 织入你的应用，你或者基于AspectJ构建你的应用（参考 <a href="http://www.eclipse.org/aspectj/doc/released/devguide/index.html" target="_top">AspectJ Development Guide</a>），或者采取“载入时织入”（load-time weaving），参考 <a href="ch06s08.html#aop-aj-ltw" title="6.8.4.&#160;在Spring应用中使用AspectJ Load-time weaving（LTW）">第&#160;6.8.4&#160;节 “在Spring应用中使用AspectJ Load-time weaving（LTW）”</a> 获得关于使用AspectJ进行“载入时织入”的讨论。
+			</p>
+</div>
+</div></body>
+</html>

@@ -1,0 +1,27 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>9.8.&#160;与特定应用服务器集成</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch09.html" title="第&#160;9&#160;章&#160;事务管理">
+<link rel="prev" href="ch09s07.html" title="9.7.&#160;选择编程式事务管理还是声明式事务管理">
+<link rel="next" href="ch09s09.html" title="9.9.&#160;公共问题的解决方案">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="transaction-application-server-integration"></a>9.8.&#160;与特定应用服务器集成</h2></div></div></div>
+<p>一般来说，Spring的事务抽象与应用服务器是无关的。另外，使用Spring的 <code class="classname">JtaTransactionManager</code> 类时，一种可选的方式是通过JNDI查询获得JTA <code class="interfacename">UserTransaction</code> 和 <code class="literal">TransactionManager</code> 对象，其中后者可以被设置为自动探测，这时针对不同的应用服务器有不同的方式。能够直接访问 <code class="literal">TransactionManager</code>，确实在很大程度上增强了事务语义，可以参考 <code class="classname">JtaTransactionManager</code> 类的javadoc获得更多细节。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id495805"></a>9.8.1.&#160;BEA WebLogic</h3></div></div></div>
+<p>在一个使用WebLogic 7.0、8.1或更高版本的环境中，你一般会优先选用特定于WebLogic的 <code class="classname">WebLogicJtaTransactionManager</code> 类来取代基础的 <code class="classname">JtaTransactionManager</code> 类。在WebLogic环境中，该类提供了对Spring事务定义的完全支持，超过了标准的JTA语义。它的特性包括：支持事务名，支持为每个事务定义隔离级别，以及在任何环境下正确地恢复事务的能力。</p>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id495836"></a>9.8.2.&#160;IBM WebSphere</h3></div></div></div>
+<p>在WebSphere 5.1、5.0和4环境下，你可以使用Spring的 <code class="classname">WebSphereTransactionManagerFactoryBean</code> 类。这是一个工厂类，通过WebSphere的 <code class="literal">静态</code> 访问方法获取到JTA <code class="literal">TransactionManager</code> 实例。（这些静态方法在每个版本的WebSphere中都不同。）一旦通过工厂bean获取到JTA <code class="interfacename">TransactionManager</code> 实例，就可以使用该实例装配一个Spring的 <code class="classname">JtaTransactionManager</code> bean，它封装了JTA <code class="interfacename">UserTransaction</code>，提供增强的事务语义。请参考相关javadoc以获得完整信息。</p>
+</div>
+</div></body>
+</html>

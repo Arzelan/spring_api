@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;2&#160;章&#160;Spring 2.0 的新特性</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="prev" href="ch01s02.html" title="1.2.&#160;使用场景">
+<link rel="next" href="ch02s02.html" title="2.2.&#160;控制反转(IoC)容器">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="new-in-2"></a>第&#160;2&#160;章&#160;Spring 2.0 的新特性</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch02.html#new-in-2-intro">2.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch02s02.html">2.2. 控制反转(IoC)容器</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch02s02.html#new-in-2-ioc-configuration">2.2.1. 更简单的XML配置</a></span></dt>
+<dt><span class="section"><a href="ch02s02.html#new-in-2-ioc-scopes">2.2.2. 新的bean作用域</a></span></dt>
+<dt><span class="section"><a href="ch02s02.html#new-in-2-ioc-custom-configuration">2.2.3. 可扩展的XML编写</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch02s03.html">2.3. 面向切面编程(AOP)</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch02s03.html#new-in-2-aop-configuration">2.3.1. 更加简单的AOP XML配置</a></span></dt>
+<dt><span class="section"><a href="ch02s03.html#new-in-2-aop-aspectJ">2.3.2. 对@AspectJ 切面的支持</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch02s04.html">2.4. 中间层</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch02s04.html#new-in-2-middle-tier-transaction-configuration">2.4.1. 在XML里更为简单的声明性事务配置</a></span></dt>
+<dt><span class="section"><a href="ch02s04.html#new-in-2-middle-tier-jpa">2.4.2. JPA</a></span></dt>
+<dt><span class="section"><a href="ch02s04.html#new-in-2-middle-tier-async-jms">2.4.3. 异步的JMS</a></span></dt>
+<dt><span class="section"><a href="ch02s04.html#new-in-2-middle-tier-jdbc">2.4.4. JDBC</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch02s05.html">2.5. Web层</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch02s05.html#new-in-2-web-form-tags">2.5.1. Spring MVC的表单标签库</a></span></dt>
+<dt><span class="section"><a href="ch02s05.html#new-in-2-web-convention">2.5.2. Spring MVC合理的默认值</a></span></dt>
+<dt><span class="section"><a href="ch02s05.html#new-in-2-web-portlet">2.5.3. Portlet 框架</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch02s06.html">2.6. 其他特性</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch02s06.html#new-in-2-other-dynamic-language-support">2.6.1. 动态语言支持</a></span></dt>
+<dt><span class="section"><a href="ch02s06.html#new-in-2-other-jmx">2.6.2. JMX</a></span></dt>
+<dt><span class="section"><a href="ch02s06.html#new-in-2-other-taskexecutor">2.6.3. 任务规划</a></span></dt>
+<dt><span class="section"><a href="ch02s06.html#new-in-2-other-java5">2.6.4. 对Java 5（Tiger）的支持</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch02s07.html">2.7. 移植到Spring 2.0</a></span></dt>
+<dd><dl><dt><span class="section"><a href="ch02s07.html#new-in-2-migrating-changes">2.7.1. 一些变化</a></span></dt></dl></dd>
+<dt><span class="section"><a href="ch02s08.html">2.8. 更新的样例应用</a></span></dt>
+<dt><span class="section"><a href="ch02s09.html">2.9. 改进的文档</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="new-in-2-intro"></a>2.1.&#160;简介</h2></div></div></div>
+<p>如果你已经用了一段时间Spring Framework，那你将发现Spring正在经历着一场大的修订。</p>
+<div class="sidebar">
+<p class="title"><b>JDK支持</b></p>
+<p>Spring Framework继续保持与从Java 1.3开始的(包括1.3)所有Java版本的兼容性。
+	      这意味着它支持1.3、1.4和1.5，尽管Spring Framework的一些高级功能无法在1.3中使用。</p>
+</div>
+<p>修订版引入一些新特性，总结并改进了许多现有功能。实际上，Spring得到了大量有价值的更新，以至于Spring开发团队决定在Spring的下一个版本里修改版本号；
+		所以2005年12月，在佛罗里达召开的<a href="http://www.thespringexperience.com/" target="_top">Spring经验交流会</a>上，Spring 2.0 问世了。</p>
+<p>本章是对Spring 2.0新特性与改进特性的向导。我们希望提供一个高层的概述使那些有经验的Spring架构师与开发人员能很快熟悉Spring 2.0的新功能。
+		如果想了解关于特性更多更深层的信息，请参考在本章里超链接的相应部分。</p>
+<p>下面介绍的一些新的或者改进的功能已经(或将要)被加入Spring 1.2.x中。
+	    如果想知道某功能是否被加入1.2.x版本中，请参考1.2.x发布包的changelog。</p>
+</div>
+</div></body>
+</html>

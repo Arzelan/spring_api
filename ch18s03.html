@@ -1,0 +1,85 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>18.3.&#160;使用Spring提供的辅助类实现EJB组件</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch18.html" title="第&#160;18&#160;章&#160;Enterprise Java Bean(EJB)集成">
+<link rel="prev" href="ch18s02.html" title="18.2.&#160;访问EJB">
+<link rel="next" href="ch19.html" title="第&#160;19&#160;章&#160;JMS">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="ejb-implementation"></a>18.3.&#160;使用Spring提供的辅助类实现EJB组件</h2></div></div></div>
+<p>Spring也提供了一些辅助类来为EJB组件的实现提供便利。它们是为了倡导一些好的实践经验，比如把业务逻辑放在在EJB层之后的POJO中实现，只把事务划分和远程调用这些职责留给EJB。</p>
+<p>要实现一个无状态或有状态的Session Bean，或消息驱动Bean，你只需要从<code class="classname">AbstractStatelessSessionBean</code>、<code class="classname">AbstractStatefulSessionBean</code>和<code class="classname">AbstractMessageDrivenBean</code>/<code class="classname">AbstractJmsMessageDrivenBean</code>分别继承你的实现类。</p>
+<p>考虑这个无状态Session bean的例子：实际上我们把无状态Session Bean的实现委托给一个普通的Java服务对象。业务接口的定义如下：</p>
+<pre class="programlisting">public interface MyComponent {
+    public void myMethod(...);
+    ...
+}</pre>
+<p>这是简单Java对象的实现：</p>
+<pre class="programlisting">public class MyComponentImpl implements MyComponent {
+    public String myMethod(...) {
+        ...
+    }
+    ...
+}</pre>
+<p>最后是无状态Session Bean自身：</p>
+<pre class="programlisting">public class MyComponentEJB extends AbstractStatelessSessionBean
+        implements MyComponent {
+
+    MyComponent myComp;
+
+    /**
+     * Obtain our POJO service object from the BeanFactory/ApplicationContext
+     * @see org.springframework.ejb.support.AbstractStatelessSessionBean#onEjbCreate()
+     */
+    protected void onEjbCreate() throws CreateException {
+        myComp = (MyComponent) getBeanFactory().getBean(
+            ServicesConstants.CONTEXT_MYCOMP_ID);
+    }
+
+    // for business method, delegate to POJO service impl.
+    public String myMethod(...) {
+        return myComp.myMethod(...);
+    }
+    ...
+}</pre>
+<p>缺省情况下，Spring EJB支持类的基类在其生命周期中将创建并加载一个Spring IoC容器供EJB使用(比如像前面获得POJO服务对象的代码)。加载的工作是通过一个策略对象完成的，它是<code class="classname">BeanFactoryLocator</code>的子类。
+默认情况下，实际使用的<code class="classname">BeanFactoryLocator</code>的实现类是<code class="classname">ContextJndiBeanFactoryLocator</code>，它根据一个被指定为JNDI环境变量的资源位置来创建一个ApplicationContext对象(对于EJB类，路径是
+<code class="literal">java:comp/env/ejb/BeanFactoryPath</code>)。如果需要改变BeanFactory或ApplicationContext的载入策略，我们可以在
+<code class="literal">setSessionContext()</code>方法调用或在具体EJB子类的构造函数中调用<code class="literal">setBeanFactoryLocator()</code>方法来覆盖默认使用的
+<code class="classname">BeanFactoryLocator</code>实现类。具体细节请参考JavaDoc。
+		</p>
+<p>如JavaDoc中所述，有状态Session Bean在其生命周期中将会被钝化并重新激活，由于(一般情况下)使用了一个不可串行化的容器实例，不可以被EJB容器保存，
+所以还需要手动在<code class="literal">ejbPassivate</code>和<code class="literal">ejbActivate</code>
+这两个方法中分别调用<code class="literal">unloadBeanFactory()</code>和<code class="literal">loadBeanFactory</code>，
+才能在钝化或激活的时候卸载或载入。</p>
+<p>有些情况下，要载入ApplicationContext以使用EJB组件，<code class="classname">ContextJndiBeanFactoryLocator</code>的默认实现基本上足够了，
+不过，当<code class="classname">ApplicationContext</code>需要载入多个bean，或这些bean初始化所需的时间或内存
+很多的时候(例如Hibernate的<code class="classname">SessionFactory</code>的初始化)，就有可能出问题，因为
+每个EJB组件都有自己的副本。这种情况下，用户会想重载<code class="classname">ContextJndiBeanFactoryLocator</code>的默认实现，并使用其它
+<code class="classname">BeanFactoryLocator</code>的变体，例如<code class="classname">ContextSingletonBeanFactoryLocator</code>
+，他们可以载入并在多个EJB或者其客户端间共享一个容器。这样做相当简单，只需要给EJB添加类似于如下的代码：</p>
+<pre class="programlisting">   /**
+    * Override default BeanFactoryLocator implementation
+    * @see javax.ejb.SessionBean#setSessionContext(javax.ejb.SessionContext)
+    */
+   public void setSessionContext(SessionContext sessionContext) {
+       super.setSessionContext(sessionContext);
+       setBeanFactoryLocator(ContextSingletonBeanFactoryLocator.getInstance());
+       setBeanFactoryLocatorKey(ServicesConstants.PRIMARY_CONTEXT_ID);
+   }</pre>
+<p>然后需要创建一个名为<code class="literal">beanRefContext.xml</code>的bean定义文件。这个文件定义了EJB中所有可能用到的bean工厂(通常以应用上下文的形式)。许多情况下，这个文件只包括一个bean的定义，如下所示(文件<code class="literal">businessApplicationContext.xml</code>包括了所有业务服务POJO的bean定义)：</p>
+<pre class="programlisting">&lt;beans&gt;
+    &lt;bean id="businessBeanFactory" class="org.springframework.context.support.ClassPathXmlApplicationContext"&gt;
+        &lt;constructor-arg value="businessApplicationContext.xml" /&gt;
+    &lt;/bean&gt;
+&lt;/beans&gt;</pre>
+<p>上例中，常量<code class="literal">ServicesConstants.PRIMARY_CONTEXT_ID</code>定义如下： </p>
+<pre class="programlisting">public static final String ServicesConstants.PRIMARY_CONTEXT_ID = "businessBeanFactory";</pre>
+<p><code class="classname">BeanFactoryLocator</code>和类<code class="classname">ContextSingletonBeanFactoryLocator</code>的更多使用信息请分别查看他们各自的Javadoc文档。</p>
+</div></body>
+</html>

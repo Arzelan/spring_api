@@ -1,0 +1,99 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>22.2.&#160;Spring邮件抽象结构</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="ch22.html" title="第&#160;22&#160;章&#160;Spring邮件抽象层">
+<link rel="prev" href="ch22.html" title="第&#160;22&#160;章&#160;Spring邮件抽象层">
+<link rel="next" href="ch22s03.html" title="22.3.&#160;使用Spring邮件抽象">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="mail-structure"></a>22.2.&#160;Spring邮件抽象结构</h2></div></div></div>
+<p>Spring邮件抽象层的主要包为<code class="literal">org.springframework.mail</code>。它包括了发送电子邮件的主要接口<code class="interfacename">MailSender</code>，和<span class="emphasis"><em>值对象</em></span><code class="classname">SimpleMailMessage</code>，它封装了简单邮件的属性如<span class="emphasis"><em>from</em></span>, <span class="emphasis"><em>to</em></span>,<span class="emphasis"><em>cc</em></span>, <span class="emphasis"><em>subject</em></span>,<span class="emphasis"><em>text</em></span>。
+	包里还包含一棵以<code class="classname">MailException</code>为根的checked Exception继承树，它们提供了对底层邮件系统异常的高级别抽象。
+	要获得关于邮件异常层次的更丰富的信息，请参考Javadocs。</p>
+<p>为了使用<span class="emphasis"><em>JavaMail</em></span>中的一些特色, 比如MIME类型的信件, Spring提供了<code class="interfacename">MailSender</code>的一个子接口,
+	即<code class="classname">org.springframework.mail.javamail.JavaMailSender</code>。Spring还提供了一个回调接口<code class="interfacename">org.springframework.mail.javamail.MimeMessagePreparator</code>, 用于准备JavaMail的MIME信件。
+	</p>
+<pre class="programlisting">public interface MailSender {
+
+    /**
+     * Send the given simple mail message.
+     * @param simpleMessage message to send
+     * @throws MailException in case of message, authentication, or send errors
+     */
+    public void send(SimpleMailMessage simpleMessage) throws MailException;
+
+    /**
+     * Send the given array of simple mail messages in batch.
+     * @param simpleMessages messages to send
+     * @throws MailException in case of message, authentication, or send errors
+     */
+    public void send(SimpleMailMessage[] simpleMessages) throws MailException;
+
+}</pre>
+<pre class="programlisting">public interface JavaMailSender extends MailSender {
+
+    /**
+     * Create a new JavaMail MimeMessage for the underlying JavaMail Session
+     * of this sender. Needs to be called to create MimeMessage instances
+     * that can be prepared by the client and passed to send(MimeMessage).
+     * @return the new MimeMessage instance
+     * @see #send(MimeMessage)
+     * @see #send(MimeMessage[])
+     */
+    public MimeMessage createMimeMessage();
+
+    /**
+     * Send the given JavaMail MIME message.
+     * The message needs to have been created with createMimeMessage.
+     * @param mimeMessage message to send
+     * @throws MailException in case of message, authentication, or send errors
+     * @see #createMimeMessage
+     */
+    public void send(MimeMessage mimeMessage) throws MailException;
+
+    /**
+     * Send the given array of JavaMail MIME messages in batch.
+     * The messages need to have been created with createMimeMessage.
+     * @param mimeMessages messages to send
+     * @throws MailException in case of message, authentication, or send errors
+     * @see #createMimeMessage
+     */
+    public void send(MimeMessage[] mimeMessages) throws MailException;
+
+    /**
+     * Send the JavaMail MIME message prepared by the given MimeMessagePreparator.
+     * Alternative way to prepare MimeMessage instances, instead of createMimeMessage
+     * and send(MimeMessage) calls. Takes care of proper exception conversion.
+     * @param mimeMessagePreparator the preparator to use
+     * @throws MailException in case of message, authentication, or send errors
+     */
+    public void send(MimeMessagePreparator mimeMessagePreparator) throws MailException;
+
+    /**
+     * Send the JavaMail MIME messages prepared by the given MimeMessagePreparators.
+     * Alternative way to prepare MimeMessage instances, instead of createMimeMessage
+     * and send(MimeMessage[]) calls. Takes care of proper exception conversion.
+     * @param mimeMessagePreparators the preparator to use
+     * @throws MailException in case of message, authentication, or send errors
+     */
+    public void send(MimeMessagePreparator[] mimeMessagePreparators) throws MailException;
+
+}</pre>
+<pre class="programlisting">public interface MimeMessagePreparator {
+
+    /**
+     * Prepare the given new MimeMessage instance.
+     * @param mimeMessage the message to prepare
+     * @throws MessagingException passing any exceptions thrown by MimeMessage
+     * methods through for automatic conversion to the MailException hierarchy
+     */
+    void prepare(MimeMessage mimeMessage) throws MessagingException;
+
+}</pre>
+</div></body>
+</html>

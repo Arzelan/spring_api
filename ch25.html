@@ -1,0 +1,84 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;25&#160;章&#160;注解和源代码级的元数据支持</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt04.html" title="部分&#160;IV.&#160;整合">
+<link rel="prev" href="ch24s05.html" title="24.5.&#160;更多的资源">
+<link rel="next" href="ch25s02.html" title="25.2.&#160;Spring的元数据支持">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="metadata"></a>第&#160;25&#160;章&#160;注解和源代码级的元数据支持</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch25.html#metadata-concepts">25.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch25s02.html">25.2. Spring的元数据支持</a></span></dt>
+<dt><span class="section"><a href="ch25s03.html">25.3. 注解</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch25s03.html#metadata-annotations-required">25.3.1. @<code class="interfacename">Required</code></a></span></dt>
+<dt><span class="section"><a href="ch25s03.html#id587285">25.3.2. Spring中的其它@Annotations</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch25s04.html">25.4. 集成Jakarta Commons Attributes</a></span></dt>
+<dt><span class="section"><a href="ch25s05.html">25.5. 元数据和Spring AOP自动代理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch25s05.html#id587923">25.5.1. 基本原理</a></span></dt>
+<dt><span class="section"><a href="ch25s05.html#metadata-tx">25.5.2. 声明式事务管理</a></span></dt>
+<dt><span class="section"><a href="ch25s05.html#metadata-pool">25.5.3. 缓冲</a></span></dt>
+<dt><span class="section"><a href="ch25s05.html#metadata-arbitrary">25.5.4. 自定义元数据</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch25s06.html">25.6. 使用属性来减少MVC web层配置</a></span></dt>
+<dt><span class="section"><a href="ch25s07.html">25.7. 元数据属性的其它用法</a></span></dt>
+<dt><span class="section"><a href="ch25s08.html">25.8. 增加对额外元数据API的支持</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="metadata-concepts"></a>25.1.&#160;简介</h2></div></div></div>
+<p>
+			源代码级的元数据通常是对类或方法这样的程序元素的<span class="emphasis"><em>属性</em></span>或<span class="emphasis"><em>注解</em></span>的补充。
+		</p>
+<p>举例来说，我们可以象下面这样给一个类添加元数据：</p>
+<pre class="programlisting">/**
+ * Normal comments here
+ * @@org.springframework.transaction.interceptor.DefaultTransactionAttribute()
+ */
+public class PetStoreImpl implements PetStoreFacade, OrderService {</pre>
+<p>我们也可以像下面这样为一个方法添加元数据：</p>
+<pre class="programlisting">/**
+ * Normal comments here
+ * @@org.springframework.transaction.interceptor.RuleBasedTransactionAttribute()
+ * @@org.springframework.transaction.interceptor.RollbackRuleAttribute(Exception.class)
+ * @@org.springframework.transaction.interceptor.NoRollbackRuleAttribute("ServletException")
+ */
+public void echoException(Exception ex) throws Exception {
+    ....
+}</pre>
+<p>这两个例子都使用了Jakarta Commons Attributes的语法。</p>
+<p>
+			源代码级的元数据随着XDoclet(在Java世界中)和Microsoft的.NET平台的发布被引入主流，它使用了源代码级的属性来控制事务、缓冲(pooling)和一些其他的行为。
+		</p>
+<p>
+			J2EE社区已经认识到了这种方法的价值。举例来说，跟EJB中专用的传统XML部署描述文件比起来它要简单很多。与人们乐意做的把一些东西从程序源代码中提取出来的做法相反，
+			一些重要的企业级设置 - 特别是事务特性 - 应该属于程序代码。并不像EJB规范中设想的那样，调整一个方法的事务特性基本没有什么意义(尽管像事务超时这样的参数可能改变)。
+		</p>
+<p>
+			虽然元数据属性主要用于框架的基础架构来描述应用程序的类需要的服务，但是它也可以在运行时被查询。
+			这是它与XDoclet这样的解决方案的关键区别，XDoclet主要把元数据作为生成代码的一种方式，比如生成EJB类。
+		</p>
+<p>
+			下面有几种解决方案，包括：
+		</p>
+<div class="itemizedlist"><ul type="disc">
+<li><p><span class="bold"><strong>标准Java注解</strong></span>：标准Java元数据实现作为JSR-175被开发，可在
+        Java 5中找到。Spring已经在事务划分、JMX和切面(准确地说它们是AspectJ的注解)中支持Java 5注解。
+        但是，我们在Java 1.4甚至是1.3中也需要一个解决方案。Spring元数据支持就提供了这样一个方案。</p></li>
+<li><p><span class="bold"><strong>XDoclet</strong></span>：成熟的解决方案，主要用于代码生成</p></li>
+<li><p>多种不同的针对Java 1.3和1.4的<span class="bold"><strong>开源元数据属性实现</strong></span>，在它们当中Commons Attributes看起来是最完整的实现。所有的这些实现都需要一个特定的前编译或后编译的步骤。</p></li>
+</ul></div>
+</div>
+</div></body>
+</html>

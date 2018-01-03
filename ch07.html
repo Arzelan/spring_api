@@ -1,0 +1,73 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;7&#160;章&#160;Spring AOP APIs</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="pt01.html" title="部分&#160;I.&#160;核心技术">
+<link rel="prev" href="ch06s09.html" title="6.9.&#160;其它资源">
+<link rel="next" href="ch07s02.html" title="7.2.&#160;Spring中的切入点API">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="aop-api"></a>第&#160;7&#160;章&#160;Spring AOP APIs</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch07.html#aop-api-introduction">7.1. 简介</a></span></dt>
+<dt><span class="section"><a href="ch07s02.html">7.2. Spring中的切入点API</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch07s02.html#id479350">7.2.1. 概念</a></span></dt>
+<dt><span class="section"><a href="ch07s02.html#id479511">7.2.2. 切入点实施</a></span></dt>
+<dt><span class="section"><a href="ch07s02.html#id479581">7.2.3. AspectJ切入点表达式</a></span></dt>
+<dt><span class="section"><a href="ch07s02.html#id479610">7.2.4. 便利的切入点实现</a></span></dt>
+<dt><span class="section"><a href="ch07s02.html#id479909">7.2.5. 切入点的基类</a></span></dt>
+<dt><span class="section"><a href="ch07s02.html#id479949">7.2.6. 自定义切入点</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch07s03.html">7.3. Spring的通知API</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch07s03.html#id479990">7.3.1. 通知的生命周期</a></span></dt>
+<dt><span class="section"><a href="ch07s03.html#aop-api-advice-types">7.3.2. Spring里的通知类型</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch07s04.html">7.4. Spring里的advisor（Advisor） API</a></span></dt>
+<dt><span class="section"><a href="ch07s05.html">7.5. 使用ProxyFactoryBean创建AOP代理</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch07s05.html#aop-pfb-1">7.5.1. 基础</a></span></dt>
+<dt><span class="section"><a href="ch07s05.html#aop-pfb-2">7.5.2. JavaBean属性</a></span></dt>
+<dt><span class="section"><a href="ch07s05.html#aop-pfb-proxy-types">7.5.3. 基于JDK和CGLIB的代理</a></span></dt>
+<dt><span class="section"><a href="ch07s05.html#id481801">7.5.4. 对接口进行代理</a></span></dt>
+<dt><span class="section"><a href="ch07s05.html#id482046">7.5.5. 对类进行代理</a></span></dt>
+<dt><span class="section"><a href="ch07s05.html#aop-global-advisors">7.5.6. 使用“全局”advisor</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch07s06.html">7.6. 简化代理定义</a></span></dt>
+<dt><span class="section"><a href="ch07s07.html">7.7. 使用ProxyFactory通过编程创建AOP代理</a></span></dt>
+<dt><span class="section"><a href="ch07s08.html">7.8. 操作被通知对象</a></span></dt>
+<dt><span class="section"><a href="ch07s09.html">7.9. 使用“自动代理（autoproxy）”功能</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch07s09.html#aop-autoproxy-choices">7.9.1. 自动代理bean定义</a></span></dt>
+<dt><span class="section"><a href="ch07s09.html#aop-autoproxy-metadata">7.9.2. 使用元数据驱动的自动代理</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch07s10.html">7.10. 使用TargetSources</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="ch07s10.html#aop-ts-swap">7.10.1. 热交换目标源</a></span></dt>
+<dt><span class="section"><a href="ch07s10.html#aop-ts-pool">7.10.2. 池化目标源</a></span></dt>
+<dt><span class="section"><a href="ch07s10.html#aop-ts-prototype">7.10.3. 原型目标源</a></span></dt>
+<dt><span class="section"><a href="ch07s10.html#aop-ts-threadlocal">7.10.4. <code class="classname">ThreadLocal</code>目标源</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="ch07s11.html">7.11. 定义新的<code class="interfacename">通知</code>类型</a></span></dt>
+<dt><span class="section"><a href="ch07s12.html">7.12. 更多资源</a></span></dt>
+</dl>
+</div>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="aop-api-introduction"></a>7.1.&#160;简介</h2></div></div></div>
+<p>
+	前一章介绍了Spring 2.0中提供的由@AspectJ和基于Schema的两种切面定义的AOP。在这个章节里，我们将
+	讨论更底层的Spring AOP API，以及如何在Spring 1.2应用中使用这些API。对于新的应用程序，我们推荐
+	使用前一章介绍的Spring 2.0 AOP支持，但是当你使用已有系统时，或是阅读书籍和文章时，很有可能会遇到
+	Spring 1.2风格的例子。Spring 2.0是完全向前兼容Spring 1.2的，这一章中涉及的所有内容在Spring 2.0里面得到了完全的支持。
+	</p>
+</div>
+</div></body>
+</html>

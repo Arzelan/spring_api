@@ -1,0 +1,60 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=GBK">
+<title>第&#160;1&#160;章&#160;简介</title>
+<link rel="stylesheet" href="styles/html.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.71.0">
+<link rel="start" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="up" href="index.html" title="Spring Framework 开发参考手册">
+<link rel="prev" href="pr01.html" title="前言">
+<link rel="next" href="ch01s02.html" title="1.2.&#160;使用场景">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF"><div class="chapter" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title">
+<a name="introduction"></a>第&#160;1&#160;章&#160;简介</h2></div></div></div>
+<div class="toc">
+<p><b>目录</b></p>
+<dl>
+<dt><span class="section"><a href="ch01.html#introduction-overview">1.1. 概览</a></span></dt>
+<dt><span class="section"><a href="ch01s02.html">1.2. 使用场景</a></span></dt>
+</dl>
+</div>
+<div class="sidebar">
+<a name="background-ioc"></a><p class="title"><b>背景</b></p>
+<p>早在2004年初，Martin Fowler在他的站点上问读者：当谈论控制反转时：
+		“<span class="quote"><span class="emphasis"><em>问题在于，它们转变的是什么方面的控制？</em></span></span>”。
+		Fowler建议重命名该原则（或至少给它一个更加明确的名称），并开始使用 <em class="firstterm">依赖注入</em>这个术语。
+		并且，在他的文章中进一步解释了控制反转（<acronym class="acronym">IoC</acronym>）和依赖注入（<acronym class="acronym">DI</acronym>）的原则思想。</p>
+<p>如果您想对控制反转和依赖注入有更深入的理解，请参阅上述文章：<a href="http://martinfowler.com/articles/injection.html" target="_top">http://martinfowler.com/articles/injection.html</a>。</p>
+</div>
+<p>Java应用（从applets的小范围到全套n层服务端企业应用）是一种典型的依赖型应用，它就是由一些互相适当地协作的对象构成的。因此，我们说这些对象间存在<span class="emphasis"><em>依赖关系</em></span>。</p>
+<p>Java语言和java平台在架构应用与建立应用方面，提供着丰富的功能。从非常基础的基本数据类型和Class（即定义新类）组成的程序块，到建立具有丰富的特性的应用服务器和web框架都有着很多的方法。一方面，可以通过抽象的显著特性让基础的程序块组成在一起成为一个连贯的整体。这样，构建一个应用（或者多个应用）的工作就可以交给架构师或者开发人员去做。因此，我们就可以清晰的知道哪些业务需要哪些Classes和对象组成，哪些设计模式可以应用在哪些业务上面。
+		例如：<em class="firstterm">Factory</em>、<em class="firstterm">Abstract Factory</em>、<em class="firstterm">Builder</em>、<em class="firstterm">Decorator</em> 和 <em class="firstterm">Service Locator</em> 这些模式（列举的只是少数）在软件开发行业被普遍认可和肯定（或许这就是为什么这些模式被定型的原因）。
+		这固然是件好事，不过这些模式只是一个有名字的，有说明的，知道最好用在什么地方的，解决应用中什么问题的最佳实践而已。
+		在本章节的最后，用“<span class="quote">... <span class="emphasis"><em>说明</em></span> ...</span>”给出了模式说明。
+		通常，模式书籍与wikis通常都列出了你可以获得的最佳实践，不过，希望你思考之后，在你自己的应用中 <span class="emphasis"><em>实现自己的模式</em></span>。</p>
+<p>Spring的IoC控件主要专注于如何利用classes、对象和服务去组成一个企业级应用，通过规范的方式，将各种不同的控件整合成一个完整的应用。Spring中使用了很多被实践证明的最佳实践和正规的设计模式，并且进行了编码实现。如果你是一个，构架师或者开发人员完全可以取出它们集成到你自己的应用之中。这对于那些使用了Spring Framework的组织和机构来说，在spring基础上实现应用不仅可以构建优秀的，可维护的应用并对Spring的设计进行验证，<em class="firstterm">确实是一件好事情</em>。</p>
+<div class="section" lang="zh-cn">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="introduction-overview"></a>1.1.&#160;概览</h2></div></div></div>
+<p>Spring框架包含许多特性，并被很好地组织在下图所示的七个模块中。本节将依次介绍每个模块。</p>
+<p>
+			</p>
+<div class="mediaobject" align="center">
+<img src="images/spring-overview.png" align="middle"><div class="caption"><p>Spring框架概述</p></div>
+</div>
+<p>
+		</p>
+<p><span class="emphasis"><em>Core</em></span> 封装包是框架的最基础部分，提供IoC和依赖注入特性。这里的基础概念是<code class="classname">BeanFactory</code>，它提供对Factory模式的经典实现来消除对程序性单例模式的需要，并真正地允许你从程序逻辑中分离出依赖关系和配置。</p>
+<p>构建于<a href="ch03.html#beans-introduction" title="3.1.&#160;简介"><span class="emphasis"><em>Core</em></span></a>封装包基础上的 <a href="ch03s08.html" title="3.8.&#160;ApplicationContext"><span class="emphasis"><em>Context</em></span></a>封装包，提供了一种框架式的对象访问方法，有些象JNDI注册器。Context封装包的特性得自于Beans封装包，并添加了对国际化（I18N）的支持（例如资源绑定），事件传播，资源装载的方式和Context的透明创建，比如说通过Servlet容器。</p>
+<p><a href="ch10.html#dao-introduction" title="10.1.&#160;简介"><span class="emphasis"><em>DAO</em></span></a> 提供了JDBC的抽象层，它可消除冗长的JDBC编码和解析数据库厂商特有的错误代码。
+		并且，<a href="ch11.html#jdbc-introduction" title="11.1.&#160;简介">JDBC</a> 封装包还提供了一种比编程性更好的声明性事务管理方法，不仅仅是实现了特定接口，而且对<span class="emphasis"><em>所有的POJOs（plain old Java objects）</em></span>都适用。
+		</p>
+<p><a href="ch12.html#orm-introduction" title="12.1.&#160;简介"><span class="emphasis"><em>ORM</em></span></a> 封装包提供了常用的“对象/关系”映射APIs的集成层。
+		其中包括<a href="ch12s06.html" title="12.6.&#160;JPA">JPA</a>、<a href="ch12s03.html" title="12.3.&#160;JDO">JDO</a>、<a href="ch12s02.html" title="12.2.&#160;Hibernate">Hibernate</a> 和 <a href="ch12s05.html" title="12.5.&#160;iBATIS SQL Maps">iBatis</a> 。利用ORM封装包，可以混合使用所有Spring提供的特性进行“对象/关系”映射，如前边提到的简单声明性事务管理。</p>
+<p>Spring的 <a href="ch06.html#aop-introduction" title="6.1.&#160;简介"><span class="emphasis"><em>AOP</em></span></a> 封装包提供了符合 <span class="emphasis"><em>AOP Alliance</em></span>规范的面向方面的编程（aspect-oriented programming）实现，让你可以定义，例如方法拦截器（method-interceptors）和切点（pointcuts），从逻辑上讲，从而减弱代码的功能耦合，清晰的被分离开。而且，利用source-level的元数据功能，还可以将各种行为信息合并到你的代码中，这有点象.Net的attribute的概念。</p>
+<p>Spring中的 <span class="emphasis"><em>Web</em></span> 包提供了基础的针对Web开发的集成特性，例如多方文件上传，利用Servlet listeners进行IoC容器初始化和针对Web的application context。当与WebWork或Struts一起使用Spring时，这个包使Spring可与其他框架结合。</p>
+<p>Spring中的 <a href="ch13.html#mvc-introduction" title="13.1.&#160;介绍"><span class="emphasis"><em>MVC</em></span></a> 封装包提供了Web应用的Model-View-Controller（MVC）实现。Spring的MVC框架并不是仅仅提供一种传统的实现，它提供了一种 <span class="emphasis"><em>清晰的</em></span> 分离模型，在领域模型代码和web form之间。并且，还可以借助Spring框架的其他特性。</p>
+</div>
+</div></body>
+</html>
